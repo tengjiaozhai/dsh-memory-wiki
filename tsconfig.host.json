@@ -1,0 +1,38 @@
+{
+  "files": [],
+  "references": [
+    {
+      "path": "./packages/dsh-typert-protocol"
+    },
+    {
+      "path": "./packages/dsh-memory-wiki"
+    }
+  ],
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": [
+      "ESNext"
+    ],
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowImportingTsExtensions": true,
+    "baseUrl": ".",
+    "types": [
+      "node"
+    ],
+    "typeRoots": [
+      "./packages/dsh-memory-wiki/node_modules/@types"
+    ],
+    "paths": {
+      "@deepseek-ai/dsh-typert-protocol": [
+        "./packages/dsh-typert-protocol/lib/types/index.d.ts"
+      ],
+      "@deepseek-ai/dsh-typert-protocol/*": [
+        "./packages/dsh-typert-protocol/lib/types/*"
+      ]
+    }
+  }
+}

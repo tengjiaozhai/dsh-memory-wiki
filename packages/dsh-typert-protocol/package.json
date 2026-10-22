@@ -1,0 +1,34 @@
+{
+  "name": "@deepseek-ai/dsh-typert-protocol",
+  "version": "0.0.0-declarations-mirror",
+  "private": true,
+  "type": "module",
+  "description": "Dev-only declaration mirror of @deepseek-ai/dsh-typert-protocol so the Typert generator attributes protocol symbols to a workspace registration. Never imported at runtime; the installed package is the runtime dependency.",
+  "main": "lib/index.js",
+  "types": "lib/types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/types/index.d.ts",
+      "default": "./lib/index.js"
+    },
+    "./types": {
+      "types": "./lib/types/types.d.ts",
+      "default": "./lib/types/types.js"
+    },
+    "./remote-info": {
+      "types": "./lib/types/remote-info.d.ts",
+      "default": "./lib/types/remote-info.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "dependencies": {
+    "@deepseek-ai/dsh-brand": "0.2.1-rc.2",
+    "zod": "^4.4.3"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.0"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "^4.0.0"
+  }
+}

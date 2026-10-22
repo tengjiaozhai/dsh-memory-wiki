@@ -1,0 +1,10 @@
+# 生成器硬约束：包根必须在 <workspaceRoot>/packages 下（analyzer.js:338）。
+# overrides 在 pnpm 10+ 只能写在这里，写进 package.json 的 "pnpm" 字段会被忽略。
+packages:
+  - 'packages/*'
+
+overrides:
+  # 宿主装的是 zod 4.4.3；typert-protocol 的 ^4.4.3 曾被解析成 4.6.7，
+  # 导致同一进程里两份 zod。strict codec 靠 z.ZodType 的 _def 校验，
+  # 跨实例最容易出现「看着一样、校验不认」，因此锁死到宿主同版。
+  zod: 4.4.3

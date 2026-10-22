@@ -1,0 +1,17 @@
+{
+  "name": "dsh-memory-wiki-workspace",
+  "private": true,
+  "description": "Workspace for the dsh-memory-wiki DSH plugin (the plugin itself lives in packages/dsh-memory-wiki).",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tengjiaozhai/dsh-memory-wiki.git"
+  },
+  "packageManager": "pnpm@11.28.6",
+  "type": "module",
+  "scripts": {
+    "build": "pnpm -C packages/dsh-memory-wiki build",
+    "test": "pnpm -C packages/dsh-memory-wiki test",
+    "typecheck": "pnpm -C packages/dsh-memory-wiki typecheck"
+  }
+}

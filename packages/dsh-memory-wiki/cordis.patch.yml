@@ -1,0 +1,16 @@
+# dsh-memory-wiki bundle layer.
+#
+# Three different things live in this file: the entry id (`memory-wiki`), the
+# module import name (`dsh-memory-wiki`) and the plugin's exported `name`
+# (`memory-wiki`). They are not required to match; see the README.
+#
+# wikiRoot is intentionally empty: there is no sensible public default. With an
+# empty value the plugin records skippedReason `disabled` and injects nothing —
+# it never guesses a path and never silently degrades to an empty library.
+- insert:
+    - id: memory-wiki
+      name: 'dsh-memory-wiki'
+      config:
+        enabled: true
+        wikiRoot: ''
+        budgetChars: 4000

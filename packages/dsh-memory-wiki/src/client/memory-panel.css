@@ -1,0 +1,858 @@
+/*
+ * dsh-memory-wiki panel styles (P3a).
+ *
+ * Design tokens live on the panel root, not :root, and every selector starts
+ * with .memory-wiki-panel — mounting or unmounting the panel cannot restyle the
+ * host. The vendored React Flow sheet is injected separately and stays inside
+ * its own .react-flow* namespace (see client/index.tsx).
+ */
+.memory-wiki-panel {
+  --mw-bg: #171f27;
+  --mw-panel: #212d39;
+  --mw-panel-2: #1c2733;
+  --mw-line: #2c3a49;
+  --mw-line-soft: #354555;
+  --mw-text: #e8edf4;
+  --mw-muted: #a1b3c9;
+  --mw-blue: #8bc7f4;
+  --mw-gold: #efc366;
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+  background: var(--mw-bg);
+  color: var(--mw-text);
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.memory-wiki-panel *,
+.memory-wiki-panel *::before,
+.memory-wiki-panel *::after {
+  box-sizing: border-box;
+}
+
+.memory-wiki-panel__head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--mw-line);
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  row-gap: 2px;
+}
+
+.memory-wiki-panel__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.memory-wiki-panel__badge {
+  padding: 1px 7px;
+  border: 1px solid var(--mw-line-soft);
+  border-radius: 999px;
+  font-size: 11px;
+  color: var(--mw-muted);
+  white-space: nowrap;
+}
+
+.memory-wiki-panel__badge--gold {
+  border-color: #6a5730;
+  color: var(--mw-gold);
+}
+
+.memory-wiki-panel__head-meta {
+  margin-left: auto;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  min-width: 0;
+  gap: 4px 14px;
+  font-size: 11px;
+  color: var(--mw-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.memory-wiki-panel__fault {
+  margin: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--mw-line-soft);
+  border-radius: 8px;
+  background: var(--mw-panel-2);
+  color: var(--mw-text);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.memory-wiki-panel__fault strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.memory-wiki-panel__fault p {
+  margin: 4px 0 0;
+  color: var(--mw-muted);
+  overflow-wrap: anywhere;
+}
+
+.memory-wiki-panel__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr) 366px;
+}
+
+.memory-wiki-panel__col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+.memory-wiki-panel__col--list {
+  border-right: 1px solid var(--mw-line);
+}
+
+.memory-wiki-panel__col--detail {
+  border-left: 1px solid var(--mw-line);
+}
+
+.memory-wiki-panel__scroll {
+  overflow: auto;
+  min-height: 0;
+}
+
+.memory-wiki-panel__section-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--mw-muted);
+  text-transform: uppercase;
+}
+
+.memory-wiki-panel__section-head span:last-child {
+  margin-left: auto;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.memory-wiki-panel__candidate {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border: 0;
+  border-left: 2px solid transparent;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.memory-wiki-panel__candidate:hover {
+  background: #1d2833;
+}
+
+.memory-wiki-panel__candidate.is-active {
+  border-left-color: var(--mw-blue);
+  background: #22303d;
+}
+
+.memory-wiki-panel__candidate-top {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.memory-wiki-panel__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+  border: 1px solid var(--mw-muted);
+}
+
+.memory-wiki-panel__dot.is-selected {
+  background: var(--mw-blue);
+  border-color: var(--mw-blue);
+}
+
+.memory-wiki-panel__dot.is-excluded {
+  background: transparent;
+  border-color: #55677c;
+}
+
+.memory-wiki-panel__candidate-title {
+  font-size: 13px;
+  font-weight: 550;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.memory-wiki-panel__candidate-id {
+  display: block;
+  margin-top: 1px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  color: #7e93a8;
+  overflow-wrap: anywhere;
+}
+
+.memory-wiki-panel__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 5px;
+}
+
+.memory-wiki-panel__chip {
+  padding: 0 5px;
+  border-radius: 3px;
+  background: #24313d;
+  color: #b9cde0;
+  font-size: 10px;
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+.memory-wiki-panel__chip--why {
+  background: #1f3341;
+  color: #a8d3f0;
+}
+
+.memory-wiki-panel__chip--budget {
+  background: #3a2c22;
+  color: var(--mw-gold);
+}
+
+.memory-wiki-panel__chip--no-usable-block {
+  background: #33232a;
+  color: #e1a0b0;
+}
+
+.memory-wiki-panel__chip--not-selected {
+  background: #232c36;
+  color: #93a6ba;
+}
+
+.memory-wiki-panel__via {
+  margin-top: 4px;
+  font-size: 11px;
+  color: #8fa6bd;
+}
+
+.memory-wiki-panel__graph-wrap {
+  flex: 1 1 auto;
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.memory-wiki-panel__graph {
+  flex: 1 1 auto;
+  min-height: 0;
+  margin: 0 12px;
+  border: 1px solid var(--mw-line);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #131b22;
+}
+
+.memory-wiki-panel__legend {
+  display: flex;
+  gap: 14px;
+  padding: 6px 14px 2px;
+  font-size: 11px;
+  color: var(--mw-muted);
+}
+
+.memory-wiki-panel__legend i {
+  display: inline-block;
+  width: 18px;
+  height: 0;
+  margin-right: 5px;
+  border-top: 2px solid var(--mw-blue);
+  vertical-align: middle;
+}
+
+.memory-wiki-panel__legend i.is-related {
+  border-top-style: dashed;
+  border-top-color: #6e86a2;
+}
+
+.memory-wiki-panel__node {
+  width: 168px;
+  padding: 6px 9px;
+  border: 1px solid var(--mw-line-soft);
+  border-radius: 6px;
+  background: var(--mw-panel);
+  color: var(--mw-text);
+  font-size: 11px;
+  line-height: 1.4;
+  text-align: left;
+  cursor: pointer;
+}
+
+.memory-wiki-panel__node.is-active {
+  border-color: var(--mw-blue);
+  box-shadow: 0 0 0 1px rgba(139, 199, 244, 0.35);
+}
+
+.memory-wiki-panel__node.is-excluded {
+  border-style: dashed;
+  opacity: 0.72;
+}
+
+.memory-wiki-panel__node strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.memory-wiki-panel__node small {
+  display: block;
+  margin-top: 2px;
+  color: var(--mw-muted);
+  font-size: 10px;
+}
+
+.memory-wiki-panel__budget {
+  flex: 0 0 auto;
+  padding: 8px 14px 10px;
+  border-top: 1px solid var(--mw-line);
+}
+
+.memory-wiki-panel__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.memory-wiki-panel__seg {
+  display: inline-flex;
+  border: 1px solid var(--mw-line-soft);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.memory-wiki-panel__seg button {
+  padding: 2px 8px;
+  border: 0;
+  background: none;
+  color: var(--mw-muted);
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.memory-wiki-panel__seg button.is-current {
+  background: #26384a;
+  color: #c4e5ff;
+}
+
+.memory-wiki-panel__meter-line {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 7px;
+  font-size: 11px;
+  color: var(--mw-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.memory-wiki-panel__meter {
+  position: relative;
+  flex: 1 1 auto;
+  height: 4px;
+  border-radius: 2px;
+  background: #263340;
+  overflow: hidden;
+}
+
+.memory-wiki-panel__meter > span {
+  display: block;
+  height: 100%;
+  background: var(--mw-blue);
+}
+
+.memory-wiki-panel__meter.is-over > span {
+  background: var(--mw-gold);
+}
+
+.memory-wiki-panel__over {
+  margin: 5px 0 0;
+  font-size: 11px;
+  color: var(--mw-gold);
+}
+
+.memory-wiki-panel__preview {
+  flex: 0 0 auto;
+  max-height: 200px;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--mw-line);
+  min-height: 0;
+}
+
+.memory-wiki-panel__preview .memory-wiki-panel__section-head {
+  padding-bottom: 4px;
+}
+
+.memory-wiki-panel__pre {
+  margin: 0 14px 10px;
+  padding: 8px 10px;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  border-radius: 6px;
+  background: var(--mw-panel-2);
+  color: #dbe6f1;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10.5px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.memory-wiki-panel__detail {
+  padding: 12px 14px 14px;
+}
+
+.memory-wiki-panel__detail-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 620;
+  line-height: 1.35;
+}
+
+.memory-wiki-panel__detail-path {
+  margin: 4px 0 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  color: #8fa6bd;
+  overflow-wrap: anywhere;
+}
+
+.memory-wiki-panel__detail-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 7px;
+}
+
+.memory-wiki-panel__excerpt {
+  margin-top: 9px;
+  padding: 9px 11px;
+  border-radius: 7px;
+  background: var(--mw-panel);
+  max-height: 150px;
+  overflow: auto;
+  font-size: 11.5px;
+  line-height: 1.75;
+  color: #e0e8f1;
+  white-space: pre-wrap;
+}
+
+/* ---------- markdown surface (scoped; the host's own markdown is untouched) ---------- */
+
+.memory-wiki-panel__md {
+  font-size: 12px;
+  line-height: 1.75;
+  color: #e0e8f1;
+}
+
+.memory-wiki-panel__md > *:first-child {
+  margin-top: 0;
+}
+
+.memory-wiki-panel__md > *:last-child {
+  margin-bottom: 0;
+}
+
+.memory-wiki-panel__md h1,
+.memory-wiki-panel__md h2,
+.memory-wiki-panel__md h3,
+.memory-wiki-panel__md h4 {
+  margin: 14px 0 6px;
+  font-weight: 620;
+  line-height: 1.4;
+  color: #eef4fb;
+}
+
+.memory-wiki-panel__md h1 {
+  font-size: 15px;
+}
+
+.memory-wiki-panel__md h2 {
+  font-size: 13.5px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--mw-line);
+}
+
+.memory-wiki-panel__md h3 {
+  font-size: 12.5px;
+}
+
+.memory-wiki-panel__md p {
+  margin: 7px 0;
+}
+
+.memory-wiki-panel__md ul,
+.memory-wiki-panel__md ol {
+  margin: 7px 0;
+  padding-left: 18px;
+}
+
+.memory-wiki-panel__md li {
+  margin: 3px 0;
+}
+
+.memory-wiki-panel__md li > p {
+  margin: 0;
+}
+
+.memory-wiki-panel__md strong {
+  color: #f2f7fc;
+  font-weight: 620;
+}
+
+.memory-wiki-panel__md a {
+  color: var(--mw-blue);
+  text-decoration: none;
+}
+
+.memory-wiki-panel__md a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.memory-wiki-panel__md code {
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: #1a242e;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10.5px;
+  color: #b8d6ef;
+}
+
+.memory-wiki-panel__md pre {
+  margin: 8px 0;
+  padding: 8px 10px;
+  border: 1px solid var(--mw-line);
+  border-radius: 6px;
+  background: #131b22;
+  overflow: auto;
+  max-height: 220px;
+}
+
+.memory-wiki-panel__md pre code {
+  padding: 0;
+  background: none;
+  font-size: 10.5px;
+  line-height: 1.6;
+  color: #cfe2f3;
+}
+
+.memory-wiki-panel__md table {
+  display: block;
+  width: 100%;
+  margin: 9px 0;
+  border-collapse: collapse;
+  font-size: 11px;
+  overflow: auto;
+}
+
+.memory-wiki-panel__md thead th {
+  text-align: left;
+  font-weight: 620;
+  color: #eef4fb;
+  background: #1d2833;
+}
+
+.memory-wiki-panel__md th,
+.memory-wiki-panel__md td {
+  padding: 4px 7px;
+  border: 1px solid var(--mw-line);
+  vertical-align: top;
+}
+
+.memory-wiki-panel__md tbody tr:nth-child(even) {
+  background: #1a232c;
+}
+
+.memory-wiki-panel__md blockquote {
+  margin: 8px 0;
+  padding: 2px 10px;
+  border-left: 2px solid var(--mw-line-soft);
+  color: var(--mw-muted);
+}
+
+.memory-wiki-panel__md hr {
+  margin: 12px 0;
+  border: 0;
+  border-top: 1px solid var(--mw-line);
+}
+
+.memory-wiki-panel__md .memory-wiki-panel__wikilink {
+  padding: 0 3px;
+  border-radius: 3px;
+  background: #1f3341;
+  color: #a8d3f0;
+  font-size: 10.5px;
+}
+
+.memory-wiki-panel__md-fallback {
+  color: var(--mw-muted);
+}
+
+.memory-wiki-panel__md.is-compact {
+  font-size: 11.5px;
+  line-height: 1.7;
+}
+
+.memory-wiki-panel__md.is-compact h1 {
+  font-size: 13.5px;
+}
+
+.memory-wiki-panel__md.is-compact h2 {
+  font-size: 12.5px;
+}
+
+.memory-wiki-panel__md.is-compact table {
+  font-size: 10.5px;
+}
+
+.memory-wiki-panel__excerpt--full {
+  max-height: 340px;
+}
+
+.memory-wiki-panel__excerpt-note {
+  margin: 6px 0 0;
+  font-size: 10px;
+  color: #8fa6bd;
+}
+
+.memory-wiki-panel__subhead {
+  margin: 13px 0 5px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--mw-muted);
+  text-transform: uppercase;
+}
+
+.memory-wiki-panel__segments {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.memory-wiki-panel__segment {
+  padding: 0 5px;
+  border: 1px solid var(--mw-line-soft);
+  border-radius: 3px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  color: #a8c0d8;
+}
+
+.memory-wiki-panel__col--detail > .memory-wiki-panel__detail {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.memory-wiki-panel__hist {
+  flex: 0 0 auto;
+  max-height: 40%;
+  overflow: auto;
+  padding: 0 14px 14px;
+  border-top: 1px solid var(--mw-line);
+}
+
+.memory-wiki-panel__hist-row {
+  padding: 7px 0;
+  border-top: 1px solid #24303c;
+  font-size: 11px;
+  color: var(--mw-muted);
+}
+
+.memory-wiki-panel__hist-row strong {
+  display: block;
+  color: var(--mw-text);
+  font-size: 11.5px;
+  font-weight: 550;
+}
+
+.memory-wiki-panel__hist-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 3px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 10px;
+  color: #8fa6bd;
+  font-variant-numeric: tabular-nums;
+}
+
+.memory-wiki-panel__readonly {
+  margin-left: 6px;
+  padding: 0 5px;
+  border: 1px solid var(--mw-line-soft);
+  border-radius: 3px;
+  font-size: 9.5px;
+  color: #8fa6bd;
+}
+
+/* ---- server view (P3b): query box, pick rows, stale-revision alert ---- */
+
+/* The server status card is not the fixture preview: it holds the mode/revision
+   header, the stale-revision alert, the write toolbar AND the draft text, so it
+   needs its own scroll box. Reusing __preview (max-height:200px, no overflow)
+   pushed the action buttons out of the viewport. */
+.memory-wiki-panel__server {
+  flex: 1 1 auto;
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--mw-line);
+  overflow: auto;
+}
+
+.memory-wiki-panel__query {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 4px 8px;
+  border: 1px solid var(--mw-line);
+  border-radius: 4px;
+  background: #0d1721;
+  color: inherit;
+  font: inherit;
+  font-size: 11.5px;
+}
+
+.memory-wiki-panel__pick-toggle {
+  flex: 0 0 auto;
+  padding: 2px 8px;
+  border: 1px solid var(--mw-line);
+  border-radius: 4px;
+  background: transparent;
+  color: #8fa6bd;
+  font: inherit;
+  font-size: 10.5px;
+  cursor: pointer;
+}
+
+.memory-wiki-panel__pick-toggle[aria-pressed='true'] {
+  border-color: #3c6e4b;
+  color: #a9e0b8;
+}
+
+.memory-wiki-panel__pick-open {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.memory-wiki-panel__stale {
+  margin: 8px 0;
+  padding: 8px 10px;
+  border: 1px solid #7a5a1e;
+  border-radius: 5px;
+  background: #241c0c;
+  color: #f0d79a;
+  font-size: 11.5px;
+}
+
+.memory-wiki-panel__stale strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.memory-wiki-panel__stale button {
+  margin-top: 6px;
+  padding: 3px 10px;
+  border: 1px solid #7a5a1e;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+@media (max-width: 1080px) {
+  .memory-wiki-panel__body {
+    grid-template-columns: 236px minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) minmax(0, 300px);
+  }
+
+  .memory-wiki-panel__col--detail {
+    grid-column: 1 / -1;
+    border-left: 0;
+    border-top: 1px solid var(--mw-line);
+  }
+}
+
+/* Narrower than the host's centre column at small window sizes: one column,
+   stacked, each block keeping its own scroll. Declared after the 1080px block on
+   purpose — same specificity, so source order is what decides which wins. */
+@media (max-width: 860px) {
+  .memory-wiki-panel__body {
+    display: block;
+    overflow-y: auto;
+  }
+
+  .memory-wiki-panel__col--list {
+    max-height: 260px;
+    border-right: 0;
+    border-bottom: 1px solid var(--mw-line);
+  }
+
+  .memory-wiki-panel__col--center {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .memory-wiki-panel__graph-wrap {
+    flex: 0 0 auto;
+    height: 340px;
+    min-height: 340px;
+  }
+
+  .memory-wiki-panel__col--detail {
+    display: flex;
+    flex-direction: column;
+    max-height: 540px;
+    border-left: 0;
+    border-top: 1px solid var(--mw-line);
+  }
+}

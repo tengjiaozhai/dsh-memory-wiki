@@ -1,0 +1,100 @@
+{
+  "name": "dsh-memory-wiki",
+  "version": "0.1.0",
+  "description": "Bring a local LLM-Wiki into DSH conversations as frozen, cited evidence.",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "wiki",
+    "memory",
+    "retrieval"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tengjiaozhai/dsh-memory-wiki.git"
+  },
+  "homepage": "https://github.com/tengjiaozhai/dsh-memory-wiki#readme",
+  "bugs": {
+    "url": "https://github.com/tengjiaozhai/dsh-memory-wiki/issues"
+  },
+  "type": "module",
+  "main": "lib/server/index.js",
+  "exports": {
+    ".": "./lib/server/index.js",
+    "./client": "./lib/client.js",
+    "./typert": {
+      "types": "./lib/typert.host.d.ts",
+      "default": "./lib/typert.host.js"
+    },
+    "./remote": {
+      "types": "./lib/typert.remote-client.d.ts",
+      "default": "./lib/typert.remote-client.js"
+    },
+    "./contracts": {
+      "types": "./lib/shared/contracts.d.ts",
+      "default": "./lib/shared/contracts.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/server",
+    "lib/client.js",
+    "lib/shared",
+    "lib/typert.host.js",
+    "lib/typert.host.d.ts",
+    "lib/typert.remote-client.js",
+    "lib/typert.remote-client.d.ts",
+    "cordis.patch.yml"
+  ],
+  "engines": {
+    "dsh": "0.2.1-rc.2",
+    "node": "^22.19.0 || >=24.0.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "typecheck": "pnpm run typecheck:host && pnpm run typecheck:client",
+    "typecheck:host": "tsc --noEmit -p tsconfig.json",
+    "typecheck:client": "tsc --noEmit -p tsconfig.client.json",
+    "test": "node --test \"tests/**/*.test.mjs\"",
+    "prepublishOnly": "pnpm run typecheck:client && pnpm run build"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/cordis": "^4.0.0",
+    "@deepseek-ai/dsh-llm": "0.2.1-rc.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "dependencies": {
+    "@deepseek-ai/dsh-typert-protocol": "0.2.1-rc.2",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "^4.0.0",
+    "@deepseek-ai/dsh-llm": "0.2.1-rc.2",
+    "@deepseek-ai/dsh-typert-generator": "0.2.1-rc.2",
+    "@deepseek-ai/schemastery": "^3.18.0",
+    "@types/node": "^22.20.1",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@xyflow/react": "12.12.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-markdown": "10.1.0",
+    "tsdown": "^0.22.0",
+    "typescript": "^5.6.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
