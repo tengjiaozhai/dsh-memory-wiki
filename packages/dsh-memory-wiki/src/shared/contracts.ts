@@ -93,6 +93,18 @@ export interface TurnView {
 }
 
 /** Response of `memoryWiki/view`. */
+export interface CaptureView {
+  jobId: string
+  phase: 'queued' | 'judging' | 'preparing' | 'verifying' | 'publishing' | 'ingested' | 'skipped' | 'deferred' | 'failed' | 'needs_attention'
+  reason: string
+  pages: string[]
+  updatedAt: string
+  evidence?: Array<{ seq: number; kind: string; text: string; truncated: boolean }>
+  evidenceTruncated?: boolean
+  changes?: Array<{ path: string; beforeHash?: string; afterHash: string }>
+  limitations?: string[]
+}
+
 export interface SessionView {
   revision: number
   mode: SessionMode
@@ -101,6 +113,7 @@ export interface SessionView {
   draft?: DraftState
   prepared?: EvidenceSnapshot
   currentTurn?: TurnView
+  capture?: CaptureView
   skippedReason?: string
   error?: RemoteError
 }

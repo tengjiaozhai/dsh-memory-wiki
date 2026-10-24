@@ -127,6 +127,7 @@ export class MemoryWikiAdapter {
   private readonly queues = new Map<string, Promise<unknown>>()
 
   private corpus?: CorpusSnapshot
+  private publishing = false
 
   /** Stat fingerprint of the last accepted library view; fast path compares this. */
   private corpusFingerprint?: string
@@ -663,8 +664,17 @@ export class MemoryWikiAdapter {
    * @returns the current library revision after the rescan.
    */
   refreshCorpus(): string {
+    const previous = this.corpus?.revision
     this.corpus = scanCorpus({ root: this.config.wikiRoot })
+    this.corpusFingerprint = this.fingerprintOf(this.config.wikiRoot)
+    this.stats.scans += 1
+    if (previous !== this.corpus.revision) this.onLibraryChanged()
     return this.corpus.revision
+  }
+
+  /** Keep readers on the last immutable corpus while files are being published. */
+  setPublishing(active: boolean): void {
+    this.publishing = active
   }
 
   /** Map a core CorpusError onto the Remote error vocabulary. */
@@ -726,6 +736,8 @@ export class MemoryWikiAdapter {
    * snapshot or the new one, never a mixture.
    */
   private loadCorpus(): CorpusSnapshot {
+    if (this.publishing && this.corpus !== undefined) return this.corpus
+    if (this.publishing) throw new CorpusError('invalid-root', 'Wiki publication recovery is in progress; reads are paused')
     if (this.corpus === undefined) {
       this.corpus = scanCorpus({ root: this.config.wikiRoot })
       this.corpusFingerprint = this.fingerprintOf(this.config.wikiRoot)
@@ -791,7 +803,7 @@ export class MemoryWikiAdapter {
       // The panel's data genuinely changed, so the view revision moves for every
       // session; a client holding the old revision is stale, not wrong.
       state.revision += 1
-      if (state.memory.view().pendingOverride === undefined) continue
+      if (state.memory.view().pendingOverride === undefined && state.draft === undefined) continue
       // An unconsumed override was prepared against pages that just changed.
       state.memory.clearOverride()
       state.mode = 'manual-invalid'

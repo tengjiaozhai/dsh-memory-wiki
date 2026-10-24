@@ -8,6 +8,8 @@ import { HistoryPane } from './HistoryPane.js'
 import { PreviewPane } from './PreviewPane.js'
 import { SourceDetail } from './SourceDetail.js'
 import { RemotePanel } from './RemotePanel.js'
+import { CaptureStatus } from './CaptureStatus.js'
+import { MarkdownView } from './MarkdownView.js'
 import type {
   BudgetOption,
   MemoryWikiSource,
@@ -69,6 +71,7 @@ export function MemoryPanel(props: {
   const [error, setError] = useState<string | null>(null)
   const [activePageId, setActivePageId] = useState<string | null>(null)
   const [page, setPage] = useState<PageView | null>(null)
+  const [capturePage, setCapturePage] = useState<PageView | null>(null)
   const [pageError, setPageError] = useState<string | null>(null)
   const [lastReadAt, setLastReadAt] = useState<number | null>(null)
   const [readNonce, setReadNonce] = useState(0)
@@ -87,6 +90,7 @@ export function MemoryPanel(props: {
     setViewState(null)
     setError(null)
     setPage(null)
+    setCapturePage(null)
     setPageError(null)
     setActivePageId(null)
     setLastReadAt(null)
@@ -244,6 +248,11 @@ export function MemoryPanel(props: {
           </span>
         </div>
       </header>
+      {view?.capture && <CaptureStatus capture={view.capture} onOpen={pageId => {
+        const session = sessionKey
+        void source.readPage({ pageId, sessionId: session }).then(result => { if (sessionRef.current === session) setCapturePage(result) }, cause => { if (sessionRef.current === session) setError(String(cause)) })
+      }} />}
+      {capturePage && <div className="memory-wiki-panel__fault"><button type="button" onClick={() => setCapturePage(null)}>关闭经验正文</button><h3>{capturePage.title}</h3><MarkdownView source={capturePage.body} /></div>}
 
       {error !== null && (
         <div className="memory-wiki-panel__fault" data-testid="mw-error" role="alert">

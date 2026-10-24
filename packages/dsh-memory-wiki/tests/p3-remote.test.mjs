@@ -374,7 +374,7 @@ test('prepareOverride 冻结的就是预览正文（text/chars/payloadHash 逐�
   assert.equal(prepared.prepared.libraryRevision, drafted.draft.libraryRevision)
 })
 
-test('库变更后 prepareOverride 拒绝冻结（要求重新预览），并给出 expected/actual', async () => {
+test('显式刷新库后 prepareOverride 拒绝旧 revision，并要求重新预览', async () => {
   const fs = await import('node:fs')
   const os = await import('node:os')
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'mw-library-'))
@@ -395,9 +395,9 @@ test('库变更后 prepareOverride 拒绝冻结（要求重新预览），并给
     assert.notEqual(after, before, 'rescan must observe a new revision')
 
     const prepared = await a.prepareOverride({ sessionId: knownSession, expectedRevision: drafted.revision })
-    assert.equal(prepared.error.code, 'library-changed')
-    assert.equal(prepared.error.expected, before)
-    assert.equal(prepared.error.actual, after)
+    assert.equal(prepared.error.code, 'stale-revision')
+    assert.equal(prepared.error.expected, drafted.revision)
+    assert.equal(prepared.error.actual, drafted.revision + 1)
     assert.equal(prepared.mode, 'manual-invalid')
     assert.equal(a.memoryFor(knownSession).hasPendingOverride, false, 'a rejected prepare must not park a snapshot')
   }

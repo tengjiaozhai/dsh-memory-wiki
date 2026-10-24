@@ -2,14 +2,22 @@
 
 把本地 LLM-Wiki（一组互链的 Markdown 笔记）里的**已有判断**，作为**冻结、带来源**的证据带进 DeepSeek Harness 的对话。
 
-它不新建一座记忆库，也不改你的 Wiki：Wiki 仍是唯一权威，插件只做「检索 → 冻结 → 引用」。
+Wiki 仍是唯一知识权威。默认做「检索 → 冻结 → 引用」；显式启用经验采集后，还会在真人轮次结束时后台判断并摄入有证据支持的编码经验。
 
 ## 它做什么
 
+- **整库图谱浏览**：打开即显示当前 Wiki 的全部有效页面与真实链接，无需先搜索或绑定会话。点击节点读取正文、查看出链与反链；顶部搜索按页面标题或路径定位。
+- **按需展开详情**：图谱是主画布，右侧阅读浮层在选中页面后出现；“上下文”入口单独容纳会话依据操作。窗口较窄时详情展开为阅读视图。
 - **每轮自动带入**：真人输入开启的轮次里，按当前问题做页级检索，一跳扩展关联页，在字符额度内编译成一份快照，作为带来源的 user 消息注入模型请求。
 - **可手选覆盖**：面板里挑页、看额度、看确切待带入文本，点「准备覆盖」后**下一轮**改用你的选择，只用一次。
 - **三个只读工具**：`wiki_search` / `wiki_read` / `wiki_neighbors`，让模型自己翻页。
 - **可回溯**：快照正文与来源版本进会话日志，重开、重放、压缩之后都能核对。
+
+浏览页面不会改变对话依据。需要手选时，点击详情中的「选为下一轮依据」，在上下文里「应用改选」查看服务端预览，再「准备下一轮」。改选尚未应用时，准备按钮保持禁用。
+
+库级 Remote 读取为 `memoryWiki/graph({})` 和 `memoryWiki/readPage({ pageId, contentHash? })`；读页不再接受 `sessionId`。会话的 `view/search/reviseDraft/prepareOverride/clearOverride` 仍检查会话与写入版本。前后端需要一同重载，不能混用旧的读页契约。
+
+DSH `0.2.1-rc.3` 会缓存插件的 Typert manifest。升级已有 Remote 方法的参数时，组件/插件开关和页面刷新不会清掉后端旧缓存，需要重启 DSH 后生效；出现 `wire field "input" failed boundary validation` 时先确认前后端运行同一版契约。
 
 ## 安装
 
@@ -51,12 +59,33 @@ dsh plugin --profile desktop add dsh-memory-wiki
 
 | 限制 | 说明 |
 |---|---|
-| 只支持 DSH `0.2.1-rc.2` | `engines.dsh` 钉死；DSH 公共接口仍处 pre-stable，升级需重新验证 |
+| 当前宿主 DSH `0.2.1-rc.3` | 自动采集接入按该版本验证；DSH 公共接口仍处 pre-stable，升级需重新验证 |
 | 单库 | 一个配置对应一个 Wiki 根；改 `wikiRoot` 要重载插件 |
-| 只读 | 不写回 Wiki，不提供 `wiki_remember`；写回是后续设计 |
+| 默认只读 | `capture.enabled` 默认为 false；启用后只有 Jev 两阶段高置信且程序检查通过的经验可自动写入，不提供任意 `wiki_remember` |
 | 输入严格、输出不严格 | 入参由生成的 strict codec 校验（多余字段拒绝）；返回值的 codec 目前是宽松的（上游生成器限制），不要据此宣称「双向严格」 |
 | 压缩后补注 | 有实现，但在 `0.2.1-rc.2` 的自动压缩里没有可触发路径；只在手动 `/compact` 场景验证 |
 | 不提供「provider 已读取」状态 | 面板只展示「已提交到日志」与调用进展，不声称模型一定用了它 |
+
+## 自动沉淀编码经验
+
+在既有配置中加入：
+
+```yaml
+capture:
+  enabled: true
+  judgeModel: jev-1.14.0
+  skillPath: /absolute/path/to/llm-wiki/SKILL.md
+```
+
+服务端从 `TYPESAFE_API_KEY` 或 `$DSH_HOME/credentials/memory-wiki-typesafe.key` 读取 Jev key；本地凭据文件应为 `0600`，不要放进插件配置或 Git。Jev 使用官方 System One API，生成笔记使用原轮次已解析的普通 LLM provider/model，写作调用没有工具权限。
+
+目标 Wiki 必须按自己的 `AGENTS.md` 显式允许自动经验来源，含 `<!-- dsh-memory-wiki:auto-capture=v1 -->` 标记。来源写到 `experiences/<jobId>.md`，source 沿用 `note`；真实 Skill、operations、模板与 schema 每次读取并记录版本。默认安装不会获得写权限。启用后的高置信任务不逐条请求确认，中低置信或冲突保留候选。
+
+处理顺序：真人 `turn/end` → 冻结 raw events → Jev 判断价值 → 按 Skill 准备暂存页 → 固定 index/lint 检查与第二次 Jev 断言验证 → 串行发布 → 刷新检索。失败工具结果保留；助手自述不视为修复验证。面板的“会话上下文”显示本轮状态和沉淀页面。
+
+任务与恢复清单保存在 `$DSH_HOME/storages/memory-wiki-auto-capture/<库哈希>/`，不保存 API key。重复终态、重启和同库并发用稳定 jobId 与文件锁处理；既有页面保留正文并补实例，发布前发现外部修改则停止，避免覆盖。发布是可恢复的逐文件替换，不是跨文件原子事务。
+
+当前验证边界：受控接口可以验证完整流程；本机对官方 TypeSafe 的合成请求返回 HTTP 451 地区不可用，尚未完成真实 Jev 自动沉淀验收。网络/API 错误会显示失败，不会换模型或把未验证内容写入 Wiki。没有修改当前 Desktop profile 或重启应用。
 
 ## 开发
 

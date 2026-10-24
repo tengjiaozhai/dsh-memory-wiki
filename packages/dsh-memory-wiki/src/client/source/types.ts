@@ -23,6 +23,7 @@ import type {
 } from '../../core/types.js'
 import type {
   ClearResult,
+  CaptureView,
   DraftResult,
   DraftSelection,
   DraftState,
@@ -85,6 +86,7 @@ export interface MemoryWikiView {
   draft?: DraftState
   prepared?: EvidenceSnapshot
   currentTurn?: TurnView
+  capture?: CaptureView
   skippedReason?: string
   error?: RemoteError
 }

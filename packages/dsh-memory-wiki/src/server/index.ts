@@ -25,6 +25,9 @@ import type {
   SessionView,
 } from '../shared/contracts.js'
 import { MemoryWikiAdapter } from './dsh-adapter.js'
+import { createHostCapture } from './capture/host.js'
+import type { ExperienceCapture } from './capture/experience.js'
+import type { CaptureView } from '../shared/contracts.js'
 
 /**
  * Host message-source vocabulary: declares this plugin's producer kind so
@@ -55,6 +58,11 @@ export const Config = z
     enabled: z.boolean().default(true),
     wikiRoot: z.string().default(''),
     budgetChars: z.union([z.const(4000), z.const(8000)]).default(4000),
+    capture: z.object({
+      enabled: z.boolean().default(false),
+      judgeModel: z.string().default('jev-1.14.0'),
+      skillPath: z.string().default(''),
+    }).default({ enabled: false, judgeModel: 'jev-1.14.0', skillPath: '' }),
   })
   .default({ enabled: true, wikiRoot: '', budgetChars: 4000 })
 
@@ -72,6 +80,8 @@ export default class MemoryWikiService extends TypertRemoteService {
   static Config = Config
 
   readonly adapter: MemoryWikiAdapter
+  private capture?: ExperienceCapture
+  private captureFailure?: CaptureView
 
   resolved: { enabled: boolean, wikiRoot: string, budgetChars: 4000 | 8000 }
 
@@ -90,6 +100,22 @@ export default class MemoryWikiService extends TypertRemoteService {
     ctx.effect(() => this.adapter.installSystemSection())
     ctx.on('agent/pre-step', (payload: any, next: () => Promise<any>) => this.adapter.preStep(payload, next))
     ctx.on('session/event', (session: any, event: any) => this.adapter.observe(session, event))
+    if (raw?.capture?.enabled === true && this.resolved.enabled && this.resolved.wikiRoot) {
+      ctx.inject(['llm', 'sessionQuery'], (captureContext: any) => {
+        try {
+          this.capture = createHostCapture(captureContext, this.resolved.wikiRoot, {
+            enabled: true, judgeModel: raw.capture.judgeModel ?? 'jev-1.14.0', skillPath: raw.capture.skillPath ?? '',
+          }, { publishing: active => this.adapter.setPublishing(active), published: () => this.adapter.refreshCorpus() })
+          const capture = this.capture
+          captureContext.on('session/event', (session: any, event: any) => capture.observe(session, event))
+          captureContext.effect(() => async () => { await capture.dispose(); if (this.capture === capture) this.capture = undefined })
+          void capture.recover().catch((error: Error) => captureContext.logger?.warn?.(error.message))
+        }
+        catch (error) {
+          this.captureFailure = { jobId: 'configuration', phase: 'failed', reason: error instanceof Error ? error.message : '经验采集初始化失败', pages: [], updatedAt: new Date().toISOString() }
+        }
+      })
+    }
   }
 
   /**
@@ -99,7 +125,10 @@ export default class MemoryWikiService extends TypertRemoteService {
    */
   @Remote('view')
   async getView(input: GetViewInput): Promise<SessionView> {
-    return this.adapter.getView(input)
+    const view = await this.adapter.getView(input)
+    if (view.error) return view
+    const capture = this.capture?.getCapture(input.sessionId) ?? this.captureFailure
+    return capture ? { ...view, capture } : view
   }
 
   /**

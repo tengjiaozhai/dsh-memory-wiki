@@ -112,6 +112,7 @@ export function createRemoteSource(client: RemoteClient | undefined, reason: str
         draft: view.draft,
         prepared: view.prepared,
         currentTurn: view.currentTurn,
+        capture: view.capture,
         skippedReason: view.skippedReason,
         error: view.error,
       }

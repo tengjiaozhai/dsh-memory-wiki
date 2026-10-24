@@ -90,16 +90,23 @@ const emitTypert = {
 }
 
 export default defineConfig([
-  {
-    entry: { 'server/index': 'src/server/index.ts', 'shared/contracts': 'src/shared/contracts.ts' },
+  ...[
+    { 'server/index': 'src/server/index.ts' },
+    { 'server/capture': 'src/server/capture.ts' },
+    { 'shared/contracts': 'src/shared/contracts.ts' },
+  ].map(entry => ({
+    // Build each server entry independently: the published files allowlist
+    // includes lib/server, not shared chunks placed at the lib root.
+    entry,
     outDir: 'lib',
-    format: 'esm',
-    dts: false,
+    format: 'esm' as const,
+    outputOptions: { chunkFileNames: 'server/[name]-[hash].js' },
+    dts: 'shared/contracts' in entry,
     clean: false,
     outExtensions: () => ({ js: '.js' }),
     external: [/^@deepseek-ai\//, /^node:/, /^zod$/],
-    plugins: [lowerDecorators, emitTypert],
-  },
+    plugins: [lowerDecorators, ...('server/index' in entry ? [emitTypert] : [])],
+  })),
   {
     // Client half. react / react-dom / jsx-runtime stay external: the host seeds
     // them in PLATFORM_MODULES and hands them to the factory as require('react'),

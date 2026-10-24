@@ -8,3 +8,6 @@ overrides:
   # 导致同一进程里两份 zod。strict codec 靠 z.ZodType 的 _def 校验，
   # 跨实例最容易出现「看着一样、校验不认」，因此锁死到宿主同版。
   zod: 4.4.3
+
+minimumReleaseAgeExclude:
+  - '@deepseek-ai/dsh-typert-generator@0.2.1-rc.3'

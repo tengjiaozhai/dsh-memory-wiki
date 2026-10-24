@@ -225,7 +225,7 @@ function CandidateList(props) {
 	});
 }
 //#endregion
-//#region ../../node_modules/.pnpm/classcat@5.0.5/node_modules/classcat/index.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/classcat@5.0.5/node_modules/classcat/index.js
 function cc(names) {
 	if (typeof names === "string" || typeof names === "number") return "" + names;
 	let out = "";
@@ -235,7 +235,7 @@ function cc(names) {
 	return out;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-dispatch@3.0.1/node_modules/d3-dispatch/src/dispatch.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-dispatch@3.0.1/node_modules/d3-dispatch/src/dispatch.js
 var noop = { value: () => {} };
 function dispatch() {
 	for (var i = 0, n = arguments.length, _ = {}, t; i < n; ++i) {
@@ -308,7 +308,7 @@ var namespaces_default = {
 	xmlns: "http://www.w3.org/2000/xmlns/"
 };
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/namespace.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/namespace.js
 function namespace_default(name) {
 	var prefix = name += "", i = prefix.indexOf(":");
 	if (i >= 0 && (prefix = name.slice(0, i)) !== "xmlns") name = name.slice(i + 1);
@@ -318,7 +318,7 @@ function namespace_default(name) {
 	} : name;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/creator.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/creator.js
 function creatorInherit(name) {
 	return function() {
 		var document = this.ownerDocument, uri = this.namespaceURI;
@@ -335,7 +335,7 @@ function creator_default(name) {
 	return (fullname.local ? creatorFixed : creatorInherit)(fullname);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selector.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selector.js
 function none() {}
 function selector_default(selector) {
 	return selector == null ? none : function() {
@@ -343,7 +343,7 @@ function selector_default(selector) {
 	};
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/select.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/select.js
 function select_default$2(select) {
 	if (typeof select !== "function") select = selector_default(select);
 	for (var groups = this._groups, m = groups.length, subgroups = new Array(m), j = 0; j < m; ++j) for (var group = groups[j], n = group.length, subgroup = subgroups[j] = new Array(n), node, subnode, i = 0; i < n; ++i) if ((node = group[i]) && (subnode = select.call(node, node.__data__, i, group))) {
@@ -353,12 +353,12 @@ function select_default$2(select) {
 	return new Selection$1(subgroups, this._parents);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/array.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/array.js
 function array(x) {
 	return x == null ? [] : Array.isArray(x) ? x : Array.from(x);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selectorAll.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selectorAll.js
 function empty() {
 	return [];
 }
@@ -368,7 +368,7 @@ function selectorAll_default(selector) {
 	};
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/selectAll.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/selectAll.js
 function arrayAll(select) {
 	return function() {
 		return array(select.apply(this, arguments));
@@ -384,7 +384,7 @@ function selectAll_default$1(select) {
 	return new Selection$1(subgroups, parents);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/matcher.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/matcher.js
 function matcher_default(selector) {
 	return function() {
 		return this.matches(selector);
@@ -396,7 +396,7 @@ function childMatcher(selector) {
 	};
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/selectChild.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/selectChild.js
 var find = Array.prototype.find;
 function childFind(match) {
 	return function() {
@@ -410,7 +410,7 @@ function selectChild_default(match) {
 	return this.select(match == null ? childFirst : childFind(typeof match === "function" ? match : childMatcher(match)));
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/selectChildren.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/selectChildren.js
 var filter = Array.prototype.filter;
 function children() {
 	return Array.from(this.children);
@@ -424,19 +424,19 @@ function selectChildren_default(match) {
 	return this.selectAll(match == null ? children : childrenFilter(typeof match === "function" ? match : childMatcher(match)));
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/filter.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/filter.js
 function filter_default$1(match) {
 	if (typeof match !== "function") match = matcher_default(match);
 	for (var groups = this._groups, m = groups.length, subgroups = new Array(m), j = 0; j < m; ++j) for (var group = groups[j], n = group.length, subgroup = subgroups[j] = [], node, i = 0; i < n; ++i) if ((node = group[i]) && match.call(node, node.__data__, i, group)) subgroup.push(node);
 	return new Selection$1(subgroups, this._parents);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/sparse.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/sparse.js
 function sparse_default(update) {
 	return new Array(update.length);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/enter.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/enter.js
 function enter_default() {
 	return new Selection$1(this._enter || this._groups.map(sparse_default), this._parents);
 }
@@ -463,14 +463,14 @@ EnterNode.prototype = {
 	}
 };
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/constant.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/constant.js
 function constant_default$3(x) {
 	return function() {
 		return x;
 	};
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/data.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/data.js
 function bindIndex(parent, group, enter, update, exit, data) {
 	var i = 0, node, groupLength = group.length, dataLength = data.length;
 	for (; i < dataLength; ++i) if (node = group[i]) {
@@ -521,12 +521,12 @@ function arraylike(data) {
 	return typeof data === "object" && "length" in data ? data : Array.from(data);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/exit.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/exit.js
 function exit_default() {
 	return new Selection$1(this._exit || this._groups.map(sparse_default), this._parents);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/join.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/join.js
 function join_default(onenter, onupdate, onexit) {
 	var enter = this.enter(), update = this, exit = this.exit();
 	if (typeof onenter === "function") {
@@ -542,7 +542,7 @@ function join_default(onenter, onupdate, onexit) {
 	return enter && update ? enter.merge(update).order() : update;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/merge.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/merge.js
 function merge_default$1(context) {
 	var selection = context.selection ? context.selection() : context;
 	for (var groups0 = this._groups, groups1 = selection._groups, m0 = groups0.length, m1 = groups1.length, m = Math.min(m0, m1), merges = new Array(m0), j = 0; j < m; ++j) for (var group0 = groups0[j], group1 = groups1[j], n = group0.length, merge = merges[j] = new Array(n), node, i = 0; i < n; ++i) if (node = group0[i] || group1[i]) merge[i] = node;
@@ -550,7 +550,7 @@ function merge_default$1(context) {
 	return new Selection$1(merges, this._parents);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/order.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/order.js
 function order_default() {
 	for (var groups = this._groups, j = -1, m = groups.length; ++j < m;) for (var group = groups[j], i = group.length - 1, next = group[i], node; --i >= 0;) if (node = group[i]) {
 		if (next && node.compareDocumentPosition(next) ^ 4) next.parentNode.insertBefore(node, next);
@@ -559,7 +559,7 @@ function order_default() {
 	return this;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/sort.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/sort.js
 function sort_default(compare) {
 	if (!compare) compare = ascending;
 	function compareNode(a, b) {
@@ -575,7 +575,7 @@ function ascending(a, b) {
 	return a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/call.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/call.js
 function call_default() {
 	var callback = arguments[0];
 	arguments[0] = this;
@@ -583,12 +583,12 @@ function call_default() {
 	return this;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/nodes.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/nodes.js
 function nodes_default() {
 	return Array.from(this);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/node.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/node.js
 function node_default() {
 	for (var groups = this._groups, j = 0, m = groups.length; j < m; ++j) for (var group = groups[j], i = 0, n = group.length; i < n; ++i) {
 		var node = group[i];
@@ -597,25 +597,25 @@ function node_default() {
 	return null;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/size.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/size.js
 function size_default() {
 	let size = 0;
 	for (const node of this) ++size;
 	return size;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/empty.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/empty.js
 function empty_default() {
 	return !this.node();
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/each.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/each.js
 function each_default(callback) {
 	for (var groups = this._groups, j = 0, m = groups.length; j < m; ++j) for (var group = groups[j], i = 0, n = group.length, node; i < n; ++i) if (node = group[i]) callback.call(node, node.__data__, i, group);
 	return this;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/attr.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/attr.js
 function attrRemove$1(name) {
 	return function() {
 		this.removeAttribute(name);
@@ -659,12 +659,12 @@ function attr_default$1(name, value) {
 	return this.each((value == null ? fullname.local ? attrRemoveNS$1 : attrRemove$1 : typeof value === "function" ? fullname.local ? attrFunctionNS$1 : attrFunction$1 : fullname.local ? attrConstantNS$1 : attrConstant$1)(fullname, value));
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/window.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/window.js
 function window_default(node) {
 	return node.ownerDocument && node.ownerDocument.defaultView || node.document && node || node.defaultView;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/style.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/style.js
 function styleRemove$1(name) {
 	return function() {
 		this.style.removeProperty(name);
@@ -689,7 +689,7 @@ function styleValue(node, name) {
 	return node.style.getPropertyValue(name) || window_default(node).getComputedStyle(node, null).getPropertyValue(name);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/property.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/property.js
 function propertyRemove(name) {
 	return function() {
 		delete this[name];
@@ -711,7 +711,7 @@ function property_default(name, value) {
 	return arguments.length > 1 ? this.each((value == null ? propertyRemove : typeof value === "function" ? propertyFunction : propertyConstant)(name, value)) : this.node()[name];
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/classed.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/classed.js
 function classArray(string) {
 	return string.trim().split(/^|\s+/);
 }
@@ -773,7 +773,7 @@ function classed_default(name, value) {
 	return this.each((typeof value === "function" ? classedFunction : value ? classedTrue : classedFalse)(names, value));
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/text.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/text.js
 function textRemove() {
 	this.textContent = "";
 }
@@ -792,7 +792,7 @@ function text_default$1(value) {
 	return arguments.length ? this.each(value == null ? textRemove : (typeof value === "function" ? textFunction$1 : textConstant$1)(value)) : this.node().textContent;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/html.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/html.js
 function htmlRemove() {
 	this.innerHTML = "";
 }
@@ -811,7 +811,7 @@ function html_default(value) {
 	return arguments.length ? this.each(value == null ? htmlRemove : (typeof value === "function" ? htmlFunction : htmlConstant)(value)) : this.node().innerHTML;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/raise.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/raise.js
 function raise() {
 	if (this.nextSibling) this.parentNode.appendChild(this);
 }
@@ -819,7 +819,7 @@ function raise_default() {
 	return this.each(raise);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/lower.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/lower.js
 function lower() {
 	if (this.previousSibling) this.parentNode.insertBefore(this, this.parentNode.firstChild);
 }
@@ -827,7 +827,7 @@ function lower_default() {
 	return this.each(lower);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/append.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/append.js
 function append_default(name) {
 	var create = typeof name === "function" ? name : creator_default(name);
 	return this.select(function() {
@@ -835,7 +835,7 @@ function append_default(name) {
 	});
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/insert.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/insert.js
 function constantNull() {
 	return null;
 }
@@ -846,7 +846,7 @@ function insert_default(name, before) {
 	});
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/remove.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/remove.js
 function remove() {
 	var parent = this.parentNode;
 	if (parent) parent.removeChild(this);
@@ -855,7 +855,7 @@ function remove_default$1() {
 	return this.each(remove);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/clone.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/clone.js
 function selection_cloneShallow() {
 	var clone = this.cloneNode(false), parent = this.parentNode;
 	return parent ? parent.insertBefore(clone, this.nextSibling) : clone;
@@ -868,12 +868,12 @@ function clone_default(deep) {
 	return this.select(deep ? selection_cloneDeep : selection_cloneShallow);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/datum.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/datum.js
 function datum_default(value) {
 	return arguments.length ? this.property("__data__", value) : this.node().__data__;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/on.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/on.js
 function contextListener(listener) {
 	return function(event) {
 		listener.call(this, event, this.__data__);
@@ -936,7 +936,7 @@ function on_default$1(typename, value, options) {
 	return this;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/dispatch.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/dispatch.js
 function dispatchEvent(node, type, params) {
 	var window = window_default(node), event = window.CustomEvent;
 	if (typeof event === "function") event = new event(type, params);
@@ -961,12 +961,12 @@ function dispatch_default(type, params) {
 	return this.each((typeof params === "function" ? dispatchFunction : dispatchConstant)(type, params));
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/iterator.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/iterator.js
 function* iterator_default() {
 	for (var groups = this._groups, j = 0, m = groups.length; j < m; ++j) for (var group = groups[j], i = 0, n = group.length, node; i < n; ++i) if (node = group[i]) yield node;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/index.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/index.js
 var root = [null];
 function Selection$1(groups, parents) {
 	this._groups = groups;
@@ -1017,19 +1017,19 @@ Selection$1.prototype = selection.prototype = {
 	[Symbol.iterator]: iterator_default
 };
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/select.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/select.js
 function select_default$1(selector) {
 	return typeof selector === "string" ? new Selection$1([[document.querySelector(selector)]], [document.documentElement]) : new Selection$1([[selector]], root);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/sourceEvent.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/sourceEvent.js
 function sourceEvent_default(event) {
 	let sourceEvent;
 	while (sourceEvent = event.sourceEvent) event = sourceEvent;
 	return event;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/pointer.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/pointer.js
 function pointer_default(event, node) {
 	event = sourceEvent_default(event);
 	if (node === void 0) node = event.currentTarget;
@@ -1049,7 +1049,7 @@ function pointer_default(event, node) {
 	return [event.pageX, event.pageY];
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/noevent.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/noevent.js
 const nonpassive = { passive: false };
 const nonpassivecapture = {
 	capture: true,
@@ -1063,7 +1063,7 @@ function noevent_default$1(event) {
 	event.stopImmediatePropagation();
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/nodrag.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/nodrag.js
 function nodrag_default(view) {
 	var root = view.document.documentElement, selection = select_default$1(view).on("dragstart.drag", noevent_default$1, nonpassivecapture);
 	if ("onselectstart" in root) selection.on("selectstart.drag", noevent_default$1, nonpassivecapture);
@@ -1087,10 +1087,10 @@ function yesdrag(view, noclick) {
 	}
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/constant.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/constant.js
 var constant_default$2 = (x) => () => x;
 //#endregion
-//#region ../../node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/event.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/event.js
 function DragEvent(type, { sourceEvent, subject, target, identifier, active, x, y, dx, dy, dispatch }) {
 	Object.defineProperties(this, {
 		type: {
@@ -1151,7 +1151,7 @@ DragEvent.prototype.on = function() {
 	return value === this._ ? this : value;
 };
 //#endregion
-//#region ../../node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/drag.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/drag.js
 function defaultFilter$1(event) {
 	return !event.ctrlKey && !event.button;
 }
@@ -1284,7 +1284,7 @@ function drag_default() {
 	return drag;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-color@3.1.0/node_modules/d3-color/src/define.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-color@3.1.0/node_modules/d3-color/src/define.js
 function define_default(constructor, factory, prototype) {
 	constructor.prototype = factory.prototype = prototype;
 	prototype.constructor = constructor;
@@ -1295,7 +1295,7 @@ function extend(parent, definition) {
 	return prototype;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-color@3.1.0/node_modules/d3-color/src/color.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-color@3.1.0/node_modules/d3-color/src/color.js
 function Color() {}
 var darker = .7;
 var brighter = 1 / darker;
@@ -1622,10 +1622,10 @@ function hsl2rgb(h, m1, m2) {
 	return (h < 60 ? m1 + (m2 - m1) * h / 60 : h < 180 ? m2 : h < 240 ? m1 + (m2 - m1) * (240 - h) / 60 : m1) * 255;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/constant.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/constant.js
 var constant_default$1 = (x) => () => x;
 //#endregion
-//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/color.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/color.js
 function linear(a, d) {
 	return function(t) {
 		return a + t * d;
@@ -1646,7 +1646,7 @@ function nogamma(a, b) {
 	return d ? linear(a, d) : constant_default$1(isNaN(a) ? b : a);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/rgb.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/rgb.js
 var rgb_default = (function rgbGamma(y) {
 	var color = gamma(y);
 	function rgb$1(start, end) {
@@ -1663,7 +1663,7 @@ var rgb_default = (function rgbGamma(y) {
 	return rgb$1;
 })(1);
 //#endregion
-//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/numberArray.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/numberArray.js
 function numberArray_default(a, b) {
 	if (!b) b = [];
 	var n = a ? Math.min(b.length, a.length) : 0, c = b.slice(), i;
@@ -1676,7 +1676,7 @@ function isNumberArray(x) {
 	return ArrayBuffer.isView(x) && !(x instanceof DataView);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/array.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/array.js
 function genericArray(a, b) {
 	var nb = b ? b.length : 0, na = a ? Math.min(nb, a.length) : 0, x = new Array(na), c = new Array(nb), i = 0;
 	for (; i < na; ++i) x[i] = value_default(a[i], b[i]);
@@ -1687,7 +1687,7 @@ function genericArray(a, b) {
 	};
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/date.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/date.js
 function date_default(a, b) {
 	var d = /* @__PURE__ */ new Date();
 	return a = +a, b = +b, function(t) {
@@ -1695,14 +1695,14 @@ function date_default(a, b) {
 	};
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/number.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/number.js
 function number_default(a, b) {
 	return a = +a, b = +b, function(t) {
 		return a * (1 - t) + b * t;
 	};
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/object.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/object.js
 function object_default(a, b) {
 	var i = {}, c = {}, k;
 	if (a === null || typeof a !== "object") a = {};
@@ -1715,7 +1715,7 @@ function object_default(a, b) {
 	};
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/string.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/string.js
 var reA = /[-+]?(?:\d+\.?\d*|\.?\d+)(?:[eE][-+]?\d+)?/g;
 var reB = new RegExp(reA.source, "g");
 function zero(b) {
@@ -1760,13 +1760,13 @@ function string_default(a, b) {
 	});
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/value.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/value.js
 function value_default(a, b) {
 	var t = typeof b, c;
 	return b == null || t === "boolean" ? constant_default$1(b) : (t === "number" ? number_default : t === "string" ? (c = color(b)) ? (b = c, rgb_default) : string_default : b instanceof color ? rgb_default : b instanceof Date ? date_default : isNumberArray(b) ? numberArray_default : Array.isArray(b) ? genericArray : typeof b.valueOf !== "function" && typeof b.toString !== "function" || isNaN(b) ? object_default : number_default)(a, b);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/transform/decompose.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/transform/decompose.js
 var degrees = 180 / Math.PI;
 var identity$2 = {
 	translateX: 0,
@@ -1792,7 +1792,7 @@ function decompose_default(a, b, c, d, e, f) {
 	};
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/transform/parse.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/transform/parse.js
 var svgNode;
 function parseCss(value) {
 	const m = new (typeof DOMMatrix === "function" ? DOMMatrix : WebKitCSSMatrix)(value + "");
@@ -1807,7 +1807,7 @@ function parseSvg(value) {
 	return decompose_default(value.a, value.b, value.c, value.d, value.e, value.f);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/transform/index.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/transform/index.js
 function interpolateTransform(parse, pxComma, pxParen, degParen) {
 	function pop(s) {
 		return s.length ? s.pop() + " " : "";
@@ -1871,7 +1871,7 @@ function interpolateTransform(parse, pxComma, pxParen, degParen) {
 var interpolateTransformCss = interpolateTransform(parseCss, "px, ", "px)", "deg)");
 var interpolateTransformSvg = interpolateTransform(parseSvg, ", ", ")", ")");
 //#endregion
-//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/zoom.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/zoom.js
 var epsilon2 = 1e-12;
 function cosh(x) {
 	return ((x = Math.exp(x)) + 1 / x) / 2;
@@ -1916,7 +1916,7 @@ var zoom_default$1 = (function zoomRho(rho, rho2, rho4) {
 	return zoom;
 })(Math.SQRT2, 2, 4);
 //#endregion
-//#region ../../node_modules/.pnpm/d3-timer@3.0.1/node_modules/d3-timer/src/timer.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-timer@3.0.1/node_modules/d3-timer/src/timer.js
 var frame = 0;
 var timeout = 0;
 var interval = 0;
@@ -2015,7 +2015,7 @@ function sleep(time) {
 	}
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-timer@3.0.1/node_modules/d3-timer/src/timeout.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-timer@3.0.1/node_modules/d3-timer/src/timeout.js
 function timeout_default(callback, delay, time) {
 	var t = new Timer();
 	delay = delay == null ? 0 : +delay;
@@ -2026,7 +2026,7 @@ function timeout_default(callback, delay, time) {
 	return t;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/schedule.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/schedule.js
 var emptyOn = dispatch("start", "end", "cancel", "interrupt");
 var emptyTween = [];
 function schedule_default(node, name, id, index, group, timing) {
@@ -2122,7 +2122,7 @@ function create(node, id, self) {
 	}
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/interrupt.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/interrupt.js
 function interrupt_default$1(node, name) {
 	var schedules = node.__transition, schedule, active, empty = true, i;
 	if (!schedules) return;
@@ -2141,14 +2141,14 @@ function interrupt_default$1(node, name) {
 	if (empty) delete node.__transition;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/selection/interrupt.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/selection/interrupt.js
 function interrupt_default(name) {
 	return this.each(function() {
 		interrupt_default$1(this, name);
 	});
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/tween.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/tween.js
 function tweenRemove(id, name) {
 	var tween0, tween1;
 	return function() {
@@ -2204,13 +2204,13 @@ function tweenValue(transition, name, value) {
 	};
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/interpolate.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/interpolate.js
 function interpolate_default(a, b) {
 	var c;
 	return (typeof b === "number" ? number_default : b instanceof color ? rgb_default : (c = color(b)) ? (b = c, rgb_default) : string_default)(a, b);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/attr.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/attr.js
 function attrRemove(name) {
 	return function() {
 		this.removeAttribute(name);
@@ -2260,7 +2260,7 @@ function attr_default(name, value) {
 	return this.attrTween(name, typeof value === "function" ? (fullname.local ? attrFunctionNS : attrFunction)(fullname, i, tweenValue(this, "attr." + name, value)) : value == null ? (fullname.local ? attrRemoveNS : attrRemove)(fullname) : (fullname.local ? attrConstantNS : attrConstant)(fullname, i, value));
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/attrTween.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/attrTween.js
 function attrInterpolate(name, i) {
 	return function(t) {
 		this.setAttribute(name, i.call(this, t));
@@ -2300,7 +2300,7 @@ function attrTween_default(name, value) {
 	return this.tween(key, (fullname.local ? attrTweenNS : attrTween)(fullname, value));
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/delay.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/delay.js
 function delayFunction(id, value) {
 	return function() {
 		init(this, id).delay = +value.apply(this, arguments);
@@ -2316,7 +2316,7 @@ function delay_default(value) {
 	return arguments.length ? this.each((typeof value === "function" ? delayFunction : delayConstant)(id, value)) : get(this.node(), id).delay;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/duration.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/duration.js
 function durationFunction(id, value) {
 	return function() {
 		set(this, id).duration = +value.apply(this, arguments);
@@ -2332,7 +2332,7 @@ function duration_default(value) {
 	return arguments.length ? this.each((typeof value === "function" ? durationFunction : durationConstant)(id, value)) : get(this.node(), id).duration;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/ease.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/ease.js
 function easeConstant(id, value) {
 	if (typeof value !== "function") throw new Error();
 	return function() {
@@ -2344,7 +2344,7 @@ function ease_default(value) {
 	return arguments.length ? this.each(easeConstant(id, value)) : get(this.node(), id).ease;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/easeVarying.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/easeVarying.js
 function easeVarying(id, value) {
 	return function() {
 		var v = value.apply(this, arguments);
@@ -2357,14 +2357,14 @@ function easeVarying_default(value) {
 	return this.each(easeVarying(this._id, value));
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/filter.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/filter.js
 function filter_default(match) {
 	if (typeof match !== "function") match = matcher_default(match);
 	for (var groups = this._groups, m = groups.length, subgroups = new Array(m), j = 0; j < m; ++j) for (var group = groups[j], n = group.length, subgroup = subgroups[j] = [], node, i = 0; i < n; ++i) if ((node = group[i]) && match.call(node, node.__data__, i, group)) subgroup.push(node);
 	return new Transition(subgroups, this._parents, this._name, this._id);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/merge.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/merge.js
 function merge_default(transition) {
 	if (transition._id !== this._id) throw new Error();
 	for (var groups0 = this._groups, groups1 = transition._groups, m0 = groups0.length, m1 = groups1.length, m = Math.min(m0, m1), merges = new Array(m0), j = 0; j < m; ++j) for (var group0 = groups0[j], group1 = groups1[j], n = group0.length, merge = merges[j] = new Array(n), node, i = 0; i < n; ++i) if (node = group0[i] || group1[i]) merge[i] = node;
@@ -2372,7 +2372,7 @@ function merge_default(transition) {
 	return new Transition(merges, this._parents, this._name, this._id);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/on.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/on.js
 function start(name) {
 	return (name + "").trim().split(/^|\s+/).every(function(t) {
 		var i = t.indexOf(".");
@@ -2393,7 +2393,7 @@ function on_default(name, listener) {
 	return arguments.length < 2 ? get(this.node(), id).on.on(name) : this.each(onFunction(id, name, listener));
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/remove.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/remove.js
 function removeFunction(id) {
 	return function() {
 		var parent = this.parentNode;
@@ -2405,7 +2405,7 @@ function remove_default() {
 	return this.on("end.remove", removeFunction(this._id));
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/select.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/select.js
 function select_default(select) {
 	var name = this._name, id = this._id;
 	if (typeof select !== "function") select = selector_default(select);
@@ -2417,7 +2417,7 @@ function select_default(select) {
 	return new Transition(subgroups, this._parents, name, id);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/selectAll.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/selectAll.js
 function selectAll_default(select) {
 	var name = this._name, id = this._id;
 	if (typeof select !== "function") select = selectorAll_default(select);
@@ -2429,13 +2429,13 @@ function selectAll_default(select) {
 	return new Transition(subgroups, parents, name, id);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/selection.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/selection.js
 var Selection = selection.prototype.constructor;
 function selection_default() {
 	return new Selection(this._groups, this._parents);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/style.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/style.js
 function styleNull(name, interpolate) {
 	var string00, string10, interpolate0;
 	return function() {
@@ -2476,7 +2476,7 @@ function style_default(name, value, priority) {
 	return value == null ? this.styleTween(name, styleNull(name, i)).on("end.style." + name, styleRemove(name)) : typeof value === "function" ? this.styleTween(name, styleFunction(name, i, tweenValue(this, "style." + name, value))).each(styleMaybeRemove(this._id, name)) : this.styleTween(name, styleConstant(name, i, value), priority).on("end.style." + name, null);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/styleTween.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/styleTween.js
 function styleInterpolate(name, i, priority) {
 	return function(t) {
 		this.style.setProperty(name, i.call(this, t), priority);
@@ -2500,7 +2500,7 @@ function styleTween_default(name, value, priority) {
 	return this.tween(key, styleTween(name, value, priority == null ? "" : priority));
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/text.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/text.js
 function textConstant(value) {
 	return function() {
 		this.textContent = value;
@@ -2516,7 +2516,7 @@ function text_default(value) {
 	return this.tween("text", typeof value === "function" ? textFunction(tweenValue(this, "text", value)) : textConstant(value == null ? "" : value + ""));
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/textTween.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/textTween.js
 function textInterpolate(i) {
 	return function(t) {
 		this.textContent = i.call(this, t);
@@ -2540,7 +2540,7 @@ function textTween_default(value) {
 	return this.tween(key, textTween(value));
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/transition.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/transition.js
 function transition_default$1() {
 	var name = this._name, id0 = this._id, id1 = newId();
 	for (var groups = this._groups, m = groups.length, j = 0; j < m; ++j) for (var group = groups[j], n = group.length, node, i = 0; i < n; ++i) if (node = group[i]) {
@@ -2555,7 +2555,7 @@ function transition_default$1() {
 	return new Transition(groups, this._parents, name, id1);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/end.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/end.js
 function end_default() {
 	var on0, on1, that = this, id = that._id, size = that.size();
 	return new Promise(function(resolve, reject) {
@@ -2576,7 +2576,7 @@ function end_default() {
 	});
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/index.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/index.js
 var id = 0;
 function Transition(groups, parents, name, id) {
 	this._groups = groups;
@@ -2624,12 +2624,12 @@ Transition.prototype = transition.prototype = {
 	[Symbol.iterator]: selection_prototype[Symbol.iterator]
 };
 //#endregion
-//#region ../../node_modules/.pnpm/d3-ease@3.0.1/node_modules/d3-ease/src/cubic.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-ease@3.0.1/node_modules/d3-ease/src/cubic.js
 function cubicInOut(t) {
 	return ((t *= 2) <= 1 ? t * t * t : (t -= 2) * t * t + 2) / 2;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/selection/transition.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/selection/transition.js
 var defaultTiming = {
 	time: null,
 	delay: 0,
@@ -2649,14 +2649,14 @@ function transition_default(name) {
 	return new Transition(groups, this._parents, name, id);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/selection/index.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/selection/index.js
 selection.prototype.interrupt = interrupt_default;
 selection.prototype.transition = transition_default;
 //#endregion
-//#region ../../node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/constant.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/constant.js
 var constant_default = (x) => () => x;
 //#endregion
-//#region ../../node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/event.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/event.js
 function ZoomEvent(type, { sourceEvent, target, transform, dispatch }) {
 	Object.defineProperties(this, {
 		type: {
@@ -2683,7 +2683,7 @@ function ZoomEvent(type, { sourceEvent, target, transform, dispatch }) {
 	});
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/transform.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/transform.js
 function Transform(k, x, y) {
 	this.k = k;
 	this.x = x;
@@ -2732,7 +2732,7 @@ function transform(node) {
 	return node.__zoom;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/noevent.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/noevent.js
 function nopropagation(event) {
 	event.stopImmediatePropagation();
 }
@@ -2741,7 +2741,7 @@ function noevent_default(event) {
 	event.stopImmediatePropagation();
 }
 //#endregion
-//#region ../../node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/zoom.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/zoom.js
 function defaultFilter(event) {
 	return (!event.ctrlKey || event.type === "wheel") && !event.button;
 }
@@ -3040,7 +3040,7 @@ function zoom_default() {
 	return zoom;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/@xyflow+system@0.0.83/node_modules/@xyflow/system/dist/esm/index.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/@xyflow+system@0.0.83/node_modules/@xyflow/system/dist/esm/index.js
 const errorMessages = {
 	error001: (lib = "react") => `Seems like you have not used ${lib === "svelte" ? "SvelteFlowProvider" : "ReactFlowProvider"} as an ancestor. Help: https://${lib}flow.dev/error#001`,
 	error002: () => "It looks like you've created a new nodeTypes or edgeTypes object. If this wasn't on purpose please define the nodeTypes/edgeTypes outside of the component or memoize them.",
@@ -5874,7 +5874,7 @@ function XYResizer({ domNode, nodeId, getStoreItems, onChange, onEnd }) {
 	};
 }
 //#endregion
-//#region ../../node_modules/.pnpm/use-sync-external-store@1.7.0_react@18.3.1/node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.production.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/use-sync-external-store@1.7.0_react@18.3.1/node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.production.js
 /**
 * @license React
 * use-sync-external-store-shim.production.js
@@ -5934,12 +5934,12 @@ var require_use_sync_external_store_shim_production = /* @__PURE__ */ __commonJS
 	exports.useSyncExternalStore = void 0 !== React.useSyncExternalStore ? React.useSyncExternalStore : shim;
 }));
 //#endregion
-//#region ../../node_modules/.pnpm/use-sync-external-store@1.7.0_react@18.3.1/node_modules/use-sync-external-store/shim/index.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/use-sync-external-store@1.7.0_react@18.3.1/node_modules/use-sync-external-store/shim/index.js
 var require_shim = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	module.exports = require_use_sync_external_store_shim_production();
 }));
 //#endregion
-//#region ../../node_modules/.pnpm/use-sync-external-store@1.7.0_react@18.3.1/node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.production.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/use-sync-external-store@1.7.0_react@18.3.1/node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.production.js
 /**
 * @license React
 * use-sync-external-store-shim/with-selector.production.js
@@ -6011,7 +6011,7 @@ var require_with_selector_production = /* @__PURE__ */ __commonJSMin(((exports) 
 	};
 }));
 //#endregion
-//#region ../../node_modules/.pnpm/zustand@4.5.7_@types+react@18.3.31_react@18.3.1/node_modules/zustand/esm/vanilla.mjs
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/zustand@4.5.7_@types+react@18.3.31_react@18.3.1/node_modules/zustand/esm/vanilla.mjs
 var import_with_selector = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((exports, module) => {
 	module.exports = require_with_selector_production();
 })))(), 1);
@@ -6048,7 +6048,7 @@ const createStoreImpl = (createState) => {
 };
 const createStore$1 = (createState) => createState ? createStoreImpl(createState) : createStoreImpl;
 //#endregion
-//#region ../../node_modules/.pnpm/zustand@4.5.7_@types+react@18.3.31_react@18.3.1/node_modules/zustand/esm/traditional.mjs
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/zustand@4.5.7_@types+react@18.3.31_react@18.3.1/node_modules/zustand/esm/traditional.mjs
 const { useDebugValue } = react.default;
 const { useSyncExternalStoreWithSelector } = import_with_selector.default;
 const identity = (arg) => arg;
@@ -6065,7 +6065,7 @@ const createWithEqualityFnImpl = (createState, defaultEqualityFn) => {
 };
 const createWithEqualityFn = (createState, defaultEqualityFn) => createState ? createWithEqualityFnImpl(createState, defaultEqualityFn) : createWithEqualityFnImpl;
 //#endregion
-//#region ../../node_modules/.pnpm/zustand@4.5.7_@types+react@18.3.31_react@18.3.1/node_modules/zustand/esm/shallow.mjs
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/zustand@4.5.7_@types+react@18.3.31_react@18.3.1/node_modules/zustand/esm/shallow.mjs
 function shallow$1(objA, objB) {
 	if (Object.is(objA, objB)) return true;
 	if (typeof objA !== "object" || objA === null || typeof objB !== "object" || objB === null) return false;
@@ -6085,7 +6085,7 @@ function shallow$1(objA, objB) {
 	return true;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/@xyflow+react@12.12.0_@types+react-dom@18.3.7_@types+react@18.3.31__@types+react@18.3.3_3531a46d79ac20e3b4338a36ca1ca7b8/node_modules/@xyflow/react/dist/esm/index.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/@xyflow+react@12.12.0_@types+react-dom@18.3.7_@types+react@18.3.31__@types+react@18.3.3_3531a46d79ac20e3b4338a36ca1ca7b8/node_modules/@xyflow/react/dist/esm/index.js
 const StoreContext = (0, react.createContext)(null);
 const Provider$1 = StoreContext.Provider;
 const zustandErrorMessage = errorMessages["error001"]("react");
@@ -11677,6 +11677,7 @@ function createRemoteSource(client, reason) {
 				draft: view.draft,
 				prepared: view.prepared,
 				currentTurn: view.currentTurn,
+				capture: view.capture,
 				skippedReason: view.skippedReason,
 				error: view.error
 			};
@@ -12574,6 +12575,63 @@ function RemotePanel(props) {
 	});
 }
 //#endregion
+//#region src/client/CaptureStatus.tsx
+const LABEL = {
+	queued: "等待判断",
+	judging: "正在判断",
+	preparing: "正在整理",
+	verifying: "正在核验",
+	publishing: "正在摄入",
+	ingested: "已沉淀",
+	skipped: "无需沉淀",
+	deferred: "待补证据",
+	failed: "暂未完成",
+	needs_attention: "需要处理"
+};
+function CaptureStatus({ capture, onOpen }) {
+	return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("section", {
+		className: "memory-wiki-panel__context-note",
+		"aria-live": "polite",
+		"data-testid": "mw-capture-status",
+		children: [
+			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("h4", { children: ["经验沉淀 · ", LABEL[capture.phase]] }),
+			/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: capture.reason }),
+			capture.phase === "ingested" && capture.pages.filter((page) => !page.startsWith("wiki/sources/")).map((page) => /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+				type: "button",
+				onClick: () => onOpen(page),
+				children: page.split("/").at(-1)
+			}, page)),
+			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("details", { children: [
+				/* @__PURE__ */ (0, react_jsx_runtime.jsx)("summary", { children: "证据与改动记录" }),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: capture.jobId }),
+				capture.limitations?.map((limit) => /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: limit }, limit)),
+				capture.changes?.map((change) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: [
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("code", { children: change.path }),
+					" · ",
+					change.beforeHash ? "更新" : "新增"
+				] }, change.path)),
+				capture.evidence?.map((event) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("details", { children: [
+					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("summary", { children: [
+						"seq ",
+						event.seq,
+						" · ",
+						event.kind
+					] }),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("pre", {
+						style: {
+							whiteSpace: "pre-wrap",
+							overflowWrap: "anywhere"
+						},
+						children: event.text
+					}),
+					event.truncated && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "此处仅展示前 1,000 字符，完整证据保存在本地任务记录。" })
+				] }, event.seq)),
+				capture.evidenceTruncated && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "此处仅展示前 12 条事件。" })
+			] })
+		]
+	});
+}
+//#endregion
 //#region src/client/MemoryPanel.tsx
 function useSessionKey(uiSession) {
 	const binding = uiSession?.adapter?.current;
@@ -12605,6 +12663,7 @@ function MemoryPanel(props) {
 	const [error, setError] = (0, react.useState)(null);
 	const [activePageId, setActivePageId] = (0, react.useState)(null);
 	const [page, setPage] = (0, react.useState)(null);
+	const [capturePage, setCapturePage] = (0, react.useState)(null);
 	const [pageError, setPageError] = (0, react.useState)(null);
 	const [lastReadAt, setLastReadAt] = (0, react.useState)(null);
 	const [readNonce, setReadNonce] = (0, react.useState)(0);
@@ -12620,6 +12679,7 @@ function MemoryPanel(props) {
 		setViewState(null);
 		setError(null);
 		setPage(null);
+		setCapturePage(null);
 		setPageError(null);
 		setActivePageId(null);
 		setLastReadAt(null);
@@ -12779,6 +12839,32 @@ function MemoryPanel(props) {
 					})
 				]
 			}),
+			view?.capture && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(CaptureStatus, {
+				capture: view.capture,
+				onOpen: (pageId) => {
+					const session = sessionKey;
+					source.readPage({
+						pageId,
+						sessionId: session
+					}).then((result) => {
+						if (sessionRef.current === session) setCapturePage(result);
+					}, (cause) => {
+						if (sessionRef.current === session) setError(String(cause));
+					});
+				}
+			}),
+			capturePage && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+				className: "memory-wiki-panel__fault",
+				children: [
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+						type: "button",
+						onClick: () => setCapturePage(null),
+						children: "关闭经验正文"
+					}),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", { children: capturePage.title }),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(MarkdownView, { source: capturePage.body })
+				]
+			}),
 			error !== null && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 				className: "memory-wiki-panel__fault",
 				"data-testid": "mw-error",
@@ -12910,7 +12996,7 @@ function createSource(mode = SOURCE_MODE, remote) {
 	return unregisteredFixtureSource("no fixture source registered; production bundles none");
 }
 //#endregion
-//#region ../../node_modules/.pnpm/@deepseek-ai+dsh-typert-protocol@0.2.1-rc.2_@deepseek-ai+cordis@4.0.5/node_modules/@deepseek-ai/dsh-typert-protocol/lib/types/remote-info.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/@deepseek-ai+dsh-typert-protocol@0.2.1-rc.3_@deepseek-ai+cordis@4.0.5/node_modules/@deepseek-ai/dsh-typert-protocol/lib/types/remote-info.js
 /** Lazy assembly of generated Remote definitions using caller-supplied Zod; no runtime imports. */
 /**
 * Retain one generated definition per endpoint without constructing parsers or projections.
@@ -13556,6 +13642,41 @@ const dsh_memory_wiki_memoryWiki_view_result$schema = () => dsh_memory_wiki_memo
 		"committedSeq": zod.z.union([zod.z.undefined(), zod.z.number()]).optional(),
 		"reInjections": zod.z.number()
 	})]).optional(),
+	"capture": zod.z.union([zod.z.undefined(), zod.z.object({
+		"jobId": zod.z.string(),
+		"phase": zod.z.union([
+			zod.z.literal("queued"),
+			zod.z.literal("judging"),
+			zod.z.literal("preparing"),
+			zod.z.literal("verifying"),
+			zod.z.literal("publishing"),
+			zod.z.literal("ingested"),
+			zod.z.literal("skipped"),
+			zod.z.literal("deferred"),
+			zod.z.literal("failed"),
+			zod.z.literal("needs_attention")
+		]),
+		"reason": zod.z.string(),
+		"pages": zod.z.array(zod.z.string()),
+		"updatedAt": zod.z.string(),
+		"evidence": zod.z.union([zod.z.undefined(), zod.z.array(zod.z.object({
+			"seq": zod.z.number(),
+			"kind": zod.z.string(),
+			"text": zod.z.string(),
+			"truncated": zod.z.boolean()
+		}))]).optional(),
+		"evidenceTruncated": zod.z.union([
+			zod.z.undefined(),
+			zod.z.literal(false),
+			zod.z.literal(true)
+		]).optional(),
+		"changes": zod.z.union([zod.z.undefined(), zod.z.array(zod.z.object({
+			"path": zod.z.string(),
+			"beforeHash": zod.z.union([zod.z.undefined(), zod.z.string()]).optional(),
+			"afterHash": zod.z.string()
+		}))]).optional(),
+		"limitations": zod.z.union([zod.z.undefined(), zod.z.array(zod.z.string())]).optional()
+	})]).optional(),
 	"skippedReason": zod.z.union([zod.z.undefined(), zod.z.string()]).optional(),
 	"error": zod.z.union([
 		zod.z.undefined(),
@@ -13821,7 +13942,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 151,
+				"line": 180,
 				"column": 9
 			}
 		},
@@ -14173,7 +14294,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 141,
+				"line": 170,
 				"column": 9
 			}
 		},
@@ -14423,7 +14544,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 121,
+				"line": 150,
 				"column": 9
 			}
 		},
@@ -14758,7 +14879,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 131,
+				"line": 160,
 				"column": 9
 			}
 		},
@@ -15052,7 +15173,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 111,
+				"line": 140,
 				"column": 9
 			}
 		},
@@ -15405,6 +15526,81 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 							],
 							"additionalProperties": true
 						},
+						"capture": {
+							"type": "object",
+							"properties": {
+								"jobId": { "type": "string" },
+								"phase": {
+									"type": "string",
+									"enum": [
+										"queued",
+										"judging",
+										"preparing",
+										"verifying",
+										"publishing",
+										"ingested",
+										"skipped",
+										"deferred",
+										"failed",
+										"needs_attention"
+									]
+								},
+								"reason": { "type": "string" },
+								"pages": {
+									"type": "array",
+									"items": { "type": "string" }
+								},
+								"updatedAt": { "type": "string" },
+								"evidence": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"seq": { "type": "number" },
+											"kind": { "type": "string" },
+											"text": { "type": "string" },
+											"truncated": { "type": "boolean" }
+										},
+										"required": [
+											"seq",
+											"kind",
+											"text",
+											"truncated"
+										],
+										"additionalProperties": true
+									}
+								},
+								"evidenceTruncated": {
+									"type": "boolean",
+									"enum": [false, true]
+								},
+								"changes": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"path": { "type": "string" },
+											"beforeHash": { "type": "string" },
+											"afterHash": { "type": "string" }
+										},
+										"required": ["path", "afterHash"],
+										"additionalProperties": true
+									}
+								},
+								"limitations": {
+									"type": "array",
+									"items": { "type": "string" }
+								}
+							},
+							"required": [
+								"jobId",
+								"phase",
+								"reason",
+								"pages",
+								"updatedAt"
+							],
+							"additionalProperties": true
+						},
 						"skippedReason": { "type": "string" },
 						"error": { "oneOf": [
 							{
@@ -15540,7 +15736,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 101,
+				"line": 127,
 				"column": 9
 			}
 		}
