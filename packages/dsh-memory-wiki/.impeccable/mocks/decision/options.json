@@ -1,0 +1,40 @@
+{
+  "title": "Memory Wiki · 图谱优先的三种布局",
+  "question": "首页均直接展示整个 Wiki。比较点开节点后的阅读方式；推荐侧边浮层，兼顾关系探索与阅读。效果图为设计预览，示例节点不代表实时知识库。",
+  "options": [
+    {
+      "id": "graph-overlay",
+      "label": "全景画布 · 侧边浮层",
+      "kicker": "THE ROLL",
+      "thesis": "整库关系图铺满主区域，选中节点才展开右侧阅读浮层。",
+      "palette": ["#171f27", "#212d39", "#e8edf4", "#8bc7f4"],
+      "materials": ["深色画布", "细线关系", "克制高亮"],
+      "viewport": "保留 DSH 导航。顶部只有搜索和上下文入口；图谱默认满幅，右侧详情按需出现。",
+      "risk": "浮层会遮住部分画布，选中节点需移动到左侧可见区域。",
+      "comp": "/Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/packages/dsh-memory-wiki/.impeccable/mocks/decision/graph-overlay.png"
+    },
+    {
+      "id": "graph-lens",
+      "label": "全景画布 · 关系透镜",
+      "thesis": "初始仍是全景图；点节点后展开局部关联与知识正文。",
+      "palette": ["#171f27", "#212d39", "#e8edf4", "#8bc7f4"],
+      "materials": ["深色画布", "聚焦关系", "正文侧栏"],
+      "viewport": "全局关系留在主画布，选中后的侧栏上方放局部关联，下方显示正文与双链。",
+      "risk": "多一层局部图适合梳理复杂关联，普通阅读会显得繁复。",
+      "comp": "/Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/packages/dsh-memory-wiki/.impeccable/mocks/decision/graph-lens.png"
+    },
+    {
+      "id": "graph-desk",
+      "label": "全景画布 · 底部阅读台",
+      "thesis": "把正文放在下方横向阅读台，关系图保留在上方。",
+      "palette": ["#171f27", "#212d39", "#e8edf4", "#8bc7f4"],
+      "materials": ["深色画布", "宽幅阅读", "上下分区"],
+      "viewport": "默认只有关系图；选中节点后底部抬起阅读台，正文与双链横向排布。",
+      "risk": "适合宽屏长文，较矮窗口会压缩关系图的纵向空间。",
+      "comp": "/Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/packages/dsh-memory-wiki/.impeccable/mocks/decision/graph-desk.png"
+    }
+  ],
+  "reroll": true,
+  "steer": true,
+  "buildPath": {"value": "comp", "toggle": true}
+}

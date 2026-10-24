@@ -51,6 +51,9 @@ function unregisteredFixtureSource(reason: string): MemoryWikiSource {
   }
   return {
     mode: 'fixture',
+    async getGraph() {
+      return fail()
+    },
     async getView() {
       return fail()
     },

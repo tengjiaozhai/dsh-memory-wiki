@@ -159,8 +159,8 @@ test('D25：readPage 用服务端 bodyStartLine，fixture 与 remote 得到同�
   const remotePage = await remote.readPage({
     pageId: PAGE_ID.breaker,
     contentHash: fixturePage.contentHash,
-    sessionId: 'session-1',
   })
+  assert.deepEqual(stub.calls.find(call => call.method === 'readPage').request, { pageId: PAGE_ID.breaker, contentHash: fixturePage.contentHash })
 
   assert.equal(remotePage.bodyStartLine, fixturePage.bodyStartLine, 'same absolute file line')
   assert.equal(remotePage.body, fixturePage.body, 'body bytes unchanged')
@@ -169,6 +169,17 @@ test('D25：readPage 用服务端 bodyStartLine，fixture 与 remote 得到同�
   // PageDocument has no confidence: the client must not invent one.
   assert.equal(remotePage.confidence, undefined)
   assert.equal(remotePage.truncated, undefined)
+})
+
+test('graph：完整库元数据原样映射，读取不携带会话或 revision', async () => {
+  const graph = await createFixtureSource().getGraph()
+  const calls = []
+  const remote = createRemoteSource({ async graph(request) { calls.push(request); return { ok: true, value: graph } } }, 'test')
+  assert.deepEqual(await remote.getGraph(), graph)
+  assert.ok(graph.pages.length > 0)
+  assert.deepEqual(calls, [{}])
+  const unavailable = createRemoteSource({ async graph() { return { ok: true, value: { ...graph, error: { code: 'wiki-unavailable', reason: 'not-configured' } } } } }, 'test')
+  await assert.rejects(unavailable.getGraph(), error => error.code === 'wiki-unavailable')
 })
 
 test('写方法：业务错误留在 value.error，传输失败才抛 RemoteCallError', async () => {

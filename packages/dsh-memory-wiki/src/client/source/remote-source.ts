@@ -16,6 +16,7 @@
 import type {
   ClearResult,
   DraftResult,
+  GraphResult,
   OverrideResult,
   PageDocument,
   ReadPageResult,
@@ -45,6 +46,10 @@ import type {
  */
 export function errorDetail(error: RemoteError): string {
   switch (error.code) {
+    case 'wiki-unavailable':
+      return error.reason === 'not-configured'
+        ? '尚未设置 Wiki 路径，请在插件设置中配置 wikiRoot。'
+        : '暂时无法读取 Wiki，请检查配置的目录是否可访问后重试。'
     case 'stale-revision':
       return '面板带着 revision ' + error.expected + ' 发起写操作，服务端已是 ' + error.actual
     case 'unknown-page':
@@ -98,6 +103,12 @@ export function createRemoteSource(client: RemoteClient | undefined, reason: str
 
   return {
     mode: 'remote',
+
+    async getGraph() {
+      const result = unwrap<GraphResult>(await requireClient().graph({}))
+      if (result.error !== undefined) throw new RemoteCallError(result.error.code, errorDetail(result.error))
+      return result
+    },
 
     /** `SessionView` → view model. Field-for-field, no recomputation. */
     async getView(request: ViewRequest) {
@@ -155,9 +166,6 @@ export function createRemoteSource(client: RemoteClient | undefined, reason: str
         await requireClient().readPage({
           pageId: request.pageId,
           ...(request.contentHash === undefined ? {} : { contentHash: request.contentHash }),
-          ...(request.sessionId === null || request.sessionId === undefined
-            ? {}
-            : { sessionId: request.sessionId }),
         }),
       )
       if (result.page === undefined) {

@@ -64,7 +64,7 @@ function adapter(pageBodyLimitChars) {
 
 /** Put a successful manual draft in place (the only supported way to have a draft). */
 async function makeDraft(a) {
-  const page = await a.readPage({ sessionId: SESSION, pageId: 'wiki/concepts/短页' })
+  const page = await a.readPage({ pageId: 'wiki/concepts/短页' })
   const view = await a.getView({ sessionId: SESSION, expectedRevision: 1 })
   const drafted = await a.reviseDraft({
     sessionId: SESSION,
@@ -147,7 +147,7 @@ test('I3：pendingOverride 只由 prepareOverride 写；只由三条 sanctioned 
 
   // 写：只有 prepareOverride
   await a.search({ sessionId: SESSION, query: '短页', hops: 1 })
-  await a.readPage({ sessionId: SESSION, pageId: 'wiki/concepts/短页' })
+  await a.readPage({ pageId: 'wiki/concepts/短页' })
   await a.getView({ sessionId: SESSION, expectedRevision: drafted.revision })
   assert.equal(a.memoryFor(SESSION).hasPendingOverride, false, 'reads never write an override')
 
@@ -184,14 +184,14 @@ test('I3b：clearOverride 是第三条 sanctioned 清路径', async () => {
 
 test('readPage 体积：小页不截断，超限页显式 truncated + limitChars + fullChars', async () => {
   const small = adapter()
-  const ok = await small.readPage({ sessionId: SESSION, pageId: 'wiki/concepts/短页' })
+  const ok = await small.readPage({ pageId: 'wiki/concepts/短页' })
   assert.equal(ok.page.truncated, false)
   assert.equal(ok.page.limitChars, 24000)
   assert.equal(ok.page.bodyChars, ok.page.fullChars)
   assert.ok(ok.page.bodyBytes >= ok.page.bodyChars, 'utf8 bytes >= utf16 units for CJK')
 
   const tight = adapter(200)
-  const cut = await tight.readPage({ sessionId: SESSION, pageId: 'wiki/concepts/超长页' })
+  const cut = await tight.readPage({ pageId: 'wiki/concepts/超长页' })
   assert.equal(cut.page.truncated, true)
   assert.equal(cut.page.limitChars, 200)
   assert.ok(cut.page.bodyChars <= 200, 'returned body respects the threshold')

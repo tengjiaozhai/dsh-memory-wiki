@@ -7,7 +7,7 @@
  * view model" counterpart the seam test uses to prove fixture ↔ remote
  * consistency (and what the P3a screenshots were taken against).
  */
-import { buildFixtureView, toWikiPage } from './wiki-fixture.js'
+import { buildFixtureView, FIXTURE_DOCS, toWikiPage } from './wiki-fixture.js'
              
                    
            
@@ -22,6 +22,19 @@ const DEFAULT_BUDGET = 4000
 export function createFixtureSource()                   {
   return {
     mode: 'fixture',
+
+    async getGraph() {
+      const view = buildFixtureView({ preset: DEFAULT_PRESET, budget: DEFAULT_BUDGET })
+      return {
+        libraryRevision: view.libraryRevision ?? '',
+        pages: FIXTURE_DOCS.map((entry) => {
+          const page = toWikiPage(entry.pageId)
+          return { pageId: page.pageId, title: page.title, kind: page.kind, contentHash: page.contentHash, ...(page.asOf === undefined ? {} : { asOf: page.asOf }) }
+        }),
+        edges: view.report?.edges ?? [],
+        brokenLinks: 0,
+      }
+    },
 
     async getView(request             ) {
       return buildFixtureView({

@@ -4,11 +4,12 @@ import type {
   TypertRemoteInfo,
   TypertRemoteMethod,
 } from '@deepseek-ai/dsh-typert-protocol'
-import type { ClearOverrideInput, ClearResult, DraftResult, GetViewInput, OverrideResult, PrepareOverrideInput, ReadPageInput, ReadPageResult, ReviseDraftInput, SearchInput, SearchResult, SessionView } from 'dsh-memory-wiki/contracts'
+import type { ClearOverrideInput, ClearResult, DraftResult, GetViewInput, GraphInput, GraphResult, OverrideResult, PrepareOverrideInput, ReadPageInput, ReadPageResult, ReviseDraftInput, SearchInput, SearchResult, SessionView } from 'dsh-memory-wiki/contracts'
 
 declare module '@deepseek-ai/dsh-typert-protocol' {
   interface TypertRemoteNamespace$6d656d6f727957696b69 {
     clearOverride: (input: ClearOverrideInput) => Promise<RemoteResult<ClearResult>>
+    graph: (input: GraphInput) => Promise<RemoteResult<GraphResult>>
     prepareOverride: (input: PrepareOverrideInput) => Promise<RemoteResult<OverrideResult>>
     readPage: (input: ReadPageInput) => Promise<RemoteResult<ReadPageResult>>
     reviseDraft: (input: ReviseDraftInput) => Promise<RemoteResult<DraftResult>>
@@ -17,6 +18,7 @@ declare module '@deepseek-ai/dsh-typert-protocol' {
   }
   interface TypertRemoteMap {
     'memoryWiki/clearOverride': (input: ClearOverrideInput) => Promise<RemoteResult<ClearResult>>
+    'memoryWiki/graph': (input: GraphInput) => Promise<RemoteResult<GraphResult>>
     'memoryWiki/prepareOverride': (input: PrepareOverrideInput) => Promise<RemoteResult<OverrideResult>>
     'memoryWiki/readPage': (input: ReadPageInput) => Promise<RemoteResult<ReadPageResult>>
     'memoryWiki/reviseDraft': (input: ReviseDraftInput) => Promise<RemoteResult<DraftResult>>
@@ -30,6 +32,7 @@ declare module '@deepseek-ai/dsh-typert-protocol' {
 
 export declare const TYPERT_REMOTE: TypertRemoteInfo<{
   readonly 'memoryWiki/clearOverride': TypertRemoteMethod<{ readonly 'input': ClearOverrideInput }, ClearResult>
+  readonly 'memoryWiki/graph': TypertRemoteMethod<{ readonly 'input': GraphInput }, GraphResult>
   readonly 'memoryWiki/prepareOverride': TypertRemoteMethod<{ readonly 'input': PrepareOverrideInput }, OverrideResult>
   readonly 'memoryWiki/readPage': TypertRemoteMethod<{ readonly 'input': ReadPageInput }, ReadPageResult>
   readonly 'memoryWiki/reviseDraft': TypertRemoteMethod<{ readonly 'input': ReviseDraftInput }, DraftResult>

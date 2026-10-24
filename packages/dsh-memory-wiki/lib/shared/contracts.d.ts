@@ -31,6 +31,14 @@ interface PageRef {
   contentHash: string;
   asOf?: string;
 }
+/** A resolved graph edge. */
+interface PageLink {
+  from: string;
+  to: string;
+  source: LinkSource;
+  /** 1-based file line for body edges; undefined for `related` edges. */
+  line?: number;
+}
 /** One retrieval candidate (design §6 RetrievalReport candidate). */
 interface Candidate {
   pageId: string;
@@ -120,7 +128,27 @@ type RemoteError = {
 } | {
   code: 'no-usable-block';
   pageIds: string[];
+} | {
+  code: 'wiki-unavailable';
+  reason: 'not-configured' | 'read-failed';
 };
+/** Library browsing is independent of conversation state. */
+interface GraphInput {}
+interface GraphPage {
+  pageId: string;
+  title: string;
+  kind: PageKind;
+  contentHash: string;
+  asOf?: string;
+}
+/** Full library metadata and real links; never a retrieval candidate report. */
+interface GraphResult {
+  libraryRevision: string;
+  pages: GraphPage[];
+  edges: PageLink[];
+  brokenLinks: number;
+  error?: RemoteError;
+}
 /**
  * Request of `memoryWiki/view`.
  *
@@ -225,7 +253,6 @@ interface SearchResult {
 }
 /** Request of `memoryWiki/readPage`. */
 interface ReadPageInput {
-  sessionId: string;
   pageId: string;
   /** When present, a page whose content hash differs is rejected rather than shown. */
   contentHash?: string;
@@ -262,7 +289,6 @@ interface PageDocument {
 }
 /** Response of `memoryWiki/readPage`. */
 interface ReadPageResult {
-  revision: number;
   page?: PageDocument;
   error?: RemoteError;
 }
@@ -324,4 +350,4 @@ interface MemoryWikiSourceMeta {
   turnStartSeq?: number;
 }
 //#endregion
-export { CaptureView, ClearOverrideInput, ClearResult, DraftPreview, DraftResult, DraftSelection, DraftState, GetViewInput, MemoryWikiSourceMeta, OverrideResult, PageDocument, PrepareOverrideInput, ReadPageInput, ReadPageResult, RemoteError, ReviseDraftInput, SearchInput, SearchResult, SessionMode, SessionView, TurnView };
+export { CaptureView, ClearOverrideInput, ClearResult, DraftPreview, DraftResult, DraftSelection, DraftState, GetViewInput, GraphInput, GraphPage, GraphResult, MemoryWikiSourceMeta, OverrideResult, PageDocument, PrepareOverrideInput, ReadPageInput, ReadPageResult, RemoteError, ReviseDraftInput, SearchInput, SearchResult, SessionMode, SessionView, TurnView };

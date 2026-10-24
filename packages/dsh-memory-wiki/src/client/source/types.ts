@@ -27,6 +27,7 @@ import type {
   DraftResult,
   DraftSelection,
   DraftState,
+  GraphResult,
   OverrideResult,
   RemoteError,
   SessionMode,
@@ -103,8 +104,6 @@ export interface ReadPageRequest {
   pageId: string
   /** Version the client expects; a changed page must be reported, not silently swapped. */
   contentHash?: string
-  /** Authorised session (Remote only; the fixture has none and ignores it). */
-  sessionId?: string | null
 }
 
 /**
@@ -154,6 +153,7 @@ export interface ReviseRequest extends RevisionRequest {
 
 export interface MemoryWikiSource {
   readonly mode: SourceMode
+  getGraph(): Promise<GraphResult>
   getView(request: ViewRequest): Promise<MemoryWikiView>
   search(request: SearchRequest): Promise<RetrievalReport>
   readPage(request: ReadPageRequest): Promise<PageView>
@@ -180,6 +180,7 @@ export interface MemoryWikiSource {
  * the single place that decides what a failure means.
  */
 export interface RemoteClient {
+  graph(request: {}): Promise<unknown>
   /** Read path: no revision (B1). Writes use `RevisionRequest` below. */
   getView(request: { sessionId: string | null }): Promise<unknown>
   search(request: SearchRequest): Promise<unknown>

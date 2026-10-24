@@ -1,328 +1,205 @@
 import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
-import type { Candidate } from '../core/types.js'
-import type { PageView } from './source/index.js'
-import { BudgetBar } from './BudgetBar.js'
-import { CandidateList } from './CandidateList.js'
+import type { GraphPage, GraphResult } from '../shared/contracts.js'
+import type { MemoryWikiSource, MemoryWikiView, PageView } from './source/index.js'
 import { EvidenceGraph } from './EvidenceGraph.js'
-import { HistoryPane } from './HistoryPane.js'
-import { PreviewPane } from './PreviewPane.js'
-import { SourceDetail } from './SourceDetail.js'
+import { MarkdownView } from './MarkdownView.js'
 import { RemotePanel } from './RemotePanel.js'
 import { CaptureStatus } from './CaptureStatus.js'
-import { MarkdownView } from './MarkdownView.js'
-import type {
-  BudgetOption,
-  MemoryWikiSource,
-  MemoryWikiView,
-  SelectionKind,
-} from './source/index.js'
-import { RemoteCallError } from './source/unwrap.js'
-import { boundSession, launchScope, stillCurrent } from './session-guard.js'
+import { Icon } from './icons.js'
+import { boundSession } from './session-guard.js'
 
-/** Host session binding: uiSession.adapter.current (getSnapshot/subscribe). */
-export type Binding = {
-  getSnapshot(): { key: string | null }
-  subscribe(listener: () => void): () => void
-}
+/*
+ * THESIS: Browse the entire Wiki first; reading and context editing unfold on demand.
+ * OWN-WORLD: DSH dark blue-gray ground, pale blue selection, fine real-link edges,
+ * system sans and one compact toolbar. The host owns application navigation.
+ * STORY: Open the graph, locate a page, read its original knowledge and follow links;
+ * explicitly select and prepare evidence for the next conversation turn.
+ * FIRST VIEWPORT: Full library canvas below a 72px search toolbar. No empty list or
+ * reader column. A selected page opens a 400px right reader over the canvas.
+ * FORM: Graph-overlay reading, grounded candidate 7, surface seed 03b9eae5;
+ * user approved graph-overlay.png on 2026-10-24 with “使用第一种方案”.
+ * FINISH: unreviewed and undocumented is unfinished; this build ends with the finish
+ * review, the verdict, DESIGN.md, and every shipping raster carrying its provenance.
+ */
+
+export type Binding = { getSnapshot(): { key: string | null }; subscribe(listener: () => void): () => void }
 export type UiSession = { adapter?: { current?: Binding } }
 export type SessionKey = string | null
 
 function useSessionKey(uiSession: UiSession | undefined): SessionKey {
   const binding = uiSession?.adapter?.current
-  const subscribe = useCallback(
-    (listener: () => void) => (binding && typeof binding.subscribe === 'function' ? binding.subscribe(listener) : () => {}),
-    [binding],
-  )
-  const getSnapshot = useCallback(
-    () => (binding && typeof binding.getSnapshot === 'function' ? binding.getSnapshot()?.key ?? null : null),
-    [binding],
-  )
-  return useSyncExternalStore(subscribe, getSnapshot, getSnapshot)
+  const subscribe = useCallback((listener: () => void) => binding?.subscribe(listener) ?? (() => {}), [binding])
+  const snapshot = useCallback(() => binding?.getSnapshot()?.key ?? null, [binding])
+  return useSyncExternalStore(subscribe, snapshot, snapshot)
 }
 
-/** B12: "when did the panel last hear from the server" must be readable, not guessed. */
-const formatClock = (at: number): string => new Date(at).toLocaleTimeString('zh-CN', { hour12: false })
+const KIND: Record<string, string> = { concept: '概念', entity: '实体', source: '来源', synthesis: '综合', output: '产出' }
+const messageOf = (cause: unknown) => cause instanceof Error ? cause.message : String(cause)
 
-/** A view is only renderable for the session it was read for (B2/B3). */
-type ScopedView = { session: string; view: MemoryWikiView }
-
-/**
- * The panel knows exactly one thing about its data: `source: MemoryWikiSource`.
- * Everything below consumes DTOs from that source; no fixture module is imported
- * here (a dev source, when one is registered, is injected at the switch point).
- *
- * Session rules (client review B1–B12):
- *   - no session → no request, and a neutral 未绑定会话 state (B4);
- *   - reads never carry `expectedRevision`; the ref exists only to pin WRITES,
- *     and it is cleared whenever the session changes (B1/B2);
- *   - a view/revision is stored together with the session that produced it, so
- *     a late answer for session A can never render in session B (B2/B3);
- *   - a read whose response carries `error` never pins a write revision (B4).
- */
-export function MemoryPanel(props: {
-  source: MemoryWikiSource
-  uiSession?: UiSession
-}) {
-  const sessionKey = useSessionKey(props.uiSession)
-  const source = props.source
-  const [budget, setBudget] = useState<BudgetOption>(4000)
-  const [preset, setPreset] = useState<SelectionKind>('auto1')
-  const [viewState, setViewState] = useState<ScopedView | null>(null)
-  const [error, setError] = useState<string | null>(null)
+/** The full library is global; only context editing belongs to a session. */
+export function MemoryPanel({ source, uiSession }: { source: MemoryWikiSource; uiSession?: UiSession }) {
+  const sessionKey = useSessionKey(uiSession)
+  const sessionRef = useRef(sessionKey)
+  sessionRef.current = sessionKey
+  const [graph, setGraph] = useState<GraphResult | null>(null)
+  const [graphError, setGraphError] = useState<string | null>(null)
+  const [graphBusy, setGraphBusy] = useState(true)
+  const [graphNonce, setGraphNonce] = useState(0)
+  const [query, setQuery] = useState('')
+  const [searchOpen, setSearchOpen] = useState(false)
   const [activePageId, setActivePageId] = useState<string | null>(null)
-  const [page, setPage] = useState<PageView | null>(null)
-  const [capturePage, setCapturePage] = useState<PageView | null>(null)
-  const [pageError, setPageError] = useState<string | null>(null)
+  const [drawer, setDrawer] = useState<'detail' | 'context' | null>(null)
+  const [reset, setReset] = useState(0)
+  const [pageState, setPageState] = useState<{ hash: string; page: PageView } | null>(null)
+  const [pageError, setPageError] = useState<{ id: string; message: string } | null>(null)
+  const [viewState, setViewState] = useState<{ session: string; view: MemoryWikiView; cleanRevision?: number } | null>(null)
+  const [viewError, setViewError] = useState<string | null>(null)
+  const [viewNonce, setViewNonce] = useState(0)
   const [lastReadAt, setLastReadAt] = useState<number | null>(null)
-  const [readNonce, setReadNonce] = useState(0)
-  /** Write pin only. Never sent on a read (B1), never fed by a dirty read (B4). */
-  const revisionRef = useRef<number | undefined>(undefined)
-  const sessionRef = useRef<SessionKey>(sessionKey)
-  const previousSessionRef = useRef<SessionKey>(sessionKey)
+  const [pendingPage, setPendingPage] = useState<GraphPage | null>(null)
+  const searchInput = useRef<HTMLInputElement>(null)
 
-  // B2: switching sessions resets every piece of local state, and drops the
-  // write pin. A revision from session A must never pin a write in session B.
   useEffect(() => {
-    sessionRef.current = sessionKey
-    if (previousSessionRef.current === sessionKey) return
-    previousSessionRef.current = sessionKey
-    revisionRef.current = undefined
-    setViewState(null)
-    setError(null)
-    setPage(null)
-    setCapturePage(null)
-    setPageError(null)
-    setActivePageId(null)
+    let cancelled = false
+    setGraphBusy(true)
+    setGraphError(null)
+    void source.getGraph().then((next) => {
+      if (cancelled) return
+      setGraph(next)
+      setGraphBusy(false)
+    }, (cause: unknown) => {
+      if (cancelled) return
+      setGraphError(messageOf(cause))
+      setGraphBusy(false)
+    })
+    return () => { cancelled = true }
+  }, [source, graphNonce])
+
+  // Reads never carry a write revision. A late session response cannot land in another session.
+  useEffect(() => {
+    setPendingPage(null)
+    setViewError(null)
     setLastReadAt(null)
-  }, [sessionKey])
-
-  // B4/B1: one read per (session, preset, budget, explicit re-read).
-  //   - unbound session → return before calling anything;
-  //   - the request carries only the session id: a read is never revision-pinned.
-  useEffect(() => {
-    const scope = launchScope(sessionKey)
-    if (scope === null) {
-      setViewState(null)
-      setError(null)
-      return
-    }
+    if (!boundSession(sessionKey)) { setViewState(null); return }
     let cancelled = false
-    void (async () => {
-      try {
-        const next = await source.getView({ sessionId: scope.sessionId, preset, budget })
-        if (cancelled || !stillCurrent(scope, sessionRef.current)) return
-        setViewState({ session: scope.sessionId, view: next })
-        // B4: only a clean view may pin a write; an error response's revision is
-        // displayed but never reused for the next mutation.
-        if (next.error === undefined) revisionRef.current = next.revision
-        setError(null)
-        setLastReadAt(Date.now())
-        setActivePageId((current) => current ?? next.report?.candidates[0]?.pageId ?? null)
-      } catch (cause) {
-        if (cancelled || !stillCurrent(scope, sessionRef.current)) return
-        const code = cause instanceof RemoteCallError ? cause.code : 'unknown-error'
-        const message = cause instanceof Error ? cause.message : String(cause)
-        setError(code + ': ' + message)
-      }
-    })()
-    return () => {
-      cancelled = true
-    }
-  }, [source, sessionKey, preset, budget, readNonce])
+    void source.getView({ sessionId: sessionKey }).then((next) => {
+      if (cancelled || sessionRef.current !== sessionKey) return
+      setViewState({ session: sessionKey, view: next, ...(next.error === undefined ? { cleanRevision: next.revision } : {}) })
+      setLastReadAt(Date.now())
+    }, (cause: unknown) => {
+      if (!cancelled && sessionRef.current === sessionKey) setViewError(messageOf(cause))
+    })
+    return () => { cancelled = true }
+  }, [source, sessionKey, viewNonce])
 
-  // B12: `prepared` can be consumed by a turn while the panel is not looking.
-  // Re-read when the window becomes visible/focused again instead of showing a
-  // stale snapshot forever; the header also names the last successful read.
   useEffect(() => {
-    if (sessionKey === null) return
-    const reRead = (): void => {
-      if (sessionRef.current === null) return
-      if (typeof document !== 'undefined' && document.visibilityState === 'hidden') return
-      setReadNonce((value) => value + 1)
+    const refresh = () => {
+      if (document.visibilityState !== 'hidden' && boundSession(sessionRef.current)) setViewNonce((n) => n + 1)
     }
-    window.addEventListener('focus', reRead)
-    document.addEventListener('visibilitychange', reRead)
-    return () => {
-      window.removeEventListener('focus', reRead)
-      document.removeEventListener('visibilitychange', reRead)
-    }
-  }, [sessionKey])
-
-  const view = viewState !== null && viewState.session === sessionKey ? viewState.view : null
-
-  // Two render shapes over one seam: a registered dev source still carries a
-  // compiler result (P3a screenshots, reversibility), while the server view
-  // carries draft/prepared DTOs. The remote mapping never fills these fields, so
-  // this predicate is what routes the panel — never a mode string.
-  const devView =
-    view !== null &&
-    view.report !== undefined &&
-    view.compile !== undefined &&
-    view.current !== undefined &&
-    view.history !== undefined
-      ? { report: view.report, compile: view.compile, current: view.current, history: view.history }
-      : null
-
-  const active = useMemo<Candidate | undefined>(
-    () => view?.report?.candidates.find((candidate) => candidate.pageId === activePageId),
-    [view, activePageId],
-  )
-
-  // readPage through the same seam; a changed page is reported, never swapped.
-  useEffect(() => {
-    const scope = launchScope(sessionKey)
-    if (activePageId === null || scope === null) return
-    let cancelled = false
-    setPageError(null)
-    void (async () => {
-      try {
-        const next = await source.readPage({
-          pageId: activePageId,
-          ...(active?.contentHash === undefined ? {} : { contentHash: active.contentHash }),
-          sessionId: scope.sessionId,
-        })
-        if (cancelled || !stillCurrent(scope, sessionRef.current)) return
-        setPage(next)
-      } catch (cause) {
-        if (cancelled || !stillCurrent(scope, sessionRef.current)) return
-        setPage(null)
-        setPageError(String(cause instanceof Error ? cause.message : cause))
-      }
-    })()
-    return () => {
-      cancelled = true
-    }
-  }, [source, sessionKey, activePageId, active?.contentHash])
-
-  /**
-   * Adopt a server view handed back by a write or a re-read.
-   *
-   * B3: the caller passes the session the read was launched under, and a
-   * mismatch is dropped here as well (second gate, cheap).
-   * B4: only a clean view updates the write pin.
-   */
-  const applyView = useCallback((next: MemoryWikiView, requestSession: string) => {
-    if (sessionRef.current !== requestSession) return
-    if (next.error === undefined) revisionRef.current = next.revision
-    setViewState({ session: requestSession, view: next })
-    setError(null)
-    setLastReadAt(Date.now())
+    window.addEventListener('focus', refresh)
+    document.addEventListener('visibilitychange', refresh)
+    return () => { window.removeEventListener('focus', refresh); document.removeEventListener('visibilitychange', refresh) }
   }, [])
 
-  const draftPreview = view?.draft?.preview
-  const over = devView !== null ? !devView.compile.fits : draftPreview !== undefined && draftPreview.fits === false
-  const fitText =
-    view === null
-      ? '加载中'
-      : over
-        ? '超额'
-        : devView === null && view.draft === undefined
-          ? '无草稿'
-          : '额度内'
+  const view = viewState?.session === sessionKey ? viewState.view : null
+  const writeRevision = viewState?.session === sessionKey ? viewState.cleanRevision : undefined
+  const applyView = useCallback((next: MemoryWikiView, requestSession: string) => {
+    if (sessionRef.current !== requestSession) return
+    setViewState((current) => ({ session: requestSession, view: next, cleanRevision: next.error === undefined ? next.revision : current?.session === requestSession ? current.cleanRevision : undefined }))
+    setViewError(null)
+    setLastReadAt(Date.now())
+  }, [])
+  const pageIndex = useMemo(() => new Map(graph?.pages.map((entry) => [entry.pageId, entry])), [graph])
+  const active = activePageId === null ? undefined : pageIndex.get(activePageId)
+  const term = query.trim().toLocaleLowerCase()
+  const results = useMemo(() => term === '' ? [] : (graph?.pages ?? []).filter((entry) => entry.title.toLocaleLowerCase().includes(term) || entry.pageId.toLocaleLowerCase().includes(term)), [graph, term])
+  const matches = useMemo(() => new Set(results.map((entry) => entry.pageId)), [results])
+  const outgoing = useMemo(() => [...new Set(graph?.edges.filter((edge) => edge.from === activePageId).map((edge) => edge.to))], [graph, activePageId])
+  const incoming = useMemo(() => [...new Set(graph?.edges.filter((edge) => edge.to === activePageId).map((edge) => edge.from))], [graph, activePageId])
+
+  useEffect(() => {
+    setPageState(null)
+    setPageError(null)
+    if (active === undefined) return
+    let cancelled = false
+    void source.readPage({ pageId: active.pageId, contentHash: active.contentHash }).then((next) => {
+      if (!cancelled) setPageState({ hash: active.contentHash, page: next })
+    }, (cause: unknown) => {
+      if (!cancelled) setPageError({ id: active.pageId, message: messageOf(cause) })
+    })
+    return () => { cancelled = true }
+  }, [source, graph, active?.pageId, active?.contentHash])
+
+  const page = pageState !== null && pageState.page.pageId === active?.pageId && pageState.hash === active?.contentHash ? pageState.page : null
+  const openPage = useCallback((id: string) => { setActivePageId(id); setDrawer('detail'); setSearchOpen(false) }, [])
+  const clearSearch = () => { setQuery(''); setSearchOpen(false); setActivePageId(null); setDrawer(null); setReset((n) => n + 1) }
+  const refreshGraph = () => { clearSearch(); setGraphNonce((n) => n + 1) }
+  const close = () => { setDrawer(null); setActivePageId(null); setReset((n) => n + 1) }
+  const readFailure = pageError?.id === activePageId ? pageError.message : null
+  const relations: Array<[string, string[]]> = [['关联知识', outgoing], ['引用了本页', incoming]]
 
   return (
-    <section className="memory-wiki-panel" data-testid="mw-panel">
+    <section className="memory-wiki-panel" data-testid="mw-panel" data-source={source.mode} onKeyDown={(event) => {
+      if (event.key === 'Escape') { setSearchOpen(false); close() }
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') { event.preventDefault(); searchInput.current?.focus() }
+    }}>
       <header className="memory-wiki-panel__head">
-        <h2 className="memory-wiki-panel__title">记忆 Wiki · 双链依据</h2>
-        <span className="memory-wiki-panel__badge" data-testid="mw-mode">
-          {source.mode}
-        </span>
-        <span
-          className={'memory-wiki-panel__badge' + (over ? ' memory-wiki-panel__badge--gold' : '')}
-          data-testid="mw-fit-badge"
-        >
-          {fitText}
-        </span>
-        <div className="memory-wiki-panel__head-meta">
-          <span data-testid="mw-session">会话 {sessionKey ?? '未绑定'}</span>
-          {view !== null && (
-            <>
-              {view.libraryRevision !== undefined && (
-                <span data-testid="mw-lib">库 {view.libraryRevision}</span>
-              )}
-              <span data-testid="mw-rev">视图 rev {view.revision}</span>
-            </>
+        <div className="memory-wiki-panel__brand"><Icon name="graph" /><h2>记忆 Wiki</h2><span>知识图谱</span></div>
+        <div className="memory-wiki-panel__searchbox">
+          <Icon name="search" />
+          <input ref={searchInput} value={query} placeholder="搜索页面标题或路径" aria-label="搜索知识" data-testid="mw-browse-query"
+            aria-expanded={searchOpen && term !== ''} aria-controls="mw-browse-results" autoComplete="off"
+            onFocus={() => setSearchOpen(true)} onChange={(event) => { setQuery(event.target.value); setSearchOpen(true) }}
+            onKeyDown={(event) => { if (event.key === 'Enter' && results[0] !== undefined) openPage(results[0].pageId) }} />
+          {query !== '' ? <button type="button" onClick={clearSearch} aria-label="清空搜索"><Icon name="close" /></button> : <kbd>⌘ K</kbd>}
+          {searchOpen && term !== '' && (
+            <div className="memory-wiki-panel__search-results" id="mw-browse-results" data-testid="mw-browse-results">
+              <p role="status">{results.length === 0 ? '没有找到页面，试试其他标题或路径。' : results.length + ' 个匹配页面'}</p>
+              {results.slice(0, 30).map((entry) => <button type="button" key={entry.pageId} onClick={() => openPage(entry.pageId)}>
+                <span>{entry.title}<small>{entry.pageId}</small></span><Icon name="arrow" />
+              </button>)}
+              {results.length > 30 && <p>还有 {results.length - 30} 页，请缩小搜索范围。</p>}
+            </div>
           )}
-          <span data-testid="mw-last-read">
-            上次读取 {lastReadAt === null ? '尚未读取' : formatClock(lastReadAt)}
-          </span>
+        </div>
+        <div className="memory-wiki-panel__head-actions">
+          <button type="button" className="memory-wiki-panel__icon" onClick={refreshGraph} aria-label="刷新知识图谱" disabled={graphBusy}><Icon name="refresh" /></button>
+          <button type="button" data-testid="mw-context-toggle" aria-expanded={drawer === 'context'} aria-controls="mw-context" onClick={() => { setSearchOpen(false); setDrawer((current) => current === 'context' ? null : 'context') }}><Icon name="graph" />上下文</button>
         </div>
       </header>
-      {view?.capture && <CaptureStatus capture={view.capture} onOpen={pageId => {
-        const session = sessionKey
-        void source.readPage({ pageId, sessionId: session }).then(result => { if (sessionRef.current === session) setCapturePage(result) }, cause => { if (sessionRef.current === session) setError(String(cause)) })
-      }} />}
-      {capturePage && <div className="memory-wiki-panel__fault"><button type="button" onClick={() => setCapturePage(null)}>关闭经验正文</button><h3>{capturePage.title}</h3><MarkdownView source={capturePage.body} /></div>}
+      <div className="memory-wiki-panel__workspace">
+        {graph !== null && graph.pages.length > 0 && <EvidenceGraph graph={graph} activePageId={activePageId} onSelect={openPage} matches={matches} drawer={drawer !== null} reset={reset} />}
+        {graphError !== null ? <div className="memory-wiki-panel__empty" role="alert" data-testid="mw-graph-error"><Icon name="graph" /><h3>暂时无法读取知识图谱</h3><p>{graphError}</p><button type="button" onClick={refreshGraph}>重新读取</button></div>
+          : graph === null ? <div className="memory-wiki-panel__empty" role="status" data-testid="mw-loading"><Icon name="graph" /><h3>正在展开知识图谱</h3><p>读取 Wiki 页面与链接…</p></div>
+          : graph.pages.length === 0 ? <div className="memory-wiki-panel__empty" data-testid="mw-graph-empty"><Icon name="graph" /><h3>Wiki 里还没有可展示的页面</h3><p>添加有效的 Markdown 知识页面后，刷新即可看到关系图。</p></div> : null}
+        {graphBusy && graph !== null && <span className="memory-wiki-panel__updating" role="status">正在更新图谱…</span>}
+        <span className="memory-wiki-panel__canvas-status" data-testid="mw-browse-status">{source.mode === 'fixture' ? '设计预览 · 示例内容' : !boundSession(sessionKey) ? '浏览模式 · 未绑定会话' : view === null ? '上下文未就绪' : view.prepared !== undefined ? '已准备下一轮手选依据' : '自动模式'}{graph !== null && graph.brokenLinks > 0 ? ' · ' + graph.brokenLinks + ' 个未解析链接' : ''}</span>
 
-      {error !== null && (
-        <div className="memory-wiki-panel__fault" data-testid="mw-error" role="alert">
-          <strong>读取视图失败（{source.mode}）</strong>
-          <p>{error}</p>
-          <p className="memory-wiki-panel__excerpt-note">
-            面板不展示回落数据：抓不到宿主视图时，它宁可停在已显示的 revision。
-          </p>
-        </div>
-      )}
-
-      {!boundSession(sessionKey) ? (
-        <div className="memory-wiki-panel__fault" data-testid="mw-unbound">
-          <strong>未绑定会话</strong>
-          <p>本面板不向服务端发请求：先在一个会话里打开它，视图随会话绑定。</p>
-        </div>
-      ) : view === null ? (
-        error === null ? (
-          <div className="memory-wiki-panel__fault" data-testid="mw-loading">
-            正在从 {source.mode} 数据源取视图…
-          </div>
-        ) : null
-      ) : devView === null ? (
-        <RemotePanel
-          key={sessionKey}
-          source={source}
-          sessionId={sessionKey}
-          view={view}
-          writeRevision={revisionRef.current}
-          onView={applyView}
-        />
-      ) : (
-        <div className="memory-wiki-panel__body" data-testid="mw-dev-view">
-          <div className="memory-wiki-panel__col memory-wiki-panel__col--list">
-            <CandidateList
-              report={devView.report}
-              activePageId={activePageId}
-              onSelect={setActivePageId}
-            />
-          </div>
-
-          <div className="memory-wiki-panel__col memory-wiki-panel__col--center">
-            <EvidenceGraph
-              report={devView.report}
-              activePageId={activePageId}
-              onSelect={setActivePageId}
-            />
-            <BudgetBar
-              result={devView.compile}
-              budget={budget}
-              selection={preset}
-              onBudget={setBudget}
-              onSelection={setPreset}
-            />
-            <PreviewPane result={devView.compile} />
-          </div>
-
-          <div className="memory-wiki-panel__col memory-wiki-panel__col--detail">
-            <SourceDetail
-              candidate={active}
-              page={page}
-              loading={pageError === null && page === null}
-              error={pageError}
-              segments={active?.segments ?? null}
-              selected={active?.selected ?? false}
-            />
-            <HistoryPane current={devView.compile} pending={devView.current} history={devView.history} />
-          </div>
-        </div>
-      )}
+        {drawer === 'detail' && active !== undefined && (
+          <aside className="memory-wiki-panel__drawer" aria-label="知识详情" data-testid="mw-knowledge-detail">
+            <div className="memory-wiki-panel__drawer-head"><h3>{active.title}</h3><button type="button" className="memory-wiki-panel__icon" onClick={close} aria-label="关闭知识详情"><Icon name="close" /></button></div>
+            <div key={active.pageId} className="memory-wiki-panel__reader">
+              <p className="memory-wiki-panel__page-meta">{KIND[active.kind] ?? active.kind}{active.asOf === undefined ? '' : ' · ' + active.asOf}</p>
+              {readFailure !== null ? <div role="alert"><p>{readFailure}</p><button type="button" onClick={() => setGraphNonce((n) => n + 1)}>刷新图谱后重读</button></div>
+                : page === null ? <p role="status">正在读取页面…</p> : <><MarkdownView source={page.body} title={active.title} testId="mw-knowledge-body" />{page.truncated && <p className="memory-wiki-panel__excerpt-note">正文较长，当前展示前 {page.limitChars?.toLocaleString()} 字符。</p>}</>}
+              {relations.map(([title, ids]) => (
+                <section className="memory-wiki-panel__relations" key={String(title)}><h4>{title}</h4>
+                  {ids.length === 0 ? <p>暂无{title === '关联知识' ? '出链' : '反链'}</p> : ids.map((id) => <button type="button" key={id} onClick={() => openPage(id)}><span>{pageIndex.get(id)?.title ?? id}</span><Icon name="arrow" /></button>)}
+                </section>
+              ))}
+              <details className="memory-wiki-panel__page-info"><summary>页面信息</summary><p>{active.pageId}</p><p>版本 {active.contentHash.slice(0, 12)}</p></details>
+            </div>
+            <footer className="memory-wiki-panel__reader-footer"><button type="button" data-testid="mw-add-evidence" disabled={!boundSession(sessionKey) || view === null || writeRevision === undefined || source.reviseDraft === undefined} onClick={() => { setPendingPage({ ...active }); setDrawer('context') }}><Icon name="plus" />选为下一轮依据</button><p>{boundSession(sessionKey) ? '先选入，再在上下文中预览和准备。' : '浏览无需会话；选为依据需先打开一个会话。'}</p></footer>
+          </aside>
+        )}
+        <aside id="mw-context" className="memory-wiki-panel__drawer memory-wiki-panel__drawer--context" aria-label="会话上下文" hidden={drawer !== 'context'}>
+          {view?.capture && <CaptureStatus capture={view.capture} onOpen={pageId => { setGraphNonce(n => n + 1); openPage(pageId) }} />}
+          <div className="memory-wiki-panel__drawer-head"><div><h3>会话上下文</h3><p>自动检索，或为下一轮指定依据。</p></div><button type="button" className="memory-wiki-panel__icon" onClick={close} aria-label="关闭上下文"><Icon name="close" /></button></div>
+          {!boundSession(sessionKey) ? <div className="memory-wiki-panel__context-note" data-testid="mw-unbound"><h4>打开一个会话后即可选择依据</h4><p>你可以继续浏览整库图谱和知识正文。</p></div>
+            : view === null ? <div className="memory-wiki-panel__context-note" role={viewError === null ? 'status' : 'alert'}><p>{viewError ?? '正在读取会话状态…'}</p><button type="button" onClick={() => setViewNonce((n) => n + 1)}>重新读取</button></div>
+            : <><div className="memory-wiki-panel__context-meta"><span data-testid="mw-mode">{source.mode}</span><span data-testid="mw-session">会话 {sessionKey}</span><span data-testid="mw-rev">视图 rev {view.revision}</span><span data-testid="mw-last-read">上次读取 {lastReadAt === null ? '尚未读取' : new Date(lastReadAt).toLocaleTimeString('zh-CN', { hour12: false })}</span></div>{viewError !== null && <p role="alert" data-testid="mw-error">{viewError}</p>}<RemotePanel key={sessionKey} source={source} sessionId={sessionKey} view={view} writeRevision={writeRevision} onView={applyView} pendingPage={pendingPage} /></>}
+        </aside>
+      </div>
     </section>
   )
 }

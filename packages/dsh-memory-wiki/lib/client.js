@@ -33,199 +33,7 @@ react = __toESM(react, 1);
 let react_jsx_runtime = require("react/jsx-runtime");
 require("react-dom");
 let zod = require("zod");
-//#region src/client/BudgetBar.tsx
-const format$3 = (value) => value.toLocaleString("zh-CN");
-const SELECTIONS = [
-	"auto1",
-	"auto0",
-	"manual"
-];
-const SELECTION_TEXT = {
-	auto1: "自动 · 1 跳",
-	auto0: "仅直接命中",
-	manual: "手选 4 页"
-};
-function BudgetBar(props) {
-	const { result, budget, selection, onBudget, onSelection } = props;
-	const pct = Math.min(result.chars / budget * 100, 100);
-	return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-		className: "memory-wiki-panel__budget",
-		"data-testid": "mw-budget",
-		children: [
-			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-				className: "memory-wiki-panel__toolbar",
-				children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-					className: "memory-wiki-panel__seg",
-					role: "group",
-					"aria-label": "选区",
-					children: SELECTIONS.map((kind) => /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
-						type: "button",
-						className: selection === kind ? "is-current" : "",
-						"aria-pressed": selection === kind,
-						"data-testid": "mw-sel-" + kind,
-						onClick: () => onSelection(kind),
-						children: SELECTION_TEXT[kind]
-					}, kind))
-				}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-					className: "memory-wiki-panel__seg",
-					role: "group",
-					"aria-label": "字符额度",
-					children: [4e3, 8e3].map((option) => /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
-						type: "button",
-						className: budget === option ? "is-current" : "",
-						"aria-pressed": budget === option,
-						"data-testid": "mw-budget-" + option,
-						onClick: () => onBudget(option),
-						children: format$3(option)
-					}, option))
-				})]
-			}),
-			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-				className: "memory-wiki-panel__meter-line",
-				children: [
-					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
-						"data-testid": "mw-chars",
-						children: [
-							format$3(result.chars),
-							" / ",
-							format$3(budget),
-							" 字符"
-						]
-					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-						className: "memory-wiki-panel__meter" + (result.fits ? "" : " is-over"),
-						role: "meter",
-						"aria-valuemin": 0,
-						"aria-valuemax": budget,
-						"aria-valuenow": Math.min(result.chars, budget),
-						"aria-valuetext": format$3(result.chars) + " 字符，上限 " + format$3(budget),
-						children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { style: { width: pct + "%" } })
-					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-						"data-testid": "mw-fit",
-						children: result.fits ? "额度内" : "超额"
-					})
-				]
-			}),
-			!result.fits && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", {
-				className: "memory-wiki-panel__over",
-				role: "alert",
-				"data-testid": "mw-over",
-				children: [
-					"超出 ",
-					format$3(result.overBy),
-					" 字符：手选不截断、不丢页，要么扩到 8,000，要么减少选取。"
-				]
-			})
-		]
-	});
-}
-//#endregion
-//#region src/client/CandidateList.tsx
-const REASON_LABEL = {
-	budget: "额度不足",
-	"no-usable-block": "无可用块",
-	"not-selected": "未选入"
-};
-function reasonLabel(reason) {
-	return reason === void 0 ? null : REASON_LABEL[reason] ?? reason;
-}
-function CandidateRow(props) {
-	const { candidate, active, onSelect } = props;
-	const excluded = reasonLabel(candidate.excludedReason);
-	const dot = candidate.selected ? "is-selected" : "is-excluded";
-	return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("button", {
-		type: "button",
-		className: "memory-wiki-panel__candidate" + (active ? " is-active" : ""),
-		"data-testid": "mw-candidate",
-		"data-page-id": candidate.pageId,
-		"data-selected": candidate.selected ? "1" : "0",
-		"data-reason": candidate.excludedReason ?? "",
-		"aria-pressed": active,
-		onClick: () => onSelect(candidate.pageId),
-		children: [
-			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
-				className: "memory-wiki-panel__candidate-top",
-				children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("i", { className: "memory-wiki-panel__dot " + dot }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-					className: "memory-wiki-panel__candidate-title",
-					children: candidate.title
-				})]
-			}),
-			/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-				className: "memory-wiki-panel__candidate-id",
-				children: candidate.pageId
-			}),
-			candidate.why.length > 0 && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-				className: "memory-wiki-panel__chips",
-				"data-testid": "mw-why",
-				children: candidate.why.map((term) => /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-					className: "memory-wiki-panel__chip memory-wiki-panel__chip--why",
-					children: term
-				}, term))
-			}),
-			candidate.viaPageId !== void 0 && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
-				className: "memory-wiki-panel__via",
-				children: ["经由 ", candidate.viaPageId]
-			}),
-			excluded !== null && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-				className: "memory-wiki-panel__chips",
-				children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-					className: "memory-wiki-panel__chip memory-wiki-panel__chip--" + candidate.excludedReason,
-					"data-testid": "mw-reason",
-					children: excluded
-				})
-			})
-		]
-	});
-}
-function CandidateList(props) {
-	const { report, activePageId, onSelect } = props;
-	const direct = report.candidates.filter((candidate) => candidate.match === "direct");
-	const linked = report.candidates.filter((candidate) => candidate.match === "linked");
-	const selected = report.candidates.filter((candidate) => candidate.selected).length;
-	return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-		className: "memory-wiki-panel__scroll",
-		"data-testid": "mw-candidates",
-		children: [
-			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-				className: "memory-wiki-panel__section-head",
-				children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: "候选" }), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
-					"data-testid": "mw-cand-counts",
-					children: [
-						"直接 ",
-						direct.length,
-						" / 关联 ",
-						linked.length,
-						" · 选入 ",
-						selected
-					]
-				})]
-			}),
-			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-				className: "memory-wiki-panel__section-head",
-				style: { paddingTop: 2 },
-				children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: "直接命中" }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: report.query })]
-			}),
-			direct.map((candidate) => /* @__PURE__ */ (0, react_jsx_runtime.jsx)(CandidateRow, {
-				candidate,
-				active: candidate.pageId === activePageId,
-				onSelect
-			}, candidate.pageId)),
-			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-				className: "memory-wiki-panel__section-head",
-				style: { paddingTop: 10 },
-				children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: "关联候选" }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: report.hops === 1 ? "1 跳" : "0 跳" })]
-			}),
-			linked.map((candidate) => /* @__PURE__ */ (0, react_jsx_runtime.jsx)(CandidateRow, {
-				candidate,
-				active: candidate.pageId === activePageId,
-				onSelect
-			}, candidate.pageId))
-		]
-	});
-}
-//#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/classcat@5.0.5/node_modules/classcat/index.js
+//#region ../../node_modules/.pnpm/classcat@5.0.5/node_modules/classcat/index.js
 function cc(names) {
 	if (typeof names === "string" || typeof names === "number") return "" + names;
 	let out = "";
@@ -235,7 +43,7 @@ function cc(names) {
 	return out;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-dispatch@3.0.1/node_modules/d3-dispatch/src/dispatch.js
+//#region ../../node_modules/.pnpm/d3-dispatch@3.0.1/node_modules/d3-dispatch/src/dispatch.js
 var noop = { value: () => {} };
 function dispatch() {
 	for (var i = 0, n = arguments.length, _ = {}, t; i < n; ++i) {
@@ -308,7 +116,7 @@ var namespaces_default = {
 	xmlns: "http://www.w3.org/2000/xmlns/"
 };
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/namespace.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/namespace.js
 function namespace_default(name) {
 	var prefix = name += "", i = prefix.indexOf(":");
 	if (i >= 0 && (prefix = name.slice(0, i)) !== "xmlns") name = name.slice(i + 1);
@@ -318,7 +126,7 @@ function namespace_default(name) {
 	} : name;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/creator.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/creator.js
 function creatorInherit(name) {
 	return function() {
 		var document = this.ownerDocument, uri = this.namespaceURI;
@@ -335,7 +143,7 @@ function creator_default(name) {
 	return (fullname.local ? creatorFixed : creatorInherit)(fullname);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selector.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selector.js
 function none() {}
 function selector_default(selector) {
 	return selector == null ? none : function() {
@@ -343,7 +151,7 @@ function selector_default(selector) {
 	};
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/select.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/select.js
 function select_default$2(select) {
 	if (typeof select !== "function") select = selector_default(select);
 	for (var groups = this._groups, m = groups.length, subgroups = new Array(m), j = 0; j < m; ++j) for (var group = groups[j], n = group.length, subgroup = subgroups[j] = new Array(n), node, subnode, i = 0; i < n; ++i) if ((node = group[i]) && (subnode = select.call(node, node.__data__, i, group))) {
@@ -353,12 +161,12 @@ function select_default$2(select) {
 	return new Selection$1(subgroups, this._parents);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/array.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/array.js
 function array(x) {
 	return x == null ? [] : Array.isArray(x) ? x : Array.from(x);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selectorAll.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selectorAll.js
 function empty() {
 	return [];
 }
@@ -368,7 +176,7 @@ function selectorAll_default(selector) {
 	};
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/selectAll.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/selectAll.js
 function arrayAll(select) {
 	return function() {
 		return array(select.apply(this, arguments));
@@ -384,7 +192,7 @@ function selectAll_default$1(select) {
 	return new Selection$1(subgroups, parents);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/matcher.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/matcher.js
 function matcher_default(selector) {
 	return function() {
 		return this.matches(selector);
@@ -396,7 +204,7 @@ function childMatcher(selector) {
 	};
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/selectChild.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/selectChild.js
 var find = Array.prototype.find;
 function childFind(match) {
 	return function() {
@@ -410,7 +218,7 @@ function selectChild_default(match) {
 	return this.select(match == null ? childFirst : childFind(typeof match === "function" ? match : childMatcher(match)));
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/selectChildren.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/selectChildren.js
 var filter = Array.prototype.filter;
 function children() {
 	return Array.from(this.children);
@@ -424,19 +232,19 @@ function selectChildren_default(match) {
 	return this.selectAll(match == null ? children : childrenFilter(typeof match === "function" ? match : childMatcher(match)));
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/filter.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/filter.js
 function filter_default$1(match) {
 	if (typeof match !== "function") match = matcher_default(match);
 	for (var groups = this._groups, m = groups.length, subgroups = new Array(m), j = 0; j < m; ++j) for (var group = groups[j], n = group.length, subgroup = subgroups[j] = [], node, i = 0; i < n; ++i) if ((node = group[i]) && match.call(node, node.__data__, i, group)) subgroup.push(node);
 	return new Selection$1(subgroups, this._parents);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/sparse.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/sparse.js
 function sparse_default(update) {
 	return new Array(update.length);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/enter.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/enter.js
 function enter_default() {
 	return new Selection$1(this._enter || this._groups.map(sparse_default), this._parents);
 }
@@ -463,14 +271,14 @@ EnterNode.prototype = {
 	}
 };
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/constant.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/constant.js
 function constant_default$3(x) {
 	return function() {
 		return x;
 	};
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/data.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/data.js
 function bindIndex(parent, group, enter, update, exit, data) {
 	var i = 0, node, groupLength = group.length, dataLength = data.length;
 	for (; i < dataLength; ++i) if (node = group[i]) {
@@ -521,12 +329,12 @@ function arraylike(data) {
 	return typeof data === "object" && "length" in data ? data : Array.from(data);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/exit.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/exit.js
 function exit_default() {
 	return new Selection$1(this._exit || this._groups.map(sparse_default), this._parents);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/join.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/join.js
 function join_default(onenter, onupdate, onexit) {
 	var enter = this.enter(), update = this, exit = this.exit();
 	if (typeof onenter === "function") {
@@ -542,7 +350,7 @@ function join_default(onenter, onupdate, onexit) {
 	return enter && update ? enter.merge(update).order() : update;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/merge.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/merge.js
 function merge_default$1(context) {
 	var selection = context.selection ? context.selection() : context;
 	for (var groups0 = this._groups, groups1 = selection._groups, m0 = groups0.length, m1 = groups1.length, m = Math.min(m0, m1), merges = new Array(m0), j = 0; j < m; ++j) for (var group0 = groups0[j], group1 = groups1[j], n = group0.length, merge = merges[j] = new Array(n), node, i = 0; i < n; ++i) if (node = group0[i] || group1[i]) merge[i] = node;
@@ -550,7 +358,7 @@ function merge_default$1(context) {
 	return new Selection$1(merges, this._parents);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/order.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/order.js
 function order_default() {
 	for (var groups = this._groups, j = -1, m = groups.length; ++j < m;) for (var group = groups[j], i = group.length - 1, next = group[i], node; --i >= 0;) if (node = group[i]) {
 		if (next && node.compareDocumentPosition(next) ^ 4) next.parentNode.insertBefore(node, next);
@@ -559,7 +367,7 @@ function order_default() {
 	return this;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/sort.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/sort.js
 function sort_default(compare) {
 	if (!compare) compare = ascending;
 	function compareNode(a, b) {
@@ -575,7 +383,7 @@ function ascending(a, b) {
 	return a < b ? -1 : a > b ? 1 : a >= b ? 0 : NaN;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/call.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/call.js
 function call_default() {
 	var callback = arguments[0];
 	arguments[0] = this;
@@ -583,12 +391,12 @@ function call_default() {
 	return this;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/nodes.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/nodes.js
 function nodes_default() {
 	return Array.from(this);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/node.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/node.js
 function node_default() {
 	for (var groups = this._groups, j = 0, m = groups.length; j < m; ++j) for (var group = groups[j], i = 0, n = group.length; i < n; ++i) {
 		var node = group[i];
@@ -597,25 +405,25 @@ function node_default() {
 	return null;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/size.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/size.js
 function size_default() {
 	let size = 0;
 	for (const node of this) ++size;
 	return size;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/empty.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/empty.js
 function empty_default() {
 	return !this.node();
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/each.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/each.js
 function each_default(callback) {
 	for (var groups = this._groups, j = 0, m = groups.length; j < m; ++j) for (var group = groups[j], i = 0, n = group.length, node; i < n; ++i) if (node = group[i]) callback.call(node, node.__data__, i, group);
 	return this;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/attr.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/attr.js
 function attrRemove$1(name) {
 	return function() {
 		this.removeAttribute(name);
@@ -659,12 +467,12 @@ function attr_default$1(name, value) {
 	return this.each((value == null ? fullname.local ? attrRemoveNS$1 : attrRemove$1 : typeof value === "function" ? fullname.local ? attrFunctionNS$1 : attrFunction$1 : fullname.local ? attrConstantNS$1 : attrConstant$1)(fullname, value));
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/window.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/window.js
 function window_default(node) {
 	return node.ownerDocument && node.ownerDocument.defaultView || node.document && node || node.defaultView;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/style.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/style.js
 function styleRemove$1(name) {
 	return function() {
 		this.style.removeProperty(name);
@@ -689,7 +497,7 @@ function styleValue(node, name) {
 	return node.style.getPropertyValue(name) || window_default(node).getComputedStyle(node, null).getPropertyValue(name);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/property.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/property.js
 function propertyRemove(name) {
 	return function() {
 		delete this[name];
@@ -711,7 +519,7 @@ function property_default(name, value) {
 	return arguments.length > 1 ? this.each((value == null ? propertyRemove : typeof value === "function" ? propertyFunction : propertyConstant)(name, value)) : this.node()[name];
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/classed.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/classed.js
 function classArray(string) {
 	return string.trim().split(/^|\s+/);
 }
@@ -773,7 +581,7 @@ function classed_default(name, value) {
 	return this.each((typeof value === "function" ? classedFunction : value ? classedTrue : classedFalse)(names, value));
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/text.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/text.js
 function textRemove() {
 	this.textContent = "";
 }
@@ -792,7 +600,7 @@ function text_default$1(value) {
 	return arguments.length ? this.each(value == null ? textRemove : (typeof value === "function" ? textFunction$1 : textConstant$1)(value)) : this.node().textContent;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/html.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/html.js
 function htmlRemove() {
 	this.innerHTML = "";
 }
@@ -811,7 +619,7 @@ function html_default(value) {
 	return arguments.length ? this.each(value == null ? htmlRemove : (typeof value === "function" ? htmlFunction : htmlConstant)(value)) : this.node().innerHTML;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/raise.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/raise.js
 function raise() {
 	if (this.nextSibling) this.parentNode.appendChild(this);
 }
@@ -819,7 +627,7 @@ function raise_default() {
 	return this.each(raise);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/lower.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/lower.js
 function lower() {
 	if (this.previousSibling) this.parentNode.insertBefore(this, this.parentNode.firstChild);
 }
@@ -827,7 +635,7 @@ function lower_default() {
 	return this.each(lower);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/append.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/append.js
 function append_default(name) {
 	var create = typeof name === "function" ? name : creator_default(name);
 	return this.select(function() {
@@ -835,7 +643,7 @@ function append_default(name) {
 	});
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/insert.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/insert.js
 function constantNull() {
 	return null;
 }
@@ -846,7 +654,7 @@ function insert_default(name, before) {
 	});
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/remove.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/remove.js
 function remove() {
 	var parent = this.parentNode;
 	if (parent) parent.removeChild(this);
@@ -855,7 +663,7 @@ function remove_default$1() {
 	return this.each(remove);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/clone.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/clone.js
 function selection_cloneShallow() {
 	var clone = this.cloneNode(false), parent = this.parentNode;
 	return parent ? parent.insertBefore(clone, this.nextSibling) : clone;
@@ -868,12 +676,12 @@ function clone_default(deep) {
 	return this.select(deep ? selection_cloneDeep : selection_cloneShallow);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/datum.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/datum.js
 function datum_default(value) {
 	return arguments.length ? this.property("__data__", value) : this.node().__data__;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/on.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/on.js
 function contextListener(listener) {
 	return function(event) {
 		listener.call(this, event, this.__data__);
@@ -936,7 +744,7 @@ function on_default$1(typename, value, options) {
 	return this;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/dispatch.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/dispatch.js
 function dispatchEvent(node, type, params) {
 	var window = window_default(node), event = window.CustomEvent;
 	if (typeof event === "function") event = new event(type, params);
@@ -961,12 +769,12 @@ function dispatch_default(type, params) {
 	return this.each((typeof params === "function" ? dispatchFunction : dispatchConstant)(type, params));
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/iterator.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/iterator.js
 function* iterator_default() {
 	for (var groups = this._groups, j = 0, m = groups.length; j < m; ++j) for (var group = groups[j], i = 0, n = group.length, node; i < n; ++i) if (node = group[i]) yield node;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/index.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/selection/index.js
 var root = [null];
 function Selection$1(groups, parents) {
 	this._groups = groups;
@@ -1017,19 +825,19 @@ Selection$1.prototype = selection.prototype = {
 	[Symbol.iterator]: iterator_default
 };
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/select.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/select.js
 function select_default$1(selector) {
 	return typeof selector === "string" ? new Selection$1([[document.querySelector(selector)]], [document.documentElement]) : new Selection$1([[selector]], root);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/sourceEvent.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/sourceEvent.js
 function sourceEvent_default(event) {
 	let sourceEvent;
 	while (sourceEvent = event.sourceEvent) event = sourceEvent;
 	return event;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/pointer.js
+//#region ../../node_modules/.pnpm/d3-selection@3.0.0/node_modules/d3-selection/src/pointer.js
 function pointer_default(event, node) {
 	event = sourceEvent_default(event);
 	if (node === void 0) node = event.currentTarget;
@@ -1049,7 +857,7 @@ function pointer_default(event, node) {
 	return [event.pageX, event.pageY];
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/noevent.js
+//#region ../../node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/noevent.js
 const nonpassive = { passive: false };
 const nonpassivecapture = {
 	capture: true,
@@ -1063,7 +871,7 @@ function noevent_default$1(event) {
 	event.stopImmediatePropagation();
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/nodrag.js
+//#region ../../node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/nodrag.js
 function nodrag_default(view) {
 	var root = view.document.documentElement, selection = select_default$1(view).on("dragstart.drag", noevent_default$1, nonpassivecapture);
 	if ("onselectstart" in root) selection.on("selectstart.drag", noevent_default$1, nonpassivecapture);
@@ -1087,10 +895,10 @@ function yesdrag(view, noclick) {
 	}
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/constant.js
+//#region ../../node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/constant.js
 var constant_default$2 = (x) => () => x;
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/event.js
+//#region ../../node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/event.js
 function DragEvent(type, { sourceEvent, subject, target, identifier, active, x, y, dx, dy, dispatch }) {
 	Object.defineProperties(this, {
 		type: {
@@ -1151,7 +959,7 @@ DragEvent.prototype.on = function() {
 	return value === this._ ? this : value;
 };
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/drag.js
+//#region ../../node_modules/.pnpm/d3-drag@3.0.0/node_modules/d3-drag/src/drag.js
 function defaultFilter$1(event) {
 	return !event.ctrlKey && !event.button;
 }
@@ -1284,7 +1092,7 @@ function drag_default() {
 	return drag;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-color@3.1.0/node_modules/d3-color/src/define.js
+//#region ../../node_modules/.pnpm/d3-color@3.1.0/node_modules/d3-color/src/define.js
 function define_default(constructor, factory, prototype) {
 	constructor.prototype = factory.prototype = prototype;
 	prototype.constructor = constructor;
@@ -1295,7 +1103,7 @@ function extend(parent, definition) {
 	return prototype;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-color@3.1.0/node_modules/d3-color/src/color.js
+//#region ../../node_modules/.pnpm/d3-color@3.1.0/node_modules/d3-color/src/color.js
 function Color() {}
 var darker = .7;
 var brighter = 1 / darker;
@@ -1622,10 +1430,10 @@ function hsl2rgb(h, m1, m2) {
 	return (h < 60 ? m1 + (m2 - m1) * h / 60 : h < 180 ? m2 : h < 240 ? m1 + (m2 - m1) * (240 - h) / 60 : m1) * 255;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/constant.js
+//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/constant.js
 var constant_default$1 = (x) => () => x;
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/color.js
+//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/color.js
 function linear(a, d) {
 	return function(t) {
 		return a + t * d;
@@ -1646,7 +1454,7 @@ function nogamma(a, b) {
 	return d ? linear(a, d) : constant_default$1(isNaN(a) ? b : a);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/rgb.js
+//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/rgb.js
 var rgb_default = (function rgbGamma(y) {
 	var color = gamma(y);
 	function rgb$1(start, end) {
@@ -1663,7 +1471,7 @@ var rgb_default = (function rgbGamma(y) {
 	return rgb$1;
 })(1);
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/numberArray.js
+//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/numberArray.js
 function numberArray_default(a, b) {
 	if (!b) b = [];
 	var n = a ? Math.min(b.length, a.length) : 0, c = b.slice(), i;
@@ -1676,7 +1484,7 @@ function isNumberArray(x) {
 	return ArrayBuffer.isView(x) && !(x instanceof DataView);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/array.js
+//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/array.js
 function genericArray(a, b) {
 	var nb = b ? b.length : 0, na = a ? Math.min(nb, a.length) : 0, x = new Array(na), c = new Array(nb), i = 0;
 	for (; i < na; ++i) x[i] = value_default(a[i], b[i]);
@@ -1687,7 +1495,7 @@ function genericArray(a, b) {
 	};
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/date.js
+//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/date.js
 function date_default(a, b) {
 	var d = /* @__PURE__ */ new Date();
 	return a = +a, b = +b, function(t) {
@@ -1695,14 +1503,14 @@ function date_default(a, b) {
 	};
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/number.js
+//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/number.js
 function number_default(a, b) {
 	return a = +a, b = +b, function(t) {
 		return a * (1 - t) + b * t;
 	};
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/object.js
+//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/object.js
 function object_default(a, b) {
 	var i = {}, c = {}, k;
 	if (a === null || typeof a !== "object") a = {};
@@ -1715,7 +1523,7 @@ function object_default(a, b) {
 	};
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/string.js
+//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/string.js
 var reA = /[-+]?(?:\d+\.?\d*|\.?\d+)(?:[eE][-+]?\d+)?/g;
 var reB = new RegExp(reA.source, "g");
 function zero(b) {
@@ -1760,13 +1568,13 @@ function string_default(a, b) {
 	});
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/value.js
+//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/value.js
 function value_default(a, b) {
 	var t = typeof b, c;
 	return b == null || t === "boolean" ? constant_default$1(b) : (t === "number" ? number_default : t === "string" ? (c = color(b)) ? (b = c, rgb_default) : string_default : b instanceof color ? rgb_default : b instanceof Date ? date_default : isNumberArray(b) ? numberArray_default : Array.isArray(b) ? genericArray : typeof b.valueOf !== "function" && typeof b.toString !== "function" || isNaN(b) ? object_default : number_default)(a, b);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/transform/decompose.js
+//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/transform/decompose.js
 var degrees = 180 / Math.PI;
 var identity$2 = {
 	translateX: 0,
@@ -1792,7 +1600,7 @@ function decompose_default(a, b, c, d, e, f) {
 	};
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/transform/parse.js
+//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/transform/parse.js
 var svgNode;
 function parseCss(value) {
 	const m = new (typeof DOMMatrix === "function" ? DOMMatrix : WebKitCSSMatrix)(value + "");
@@ -1807,7 +1615,7 @@ function parseSvg(value) {
 	return decompose_default(value.a, value.b, value.c, value.d, value.e, value.f);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/transform/index.js
+//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/transform/index.js
 function interpolateTransform(parse, pxComma, pxParen, degParen) {
 	function pop(s) {
 		return s.length ? s.pop() + " " : "";
@@ -1871,7 +1679,7 @@ function interpolateTransform(parse, pxComma, pxParen, degParen) {
 var interpolateTransformCss = interpolateTransform(parseCss, "px, ", "px)", "deg)");
 var interpolateTransformSvg = interpolateTransform(parseSvg, ", ", ")", ")");
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/zoom.js
+//#region ../../node_modules/.pnpm/d3-interpolate@3.0.1/node_modules/d3-interpolate/src/zoom.js
 var epsilon2 = 1e-12;
 function cosh(x) {
 	return ((x = Math.exp(x)) + 1 / x) / 2;
@@ -1916,7 +1724,7 @@ var zoom_default$1 = (function zoomRho(rho, rho2, rho4) {
 	return zoom;
 })(Math.SQRT2, 2, 4);
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-timer@3.0.1/node_modules/d3-timer/src/timer.js
+//#region ../../node_modules/.pnpm/d3-timer@3.0.1/node_modules/d3-timer/src/timer.js
 var frame = 0;
 var timeout = 0;
 var interval = 0;
@@ -2015,7 +1823,7 @@ function sleep(time) {
 	}
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-timer@3.0.1/node_modules/d3-timer/src/timeout.js
+//#region ../../node_modules/.pnpm/d3-timer@3.0.1/node_modules/d3-timer/src/timeout.js
 function timeout_default(callback, delay, time) {
 	var t = new Timer();
 	delay = delay == null ? 0 : +delay;
@@ -2026,7 +1834,7 @@ function timeout_default(callback, delay, time) {
 	return t;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/schedule.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/schedule.js
 var emptyOn = dispatch("start", "end", "cancel", "interrupt");
 var emptyTween = [];
 function schedule_default(node, name, id, index, group, timing) {
@@ -2122,7 +1930,7 @@ function create(node, id, self) {
 	}
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/interrupt.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/interrupt.js
 function interrupt_default$1(node, name) {
 	var schedules = node.__transition, schedule, active, empty = true, i;
 	if (!schedules) return;
@@ -2141,14 +1949,14 @@ function interrupt_default$1(node, name) {
 	if (empty) delete node.__transition;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/selection/interrupt.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/selection/interrupt.js
 function interrupt_default(name) {
 	return this.each(function() {
 		interrupt_default$1(this, name);
 	});
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/tween.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/tween.js
 function tweenRemove(id, name) {
 	var tween0, tween1;
 	return function() {
@@ -2204,13 +2012,13 @@ function tweenValue(transition, name, value) {
 	};
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/interpolate.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/interpolate.js
 function interpolate_default(a, b) {
 	var c;
 	return (typeof b === "number" ? number_default : b instanceof color ? rgb_default : (c = color(b)) ? (b = c, rgb_default) : string_default)(a, b);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/attr.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/attr.js
 function attrRemove(name) {
 	return function() {
 		this.removeAttribute(name);
@@ -2260,7 +2068,7 @@ function attr_default(name, value) {
 	return this.attrTween(name, typeof value === "function" ? (fullname.local ? attrFunctionNS : attrFunction)(fullname, i, tweenValue(this, "attr." + name, value)) : value == null ? (fullname.local ? attrRemoveNS : attrRemove)(fullname) : (fullname.local ? attrConstantNS : attrConstant)(fullname, i, value));
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/attrTween.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/attrTween.js
 function attrInterpolate(name, i) {
 	return function(t) {
 		this.setAttribute(name, i.call(this, t));
@@ -2300,7 +2108,7 @@ function attrTween_default(name, value) {
 	return this.tween(key, (fullname.local ? attrTweenNS : attrTween)(fullname, value));
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/delay.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/delay.js
 function delayFunction(id, value) {
 	return function() {
 		init(this, id).delay = +value.apply(this, arguments);
@@ -2316,7 +2124,7 @@ function delay_default(value) {
 	return arguments.length ? this.each((typeof value === "function" ? delayFunction : delayConstant)(id, value)) : get(this.node(), id).delay;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/duration.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/duration.js
 function durationFunction(id, value) {
 	return function() {
 		set(this, id).duration = +value.apply(this, arguments);
@@ -2332,7 +2140,7 @@ function duration_default(value) {
 	return arguments.length ? this.each((typeof value === "function" ? durationFunction : durationConstant)(id, value)) : get(this.node(), id).duration;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/ease.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/ease.js
 function easeConstant(id, value) {
 	if (typeof value !== "function") throw new Error();
 	return function() {
@@ -2344,7 +2152,7 @@ function ease_default(value) {
 	return arguments.length ? this.each(easeConstant(id, value)) : get(this.node(), id).ease;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/easeVarying.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/easeVarying.js
 function easeVarying(id, value) {
 	return function() {
 		var v = value.apply(this, arguments);
@@ -2357,14 +2165,14 @@ function easeVarying_default(value) {
 	return this.each(easeVarying(this._id, value));
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/filter.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/filter.js
 function filter_default(match) {
 	if (typeof match !== "function") match = matcher_default(match);
 	for (var groups = this._groups, m = groups.length, subgroups = new Array(m), j = 0; j < m; ++j) for (var group = groups[j], n = group.length, subgroup = subgroups[j] = [], node, i = 0; i < n; ++i) if ((node = group[i]) && match.call(node, node.__data__, i, group)) subgroup.push(node);
 	return new Transition(subgroups, this._parents, this._name, this._id);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/merge.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/merge.js
 function merge_default(transition) {
 	if (transition._id !== this._id) throw new Error();
 	for (var groups0 = this._groups, groups1 = transition._groups, m0 = groups0.length, m1 = groups1.length, m = Math.min(m0, m1), merges = new Array(m0), j = 0; j < m; ++j) for (var group0 = groups0[j], group1 = groups1[j], n = group0.length, merge = merges[j] = new Array(n), node, i = 0; i < n; ++i) if (node = group0[i] || group1[i]) merge[i] = node;
@@ -2372,7 +2180,7 @@ function merge_default(transition) {
 	return new Transition(merges, this._parents, this._name, this._id);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/on.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/on.js
 function start(name) {
 	return (name + "").trim().split(/^|\s+/).every(function(t) {
 		var i = t.indexOf(".");
@@ -2393,7 +2201,7 @@ function on_default(name, listener) {
 	return arguments.length < 2 ? get(this.node(), id).on.on(name) : this.each(onFunction(id, name, listener));
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/remove.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/remove.js
 function removeFunction(id) {
 	return function() {
 		var parent = this.parentNode;
@@ -2405,7 +2213,7 @@ function remove_default() {
 	return this.on("end.remove", removeFunction(this._id));
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/select.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/select.js
 function select_default(select) {
 	var name = this._name, id = this._id;
 	if (typeof select !== "function") select = selector_default(select);
@@ -2417,7 +2225,7 @@ function select_default(select) {
 	return new Transition(subgroups, this._parents, name, id);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/selectAll.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/selectAll.js
 function selectAll_default(select) {
 	var name = this._name, id = this._id;
 	if (typeof select !== "function") select = selectorAll_default(select);
@@ -2429,13 +2237,13 @@ function selectAll_default(select) {
 	return new Transition(subgroups, parents, name, id);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/selection.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/selection.js
 var Selection = selection.prototype.constructor;
 function selection_default() {
 	return new Selection(this._groups, this._parents);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/style.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/style.js
 function styleNull(name, interpolate) {
 	var string00, string10, interpolate0;
 	return function() {
@@ -2476,7 +2284,7 @@ function style_default(name, value, priority) {
 	return value == null ? this.styleTween(name, styleNull(name, i)).on("end.style." + name, styleRemove(name)) : typeof value === "function" ? this.styleTween(name, styleFunction(name, i, tweenValue(this, "style." + name, value))).each(styleMaybeRemove(this._id, name)) : this.styleTween(name, styleConstant(name, i, value), priority).on("end.style." + name, null);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/styleTween.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/styleTween.js
 function styleInterpolate(name, i, priority) {
 	return function(t) {
 		this.style.setProperty(name, i.call(this, t), priority);
@@ -2500,7 +2308,7 @@ function styleTween_default(name, value, priority) {
 	return this.tween(key, styleTween(name, value, priority == null ? "" : priority));
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/text.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/text.js
 function textConstant(value) {
 	return function() {
 		this.textContent = value;
@@ -2516,7 +2324,7 @@ function text_default(value) {
 	return this.tween("text", typeof value === "function" ? textFunction(tweenValue(this, "text", value)) : textConstant(value == null ? "" : value + ""));
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/textTween.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/textTween.js
 function textInterpolate(i) {
 	return function(t) {
 		this.textContent = i.call(this, t);
@@ -2540,7 +2348,7 @@ function textTween_default(value) {
 	return this.tween(key, textTween(value));
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/transition.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/transition.js
 function transition_default$1() {
 	var name = this._name, id0 = this._id, id1 = newId();
 	for (var groups = this._groups, m = groups.length, j = 0; j < m; ++j) for (var group = groups[j], n = group.length, node, i = 0; i < n; ++i) if (node = group[i]) {
@@ -2555,7 +2363,7 @@ function transition_default$1() {
 	return new Transition(groups, this._parents, name, id1);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/end.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/end.js
 function end_default() {
 	var on0, on1, that = this, id = that._id, size = that.size();
 	return new Promise(function(resolve, reject) {
@@ -2576,7 +2384,7 @@ function end_default() {
 	});
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/index.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/transition/index.js
 var id = 0;
 function Transition(groups, parents, name, id) {
 	this._groups = groups;
@@ -2624,12 +2432,12 @@ Transition.prototype = transition.prototype = {
 	[Symbol.iterator]: selection_prototype[Symbol.iterator]
 };
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-ease@3.0.1/node_modules/d3-ease/src/cubic.js
+//#region ../../node_modules/.pnpm/d3-ease@3.0.1/node_modules/d3-ease/src/cubic.js
 function cubicInOut(t) {
 	return ((t *= 2) <= 1 ? t * t * t : (t -= 2) * t * t + 2) / 2;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/selection/transition.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/selection/transition.js
 var defaultTiming = {
 	time: null,
 	delay: 0,
@@ -2649,14 +2457,14 @@ function transition_default(name) {
 	return new Transition(groups, this._parents, name, id);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/selection/index.js
+//#region ../../node_modules/.pnpm/d3-transition@3.0.1_d3-selection@3.0.0/node_modules/d3-transition/src/selection/index.js
 selection.prototype.interrupt = interrupt_default;
 selection.prototype.transition = transition_default;
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/constant.js
+//#region ../../node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/constant.js
 var constant_default = (x) => () => x;
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/event.js
+//#region ../../node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/event.js
 function ZoomEvent(type, { sourceEvent, target, transform, dispatch }) {
 	Object.defineProperties(this, {
 		type: {
@@ -2683,7 +2491,7 @@ function ZoomEvent(type, { sourceEvent, target, transform, dispatch }) {
 	});
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/transform.js
+//#region ../../node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/transform.js
 function Transform(k, x, y) {
 	this.k = k;
 	this.x = x;
@@ -2732,7 +2540,7 @@ function transform(node) {
 	return node.__zoom;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/noevent.js
+//#region ../../node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/noevent.js
 function nopropagation(event) {
 	event.stopImmediatePropagation();
 }
@@ -2741,7 +2549,7 @@ function noevent_default(event) {
 	event.stopImmediatePropagation();
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/zoom.js
+//#region ../../node_modules/.pnpm/d3-zoom@3.0.0/node_modules/d3-zoom/src/zoom.js
 function defaultFilter(event) {
 	return (!event.ctrlKey || event.type === "wheel") && !event.button;
 }
@@ -3040,7 +2848,7 @@ function zoom_default() {
 	return zoom;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/@xyflow+system@0.0.83/node_modules/@xyflow/system/dist/esm/index.js
+//#region ../../node_modules/.pnpm/@xyflow+system@0.0.83/node_modules/@xyflow/system/dist/esm/index.js
 const errorMessages = {
 	error001: (lib = "react") => `Seems like you have not used ${lib === "svelte" ? "SvelteFlowProvider" : "ReactFlowProvider"} as an ancestor. Help: https://${lib}flow.dev/error#001`,
 	error002: () => "It looks like you've created a new nodeTypes or edgeTypes object. If this wasn't on purpose please define the nodeTypes/edgeTypes outside of the component or memoize them.",
@@ -5874,7 +5682,7 @@ function XYResizer({ domNode, nodeId, getStoreItems, onChange, onEnd }) {
 	};
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/use-sync-external-store@1.7.0_react@18.3.1/node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.production.js
+//#region ../../node_modules/.pnpm/use-sync-external-store@1.7.0_react@18.3.1/node_modules/use-sync-external-store/cjs/use-sync-external-store-shim.production.js
 /**
 * @license React
 * use-sync-external-store-shim.production.js
@@ -5934,12 +5742,12 @@ var require_use_sync_external_store_shim_production = /* @__PURE__ */ __commonJS
 	exports.useSyncExternalStore = void 0 !== React.useSyncExternalStore ? React.useSyncExternalStore : shim;
 }));
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/use-sync-external-store@1.7.0_react@18.3.1/node_modules/use-sync-external-store/shim/index.js
+//#region ../../node_modules/.pnpm/use-sync-external-store@1.7.0_react@18.3.1/node_modules/use-sync-external-store/shim/index.js
 var require_shim = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	module.exports = require_use_sync_external_store_shim_production();
 }));
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/use-sync-external-store@1.7.0_react@18.3.1/node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.production.js
+//#region ../../node_modules/.pnpm/use-sync-external-store@1.7.0_react@18.3.1/node_modules/use-sync-external-store/cjs/use-sync-external-store-shim/with-selector.production.js
 /**
 * @license React
 * use-sync-external-store-shim/with-selector.production.js
@@ -6011,7 +5819,7 @@ var require_with_selector_production = /* @__PURE__ */ __commonJSMin(((exports) 
 	};
 }));
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/zustand@4.5.7_@types+react@18.3.31_react@18.3.1/node_modules/zustand/esm/vanilla.mjs
+//#region ../../node_modules/.pnpm/zustand@4.5.7_@types+react@18.3.31_react@18.3.1/node_modules/zustand/esm/vanilla.mjs
 var import_with_selector = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((exports, module) => {
 	module.exports = require_with_selector_production();
 })))(), 1);
@@ -6048,7 +5856,7 @@ const createStoreImpl = (createState) => {
 };
 const createStore$1 = (createState) => createState ? createStoreImpl(createState) : createStoreImpl;
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/zustand@4.5.7_@types+react@18.3.31_react@18.3.1/node_modules/zustand/esm/traditional.mjs
+//#region ../../node_modules/.pnpm/zustand@4.5.7_@types+react@18.3.31_react@18.3.1/node_modules/zustand/esm/traditional.mjs
 const { useDebugValue } = react.default;
 const { useSyncExternalStoreWithSelector } = import_with_selector.default;
 const identity = (arg) => arg;
@@ -6065,7 +5873,7 @@ const createWithEqualityFnImpl = (createState, defaultEqualityFn) => {
 };
 const createWithEqualityFn = (createState, defaultEqualityFn) => createState ? createWithEqualityFnImpl(createState, defaultEqualityFn) : createWithEqualityFnImpl;
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/zustand@4.5.7_@types+react@18.3.31_react@18.3.1/node_modules/zustand/esm/shallow.mjs
+//#region ../../node_modules/.pnpm/zustand@4.5.7_@types+react@18.3.31_react@18.3.1/node_modules/zustand/esm/shallow.mjs
 function shallow$1(objA, objB) {
 	if (Object.is(objA, objB)) return true;
 	if (typeof objA !== "object" || objA === null || typeof objB !== "object" || objB === null) return false;
@@ -6085,7 +5893,7 @@ function shallow$1(objA, objB) {
 	return true;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/@xyflow+react@12.12.0_@types+react-dom@18.3.7_@types+react@18.3.31__@types+react@18.3.3_3531a46d79ac20e3b4338a36ca1ca7b8/node_modules/@xyflow/react/dist/esm/index.js
+//#region ../../node_modules/.pnpm/@xyflow+react@12.12.0_@types+react-dom@18.3.7_@types+react@18.3.31__@types+react@18.3.3_3531a46d79ac20e3b4338a36ca1ca7b8/node_modules/@xyflow/react/dist/esm/index.js
 const StoreContext = (0, react.createContext)(null);
 const Provider$1 = StoreContext.Provider;
 const zustandErrorMessage = errorMessages["error001"]("react");
@@ -10196,6 +10004,43 @@ function ReactFlow({ nodes, edges, defaultNodes, defaultEdges, className, nodeTy
 *```
 */
 var index = fixedForwardRef(ReactFlow);
+const viewportSelector = (state) => ({
+	x: state.transform[0],
+	y: state.transform[1],
+	zoom: state.transform[2]
+});
+/**
+* The `useViewport` hook is a convenient way to read the current state of the
+* {@link Viewport} in a component. Components that use this hook
+* will re-render **whenever the viewport changes**.
+*
+* @public
+* @returns The current viewport.
+*
+* @example
+*
+*```jsx
+*import { useViewport } from '@xyflow/react';
+*
+*export default function ViewportDisplay() {
+*  const { x, y, zoom } = useViewport();
+*
+*  return (
+*    <div>
+*      <p>
+*        The viewport is currently at ({x}, {y}) and zoomed to {zoom}.
+*      </p>
+*    </div>
+*  );
+*}
+*```
+*
+* @remarks This hook can only be used in a component that is a child of a
+*{@link ReactFlowProvider} or a {@link ReactFlow} component.
+*/
+function useViewport() {
+	return useStore(viewportSelector, shallow$1);
+}
 errorMessages["error014"]();
 function LinePattern({ dimensions, lineWidth, variant, className }) {
 	return (0, react_jsx_runtime.jsx)("path", {
@@ -10291,60 +10136,7 @@ function BackgroundComponent({ id, variant = BackgroundVariant.Dots, gap = 20, s
 	});
 }
 BackgroundComponent.displayName = "Background";
-/**
-* The `<Background />` component makes it convenient to render different types of backgrounds common in node-based UIs. It comes with three variants: lines, dots and cross.
-*
-* @example
-*
-* A simple example of how to use the Background component.
-*
-* ```tsx
-* import { useState } from 'react';
-* import { ReactFlow, Background, BackgroundVariant } from '@xyflow/react';
-*
-* export default function Flow() {
-*   return (
-*     <ReactFlow defaultNodes={[...]} defaultEdges={[...]}>
-*       <Background color="#ccc" variant={BackgroundVariant.Dots} />
-*     </ReactFlow>
-*   );
-* }
-* ```
-*
-* @example
-*
-* In this example you can see how to combine multiple backgrounds
-*
-* ```tsx
-* import { ReactFlow, Background, BackgroundVariant } from '@xyflow/react';
-* import '@xyflow/react/dist/style.css';
-*
-* export default function Flow() {
-*   return (
-*     <ReactFlow defaultNodes={[...]} defaultEdges={[...]}>
-*       <Background
-*         id="1"
-*         gap={10}
-*         color="#f1f1f1"
-*         variant={BackgroundVariant.Lines}
-*       />
-*       <Background
-*         id="2"
-*         gap={100}
-*         color="#ccc"
-*         variant={BackgroundVariant.Lines}
-*       />
-*     </ReactFlow>
-*   );
-* }
-* ```
-*
-* @remarks
-*
-* When combining multiple <Background /> components it’s important to give each of them a unique id prop!
-*
-*/
-const Background = (0, react.memo)(BackgroundComponent);
+(0, react.memo)(BackgroundComponent);
 function PlusIcon() {
 	return (0, react_jsx_runtime.jsx)("svg", {
 		xmlns: "http://www.w3.org/2000/svg",
@@ -10872,250 +10664,350 @@ function ResizeControl({ nodeId, position, variant = ResizeControlVariant.Handle
 }
 (0, react.memo)(ResizeControl);
 //#endregion
+//#region src/client/graph-layout.ts
+/** Stable positions from real links. Local spatial repulsion keeps labels apart. */
+function layoutGraph(pages, edges) {
+	const index = new Map(pages.map((page, i) => [page.pageId, i]));
+	const links = edges.flatMap((edge) => {
+		const from = index.get(edge.from);
+		const to = index.get(edge.to);
+		return from === void 0 || to === void 0 || from === to ? [] : [{
+			from,
+			to
+		}];
+	});
+	const degree = pages.map(() => 0);
+	for (const link of links) {
+		degree[link.from]++;
+		degree[link.to]++;
+	}
+	const order = pages.map((_, i) => i).sort((a, b) => degree[b] - degree[a] || a - b);
+	const points = pages.map(() => ({
+		x: 0,
+		y: 0,
+		vx: 0,
+		vy: 0
+	}));
+	order.forEach((id, rank) => {
+		const angle = rank * 2.399963;
+		const radius = Math.sqrt(rank) * 115;
+		points[id] = {
+			x: Math.cos(angle) * radius,
+			y: Math.sin(angle) * radius * .75,
+			vx: 0,
+			vy: 0
+		};
+	});
+	for (let iteration = 0; iteration < 160; iteration++) {
+		const cells = /* @__PURE__ */ new Map();
+		points.forEach((point, i) => {
+			const key = Math.floor(point.x / 240) + ":" + Math.floor(point.y / 120);
+			const cell = cells.get(key);
+			if (cell === void 0) cells.set(key, [i]);
+			else cell.push(i);
+		});
+		points.forEach((point, i) => {
+			const cx = Math.floor(point.x / 240), cy = Math.floor(point.y / 120);
+			for (let x = cx - 1; x <= cx + 1; x++) for (let y = cy - 1; y <= cy + 1; y++) for (const j of cells.get(x + ":" + y) ?? []) {
+				if (j <= i) continue;
+				const other = points[j];
+				const dx = point.x - other.x || .1, dy = (point.y - other.y) * 2 || .1;
+				const distance = Math.max(1, Math.hypot(dx, dy));
+				const force = Math.max(0, 230 - distance) * .045;
+				point.vx += dx / distance * force;
+				other.vx -= dx / distance * force;
+				point.vy += dy / distance * force;
+				other.vy -= dy / distance * force;
+			}
+		});
+		for (const link of links) {
+			const a = points[link.from], b = points[link.to];
+			const dx = b.x - a.x, dy = b.y - a.y;
+			const distance = Math.max(1, Math.hypot(dx, dy));
+			const force = (distance - 210) * .012;
+			a.vx += dx / distance * force;
+			b.vx -= dx / distance * force;
+			a.vy += dy / distance * force;
+			b.vy -= dy / distance * force;
+		}
+		const cooling = 1 - iteration / 180;
+		for (const point of points) {
+			point.vx = (point.vx - point.x * .001) * .72;
+			point.vy = (point.vy - point.y * .001) * .72;
+			point.x += Math.max(-15, Math.min(15, point.vx)) * cooling;
+			point.y += Math.max(-15, Math.min(15, point.vy)) * cooling;
+		}
+	}
+	return new Map(pages.map((page, i) => [page.pageId, {
+		x: points[i].x,
+		y: points[i].y
+	}]));
+}
+//#endregion
+//#region src/client/icons.tsx
+const paths = {
+	search: /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("circle", {
+		cx: "10.5",
+		cy: "10.5",
+		r: "6.5"
+	}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", { d: "m16 16 4 4" })] }),
+	close: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", { d: "m6 6 12 12M6 18 18 6" }),
+	graph: /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [
+		/* @__PURE__ */ (0, react_jsx_runtime.jsx)("circle", {
+			cx: "6",
+			cy: "6",
+			r: "2.5"
+		}),
+		/* @__PURE__ */ (0, react_jsx_runtime.jsx)("circle", {
+			cx: "18",
+			cy: "8",
+			r: "2.5"
+		}),
+		/* @__PURE__ */ (0, react_jsx_runtime.jsx)("circle", {
+			cx: "9",
+			cy: "19",
+			r: "2.5"
+		}),
+		/* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", { d: "m8.5 6.5 7 1M6.5 8.5l2 8m2-1 6-5" })
+	] }),
+	plus: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", { d: "M12 5v14M5 12h14" }),
+	minus: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", { d: "M5 12h14" }),
+	fit: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", { d: "M9 4H4v5m11-5h5v5M4 15v5h5m6 0h5v-5" }),
+	arrow: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", { d: "m9 6 6 6-6 6" }),
+	refresh: /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", { d: "M20 7v5h-5M4 17v-5h5" }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", { d: "M6 7a7 7 0 0 1 11-2l3 4M4 15l3 4a7 7 0 0 0 11-2" })] }),
+	back: /* @__PURE__ */ (0, react_jsx_runtime.jsx)("path", { d: "m10 5-7 7 7 7M3 12h18" })
+};
+function Icon({ name }) {
+	return /* @__PURE__ */ (0, react_jsx_runtime.jsx)("svg", {
+		width: "18",
+		height: "18",
+		viewBox: "0 0 24 24",
+		fill: "none",
+		stroke: "currentColor",
+		strokeWidth: "1.6",
+		strokeLinecap: "round",
+		strokeLinejoin: "round",
+		"aria-hidden": "true",
+		children: paths[name]
+	});
+}
+//#endregion
 //#region src/client/EvidenceGraph.tsx
-const NODE_TYPES = { page: (0, react.memo)(function PageNode(props) {
-	const { data } = props;
-	const className = "memory-wiki-panel__node" + (data.active ? " is-active" : "") + (data.selected ? "" : " is-excluded");
-	return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-		className,
+const NODE_TYPES = { page: (0, react.memo)(function PagePoint({ data, id }) {
+	return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("button", {
+		type: "button",
+		className: "memory-wiki-panel__point" + (data.active ? " is-active" : "") + (data.dim ? " is-dim" : "") + (data.match ? " is-match" : ""),
 		"data-testid": "mw-node",
-		"data-page-id": data.pageId,
+		"data-page-id": id,
+		"data-show-label": data.label ? "1" : "0",
+		title: data.title,
+		"aria-label": "查看 " + data.title,
+		"aria-pressed": data.active,
 		children: [
 			/* @__PURE__ */ (0, react_jsx_runtime.jsx)(Handle, {
 				type: "target",
-				position: Position.Left,
+				position: Position.Top,
 				id: "in"
 			}),
-			/* @__PURE__ */ (0, react_jsx_runtime.jsx)("strong", { children: data.title }),
-			/* @__PURE__ */ (0, react_jsx_runtime.jsx)("small", { children: data.note }),
+			/* @__PURE__ */ (0, react_jsx_runtime.jsx)("i", { style: {
+				width: Math.min(16, 8 + Math.sqrt(data.degree) * 2),
+				height: Math.min(16, 8 + Math.sqrt(data.degree) * 2)
+			} }),
+			/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+				style: {
+					fontSize: 13 * data.scale,
+					width: 180 * data.scale
+				},
+				children: data.title
+			}),
 			/* @__PURE__ */ (0, react_jsx_runtime.jsx)(Handle, {
 				type: "source",
-				position: Position.Right,
+				position: Position.Top,
 				id: "out"
 			})
 		]
 	});
 }) };
-function EvidenceGraph(props) {
-	const { report, activePageId, onSelect, selectedPageIds } = props;
-	const chosen = (0, react.useMemo)(() => selectedPageIds !== void 0 ? new Set(selectedPageIds) : new Set(report.candidates.filter((candidate) => candidate.selected).map((candidate) => candidate.pageId)), [report, selectedPageIds]);
-	const nodes = (0, react.useMemo)(() => {
-		const direct = report.candidates.filter((candidate) => candidate.match === "direct");
-		const linked = report.candidates.filter((candidate) => candidate.match === "linked");
-		const build = (candidate, index, column) => ({
-			id: candidate.pageId,
-			type: "page",
-			position: {
-				x: 30 + column * 250,
-				y: 20 + index * 96
-			},
-			data: {
-				title: candidate.title,
-				pageId: candidate.pageId,
-				match: candidate.match,
-				selected: chosen.has(candidate.pageId),
-				active: candidate.pageId === activePageId,
-				note: candidate.match === "direct" ? "直接命中 #" + candidate.rank + " · " + (chosen.has(candidate.pageId) ? "已选入" : "未选入") : "关联 · " + (chosen.has(candidate.pageId) ? "已选入" : reasonLabel(candidate.excludedReason) ?? "未选入")
+function Canvas({ graph, activePageId, onSelect, matches, drawer, reset }) {
+	const flow = useReactFlow();
+	const root = (0, react.useRef)(null);
+	const { zoom } = useViewport();
+	const positions = (0, react.useMemo)(() => layoutGraph(graph.pages, graph.edges), [graph]);
+	const neighborhood = (0, react.useMemo)(() => {
+		const connected = /* @__PURE__ */ new Set([activePageId]);
+		for (const edge of graph.edges) {
+			if (edge.from === activePageId) connected.add(edge.to);
+			if (edge.to === activePageId) connected.add(edge.from);
+		}
+		return connected;
+	}, [graph, activePageId]);
+	const degree = (0, react.useMemo)(() => {
+		const map = /* @__PURE__ */ new Map();
+		for (const edge of graph.edges) for (const id of [edge.from, edge.to]) map.set(id, (map.get(id) ?? 0) + 1);
+		return map;
+	}, [graph]);
+	const labels = (0, react.useMemo)(() => {
+		const visible = /* @__PURE__ */ new Set();
+		const boxes = [];
+		const priority = (id) => id === activePageId ? 1e5 : matches.has(id) ? 1e4 : neighborhood.has(id) ? 1e3 : 0;
+		const order = [...graph.pages].sort((a, b) => priority(b.pageId) + (degree.get(b.pageId) ?? 0) - priority(a.pageId) - (degree.get(a.pageId) ?? 0));
+		for (const page of order) {
+			const point = positions.get(page.pageId);
+			if (page.pageId === activePageId || matches.has(page.pageId) || !boxes.some((box) => Math.abs(box.x - point.x) * zoom < 195 && Math.abs(box.y - point.y) * zoom < 46)) {
+				visible.add(page.pageId);
+				boxes.push(point);
 			}
-		});
-		return [...direct.map((candidate, index) => build(candidate, index, 0)), ...linked.map((candidate, index) => build(candidate, index, 1))];
+		}
+		return visible;
 	}, [
-		report,
+		graph,
+		positions,
+		zoom,
 		activePageId,
-		chosen
+		matches,
+		neighborhood,
+		degree
 	]);
-	const edges = (0, react.useMemo)(() => {
-		const known = new Set(report.candidates.map((candidate) => candidate.pageId));
-		const selected = chosen;
-		return report.edges.filter((edge) => known.has(edge.from) && known.has(edge.to)).map((edge) => {
-			const body = edge.source === "body";
-			const live = selected.has(edge.from) && selected.has(edge.to);
-			const color = body ? "#8bc7f4" : "#6e86a2";
-			return {
-				id: edge.source + ":" + edge.from + ">" + edge.to,
-				source: edge.from,
-				target: edge.to,
-				sourceHandle: "out",
-				targetHandle: "in",
-				type: "default",
-				style: {
-					stroke: color,
-					strokeWidth: body ? 1.8 : 1.5,
-					strokeDasharray: body ? void 0 : "6 5",
-					opacity: live ? 1 : .6
-				},
-				markerEnd: {
-					type: "arrowclosed",
-					width: 14,
-					height: 14,
-					color
-				}
-			};
+	const nodes = (0, react.useMemo)(() => graph.pages.map((page) => ({
+		id: page.pageId,
+		type: "page",
+		position: positions.get(page.pageId),
+		data: {
+			title: page.title,
+			active: page.pageId === activePageId,
+			dim: activePageId !== null && !neighborhood.has(page.pageId),
+			degree: degree.get(page.pageId) ?? 0,
+			match: matches.has(page.pageId),
+			label: labels.has(page.pageId),
+			scale: 1 / Math.max(.08, zoom)
+		}
+	})), [
+		graph,
+		positions,
+		activePageId,
+		neighborhood,
+		degree,
+		matches,
+		labels,
+		zoom
+	]);
+	const edges = (0, react.useMemo)(() => graph.edges.map((edge, i) => {
+		const highlighted = activePageId !== null && (edge.from === activePageId || edge.to === activePageId);
+		return {
+			id: String(i),
+			source: edge.from,
+			target: edge.to,
+			sourceHandle: "out",
+			targetHandle: "in",
+			type: "default",
+			style: {
+				stroke: highlighted ? "var(--mw-blue)" : "var(--mw-edge)",
+				strokeWidth: highlighted ? 1.5 : 1,
+				opacity: activePageId === null ? .3 : highlighted ? .95 : .12,
+				strokeDasharray: edge.source === "related" ? "4 5" : void 0
+			}
+		};
+	}), [graph, activePageId]);
+	const fit = (0, react.useCallback)(() => {
+		flow.fitView({
+			padding: .2,
+			maxZoom: 1,
+			duration: 200
 		});
-	}, [report, chosen]);
-	const onNodeClick = (0, react.useCallback)((_event, node) => {
-		if (typeof node.id === "string") onSelect(node.id);
-	}, [onSelect]);
+	}, [flow]);
+	(0, react.useEffect)(() => {
+		fit();
+	}, [
+		positions,
+		reset,
+		fit
+	]);
+	(0, react.useEffect)(() => {
+		if (activePageId === null) return;
+		const point = positions.get(activePageId), element = root.current;
+		if (point === void 0 || element === null || element.clientWidth < 700) return;
+		const zoom = Math.max(.85, Math.min(1.2, flow.getZoom()));
+		const available = element.clientWidth - (drawer ? Math.min(420, element.clientWidth * .4) + 32 : 0);
+		flow.setViewport({
+			x: available / 2 - (point.x + 80) * zoom,
+			y: element.clientHeight / 2 - (point.y + 18) * zoom,
+			zoom
+		}, { duration: 200 });
+	}, [
+		activePageId,
+		drawer,
+		flow,
+		positions
+	]);
 	return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-		className: "memory-wiki-panel__graph-wrap",
+		ref: root,
+		className: "memory-wiki-panel__graph",
+		"data-testid": "mw-graph",
 		children: [
-			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-				className: "memory-wiki-panel__section-head",
-				children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: "双链图谱" }), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
-					"data-testid": "mw-graph-facts",
-					children: [
-						nodes.length,
-						" 节点 / ",
-						edges.length,
-						" 边"
-					]
-				})]
-			}),
-			/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-				className: "memory-wiki-panel__graph",
-				"data-testid": "mw-graph",
-				children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(index, {
-					nodes,
-					edges,
-					nodeTypes: NODE_TYPES,
-					onNodeClick,
-					fitView: true,
-					fitViewOptions: {
-						padding: .16,
-						maxZoom: 1
-					},
-					minZoom: .4,
-					maxZoom: 1.2,
-					nodesDraggable: false,
-					nodesConnectable: false,
-					nodesFocusable: false,
-					edgesFocusable: false,
-					elementsSelectable: false,
-					panOnDrag: true,
-					zoomOnScroll: false,
-					zoomOnDoubleClick: false,
-					preventScrolling: false,
-					proOptions: { hideAttribution: true },
-					children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Background, {
-						gap: 16,
-						size: 1
-					})
-				})
+			/* @__PURE__ */ (0, react_jsx_runtime.jsx)(index, {
+				nodes,
+				edges,
+				nodeTypes: NODE_TYPES,
+				onNodeClick: (_event, node) => onSelect(node.id),
+				fitView: true,
+				fitViewOptions: {
+					padding: .2,
+					maxZoom: 1
+				},
+				minZoom: .08,
+				maxZoom: 1.8,
+				nodesDraggable: false,
+				nodesConnectable: false,
+				nodesFocusable: false,
+				edgesFocusable: false,
+				elementsSelectable: true,
+				panOnDrag: true,
+				zoomOnScroll: true,
+				zoomOnDoubleClick: false
 			}),
 			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-				className: "memory-wiki-panel__legend",
-				"data-testid": "mw-legend",
+				className: "memory-wiki-panel__canvas-tools",
+				"aria-label": "图谱视图",
 				children: [
-					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("i", {}), "正文链接（body）"] }),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("i", { className: "is-related" }), "related 字段"] }),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: "虚线节点 = 未选入候选" })
+					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
+						"data-testid": "mw-graph-facts",
+						children: [
+							graph.pages.length,
+							" 页 · ",
+							graph.edges.length,
+							" 条连接"
+						]
+					}),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+						type: "button",
+						"aria-label": "缩小",
+						onClick: () => void flow.zoomOut({ duration: 150 }),
+						children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "minus" })
+					}),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+						type: "button",
+						"aria-label": "放大",
+						onClick: () => void flow.zoomIn({ duration: 150 }),
+						children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "plus" })
+					}),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+						type: "button",
+						"aria-label": "显示完整图谱",
+						onClick: fit,
+						children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "fit" })
+					})
 				]
+			}),
+			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+				className: "memory-wiki-panel__graph-legend",
+				"data-testid": "mw-legend",
+				children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: "实线 · 正文链接" }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: "虚线 · related" })]
 			})
 		]
 	});
 }
-//#endregion
-//#region src/client/HistoryPane.tsx
-const format$2 = (value) => value.toLocaleString("zh-CN");
-const originLabel = (origin) => origin === "manual" ? "手选" : "自动";
-/**
-* 本轮依据 + 待提交快照 + 历史快照，全部只读（design §8.1: 选入不等于提交）。
-* Every line is a DTO field: nothing here is a UI-only caption that pretends to
-* be snapshot data.
-*/
-function HistoryPane(props) {
-	const { current, pending, history } = props;
-	const row = (snapshot, testid) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-		className: "memory-wiki-panel__hist-row",
-		"data-testid": testid,
-		children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("strong", { children: [
-			originLabel(snapshot.origin),
-			" · ",
-			snapshot.snapshotId
-		] }), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-			className: "memory-wiki-panel__hist-facts",
-			children: [
-				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", { children: [format$2(snapshot.budgetChars), " 额度"] }),
-				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", { children: [format$2(snapshot.chars), " 字符"] }),
-				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", { children: [snapshot.sources.length, " 页"] }),
-				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", { children: ["lib ", snapshot.libraryRevision] }),
-				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", { children: ["hash ", snapshot.payloadHash.slice(0, 12)] })
-			]
-		})]
-	}, snapshot.snapshotId);
-	return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-		className: "memory-wiki-panel__hist",
-		"data-testid": "mw-history",
-		children: [
-			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("h4", {
-				className: "memory-wiki-panel__subhead",
-				children: [
-					"本轮依据（",
-					current.sources.length,
-					" 页）"
-				]
-			}),
-			current.sources.map((source) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-				className: "memory-wiki-panel__hist-row",
-				"data-testid": "mw-turn-source",
-				children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("strong", { children: source.title }), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-					className: "memory-wiki-panel__hist-facts",
-					children: [
-						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: source.pageId }),
-						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: source.segments.map((segment) => segment.startLine + "-" + segment.endLine).join(",") }),
-						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: source.contentHash.slice(0, 12) })
-					]
-				})]
-			}, source.pageId)),
-			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("h4", {
-				className: "memory-wiki-panel__subhead",
-				children: ["本轮快照（待提交）", /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-					className: "memory-wiki-panel__readonly",
-					children: "只读"
-				})]
-			}),
-			row(pending, "mw-pending"),
-			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("h4", {
-				className: "memory-wiki-panel__subhead",
-				children: ["历史快照", /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-					className: "memory-wiki-panel__readonly",
-					children: "只读"
-				})]
-			}),
-			history.map((snapshot) => row(snapshot, "mw-snapshot"))
-		]
-	});
-}
-//#endregion
-//#region src/client/PreviewPane.tsx
-const format$1 = (value) => value.toLocaleString("zh-CN");
-/**
-* The exact text the snapshot would submit. Design §5.2: the panel shows
-* compile.text verbatim — the client never re-assembles it.
-*/
-function PreviewPane(props) {
-	const { result } = props;
-	return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-		className: "memory-wiki-panel__preview",
-		"data-testid": "mw-preview",
-		children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-			className: "memory-wiki-panel__section-head",
-			children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: "待带入文本 = snapshot.text" }), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
-				"data-testid": "mw-preview-facts",
-				children: [
-					format$1(result.chars),
-					" 字符 · ",
-					result.sources.length,
-					" 页 · hash ",
-					result.payloadHash.slice(0, 12)
-				]
-			})]
-		}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("pre", {
-			className: "memory-wiki-panel__pre",
-			"data-testid": "mw-preview-text",
-			children: result.text
-		})]
-	});
+function EvidenceGraph(props) {
+	return /* @__PURE__ */ (0, react_jsx_runtime.jsx)(ReactFlowProvider, { children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Canvas, { ...props }) });
 }
 //#endregion
 //#region src/core/markdown.ts
@@ -11371,13 +11263,25 @@ function renderBlock(block, index) {
 	}
 }
 function MarkdownView(props) {
-	const blocks = splitBlocks(props.source, 1);
+	const parsed = splitBlocks(props.source, 1);
+	const first = parsed[0];
+	const blocks = props.title !== void 0 && first?.kind === "heading" && first.text.replace(/^#+\s*/, "").trim() === props.title ? parsed.slice(1) : parsed;
 	return /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
 		className: "memory-wiki-panel__md" + (props.compact === true ? " is-compact" : ""),
 		"data-testid": props.testId ?? "mw-md",
 		"data-blocks": blocks.length,
 		children: blocks.map((block, index) => renderBlock(block, index))
 	});
+}
+//#endregion
+//#region src/client/CandidateList.tsx
+const REASON_LABEL = {
+	budget: "额度不足",
+	"no-usable-block": "无可用块",
+	"not-selected": "未选入"
+};
+function reasonLabel(reason) {
+	return reason === void 0 ? null : REASON_LABEL[reason] ?? reason;
 }
 //#endregion
 //#region src/client/SourceDetail.tsx
@@ -11578,6 +11482,7 @@ function SourceDetail(props) {
 * panel must translate every code instead of showing "call failed".
 */
 const HINTS = {
+	"wiki-unavailable": "暂时无法读取 Wiki：请检查插件中的 wikiRoot 设置后重试。",
 	"unknown-session": "会话已不存在或无权访问：请重新打开一个会话，本面板不会自行创建。",
 	"stale-revision": "视图已过期：点按钮读取服务端最新视图，确认当前选择后再操作。",
 	"library-changed": "知识库在准备之后变更了：请重新预览再准备（旧选择不会自动沿用）。",
@@ -11631,6 +11536,7 @@ function unwrap(result) {
 */
 function errorDetail(error) {
 	switch (error.code) {
+		case "wiki-unavailable": return error.reason === "not-configured" ? "尚未设置 Wiki 路径，请在插件设置中配置 wikiRoot。" : "暂时无法读取 Wiki，请检查配置的目录是否可访问后重试。";
 		case "stale-revision": return "面板带着 revision " + error.expected + " 发起写操作，服务端已是 " + error.actual;
 		case "unknown-page": return "页面不在当前知识库：" + error.pageId;
 		case "library-changed": return "准备之后知识库版本变了（期望 " + error.expected.slice(0, 12) + "，实际 " + error.actual.slice(0, 12) + "）";
@@ -11666,6 +11572,11 @@ function createRemoteSource(client, reason) {
 	};
 	return {
 		mode: "remote",
+		async getGraph() {
+			const result = unwrap(await requireClient().graph({}));
+			if (result.error !== void 0) throw new RemoteCallError(result.error.code, errorDetail(result.error));
+			return result;
+		},
 		/** `SessionView` → view model. Field-for-field, no recomputation. */
 		async getView(request) {
 			const view = unwrap(await requireClient().getView({ sessionId: request.sessionId }));
@@ -11709,8 +11620,7 @@ function createRemoteSource(client, reason) {
 		async readPage(request) {
 			const result = unwrap(await requireClient().readPage({
 				pageId: request.pageId,
-				...request.contentHash === void 0 ? {} : { contentHash: request.contentHash },
-				...request.sessionId === null || request.sessionId === void 0 ? {} : { sessionId: request.sessionId }
+				...request.contentHash === void 0 ? {} : { contentHash: request.contentHash }
 			}));
 			if (result.page === void 0) {
 				const error = result.error;
@@ -11820,6 +11730,13 @@ function committableSelection(pageIds, view, candidates) {
 		unfrozen
 	};
 }
+/** Preparing must freeze exactly the selection the user is looking at. */
+function draftMatchesSelection(draft, query, pages) {
+	return draft !== void 0 && draft.query === query && draft.selectedPages.length === pages.length && pages.every((page, index) => {
+		const saved = draft.selectedPages[index];
+		return saved?.pageId === page.pageId && saved.contentHash === page.contentHash;
+	});
+}
 /**
 * B9: fragment boundaries come from ONE place — the server's compiled preview.
 *
@@ -11893,7 +11810,7 @@ const MODE_TEXT = {
 	"manual-invalid": "手选无效"
 };
 const format = (value) => value.toLocaleString("zh-CN");
-const messageOf = (cause) => cause instanceof Error ? cause.message : String(cause);
+const messageOf$1 = (cause) => cause instanceof Error ? cause.message : String(cause);
 /** One candidate row: picking is a separate action from opening the page. */
 function PickRow(props) {
 	const { candidate, picked, active, onToggle, onOpen } = props;
@@ -11954,7 +11871,7 @@ function PickRow(props) {
 	});
 }
 function RemotePanel(props) {
-	const { source, sessionId, view, writeRevision, onView } = props;
+	const { source, sessionId, view, writeRevision, onView, pendingPage } = props;
 	const [override, setOverride] = (0, react.useState)({});
 	const [query, setQuery] = (0, react.useState)(view.draft?.query ?? "");
 	const [report, setReport] = (0, react.useState)(null);
@@ -11967,6 +11884,18 @@ function RemotePanel(props) {
 	const [activePageId, setActivePageId] = (0, react.useState)(null);
 	const [page, setPage] = (0, react.useState)(null);
 	const [pageError, setPageError] = (0, react.useState)(null);
+	const [pickedVersions, setPickedVersions] = (0, react.useState)([]);
+	(0, react.useEffect)(() => {
+		if (pendingPage === null || pendingPage === void 0) return;
+		setPickedVersions((current) => [...current.filter((entry) => entry.pageId !== pendingPage.pageId), {
+			pageId: pendingPage.pageId,
+			contentHash: pendingPage.contentHash
+		}]);
+		setOverride((current) => ({
+			...current,
+			[pendingPage.pageId]: true
+		}));
+	}, [pendingPage]);
 	/** B3: the only session this component's answers may land on. */
 	const sessionRef = (0, react.useRef)(sessionId);
 	const previousSessionRef = (0, react.useRef)(sessionId);
@@ -11989,6 +11918,7 @@ function RemotePanel(props) {
 		setActivePageId(null);
 		setPage(null);
 		setPageError(null);
+		setPickedVersions([]);
 	}, [sessionId]);
 	const revision = view.revision;
 	(0, react.useEffect)(() => {
@@ -11997,19 +11927,25 @@ function RemotePanel(props) {
 	}, [revision, view.draft]);
 	const candidates = report?.candidates ?? [];
 	const draftSelected = view.draft?.selectedPages ?? [];
-	const selection = (0, react.useMemo)(() => committableSelection(effectiveSelection(draftSelected, override), view, candidates), [
+	const versionedPages = (0, react.useMemo)(() => [...candidates, ...pickedVersions], [report, pickedVersions]);
+	const selection = (0, react.useMemo)(() => committableSelection(effectiveSelection(draftSelected, override), view, versionedPages), [
 		draftSelected,
 		override,
 		view,
-		candidates
+		versionedPages
 	]);
 	const selectedIds = (0, react.useMemo)(() => new Set(selection.selectedPageIds), [selection]);
 	const hashOf = (0, react.useMemo)(() => {
 		const map = /* @__PURE__ */ new Map();
 		for (const candidate of report?.candidates ?? []) map.set(candidate.pageId, candidate.contentHash);
+		for (const pageRef of pickedVersions) map.set(pageRef.pageId, pageRef.contentHash);
 		for (const pageRef of view.draft?.selectedPages ?? []) if (!map.has(pageRef.pageId)) map.set(pageRef.pageId, pageRef.contentHash);
 		return map;
-	}, [report, view.draft]);
+	}, [
+		report,
+		view.draft,
+		pickedVersions
+	]);
 	const activeHash = activePageId === null ? void 0 : hashOf.get(activePageId);
 	const activeCandidate = (0, react.useMemo)(() => candidates.find((candidate) => candidate.pageId === activePageId), [candidates, activePageId]);
 	/** B9: boundaries come from the compiled preview — nowhere else. */
@@ -12026,8 +11962,7 @@ function RemotePanel(props) {
 			try {
 				const next = await source.readPage({
 					pageId: activePageId,
-					...contentHash === void 0 ? {} : { contentHash },
-					sessionId: scope.sessionId
+					...contentHash === void 0 ? {} : { contentHash }
 				});
 				if (cancelled || !stillCurrent(scope, sessionRef.current)) return;
 				setPage(next);
@@ -12035,7 +11970,7 @@ function RemotePanel(props) {
 				if (cancelled || !stillCurrent(scope, sessionRef.current)) return;
 				setPage(null);
 				const code = cause instanceof RemoteCallError ? cause.code + ": " : "";
-				setPageError(code + messageOf(cause));
+				setPageError(code + messageOf$1(cause));
 			}
 		})();
 		return () => {
@@ -12078,7 +12013,7 @@ function RemotePanel(props) {
 			onView(next, scope.sessionId);
 		} catch (cause) {
 			if (!isCurrentRequest(id, reloadIdRef.current) || !stillCurrent(scope, sessionRef.current)) return;
-			setRefreshError(committed ? committedReadFailureCopy(operation, messageOf(cause)) : rejectedReadFailureCopy(operation, messageOf(cause)));
+			setRefreshError(committed ? committedReadFailureCopy(operation, messageOf$1(cause)) : rejectedReadFailureCopy(operation, messageOf$1(cause)));
 		}
 	};
 	const performWrite = async (operation, call) => {
@@ -12095,7 +12030,7 @@ function RemotePanel(props) {
 			setBusy(false);
 			if (!stillCurrent(scope, sessionRef.current)) return;
 			const code = cause instanceof RemoteCallError ? cause.code + ": " : "";
-			setWriteError(code + messageOf(cause));
+			setWriteError(code + messageOf$1(cause));
 			return;
 		}
 		setBusy(false);
@@ -12127,7 +12062,7 @@ function RemotePanel(props) {
 			onView(next, scope.sessionId);
 		} catch (cause) {
 			if (!isCurrentRequest(id, reloadIdRef.current) || !stillCurrent(scope, sessionRef.current)) return;
-			setRefreshError(readFailureCopy(messageOf(cause)));
+			setRefreshError(readFailureCopy(messageOf$1(cause)));
 		}
 	};
 	const budgetChars = view.budgetChars;
@@ -12137,6 +12072,7 @@ function RemotePanel(props) {
 	const canWrite = source.reviseDraft !== void 0 && writeRevision !== void 0;
 	const canRevise = canWrite && !locked && budgetChars !== void 0 && hops !== void 0 && selection.unfrozen.length === 0;
 	const canSearch = hops !== void 0 && !locked;
+	const draftDirty = selection.unfrozen.length > 0 || !draftMatchesSelection(view.draft, query, selection.committable);
 	const revise = () => {
 		const reviseDraft = source.reviseDraft;
 		if (reviseDraft === void 0 || !canRevise || budgetChars === void 0 || hops === void 0) return Promise.resolve();
@@ -12151,7 +12087,7 @@ function RemotePanel(props) {
 	};
 	const prepare = () => {
 		const prepareOverride = source.prepareOverride;
-		if (prepareOverride === void 0 || !canWrite || locked) return Promise.resolve();
+		if (prepareOverride === void 0 || !canWrite || locked || draftDirty) return Promise.resolve();
 		return performWrite("prepare-override", (scope, expectedRevision) => prepareOverride({
 			sessionId: scope.sessionId,
 			expectedRevision
@@ -12190,11 +12126,12 @@ function RemotePanel(props) {
 			if (!isCurrentRequest(id, searchIdRef.current) || !stillCurrent(scope, sessionRef.current)) return;
 			setReport(null);
 			setSearchState("failed");
-			setSearchError(messageOf(cause));
+			setSearchError(messageOf$1(cause));
 		}
 	};
 	const toggle = (pageId) => {
 		const selected = selectedIds.has(pageId);
+		if (!selected && candidates.some((candidate) => candidate.pageId === pageId)) setPickedVersions((current) => current.filter((entry) => entry.pageId !== pageId));
 		setOverride((current) => toggleSelection(current, pageId, selected));
 	};
 	const draft = view.draft;
@@ -12222,7 +12159,7 @@ function RemotePanel(props) {
 							className: "memory-wiki-panel__query",
 							"data-testid": "mw-query",
 							value: query,
-							placeholder: "本轮问题（交给服务端检索）",
+							placeholder: "按本轮问题检索依据",
 							"aria-label": "检索问题",
 							onChange: (event) => setQuery(event.target.value)
 						}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
@@ -12242,7 +12179,7 @@ function RemotePanel(props) {
 					report === null ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
 						className: "memory-wiki-panel__excerpt-note",
 						"data-testid": "mw-candidates-empty",
-						children: "候选来自服务端 search：不检索就没有候选，也不在客户端本地打分。"
+						children: "输入本轮问题查找依据，也可以从图谱中选入页面。"
 					}) : /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 						className: "memory-wiki-panel__scroll",
 						"data-testid": "mw-pick-list",
@@ -12271,14 +12208,9 @@ function RemotePanel(props) {
 					})
 				]
 			}),
-			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+			/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
 				className: "memory-wiki-panel__col memory-wiki-panel__col--center",
-				children: [report !== null && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(EvidenceGraph, {
-					report,
-					activePageId,
-					onSelect: setActivePageId,
-					selectedPageIds: selection.selectedPageIds
-				}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+				children: /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 					className: "memory-wiki-panel__server",
 					"data-testid": "mw-server-status",
 					children: [
@@ -12389,9 +12321,9 @@ function RemotePanel(props) {
 								/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
 									type: "button",
 									"data-testid": "mw-prepare",
-									disabled: !canWrite || locked || draft === void 0,
+									disabled: !canWrite || locked || draft === void 0 || draftDirty,
 									onClick: () => void prepare(),
-									children: "准备覆盖"
+									children: "准备下一轮"
 								}),
 								/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
 									type: "button",
@@ -12405,7 +12337,12 @@ function RemotePanel(props) {
 						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
 							className: "memory-wiki-panel__excerpt-note",
 							"data-testid": "mw-write-note",
-							children: "改选无改动时服务端不会清除已准备的覆盖（幂等）；写入只提交带 contentHash 的页。"
+							children: "改选只更新草稿；准备后用于下一轮，不会立即发送消息。"
+						}),
+						draft !== void 0 && draftDirty && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+							className: "memory-wiki-panel__over",
+							"data-testid": "mw-draft-dirty",
+							children: "选择已修改，请先应用改选，再准备下一轮。"
 						}),
 						selection.unfrozen.length > 0 && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", {
 							className: "memory-wiki-panel__over",
@@ -12422,7 +12359,7 @@ function RemotePanel(props) {
 						preview === void 0 || draft === void 0 ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
 							className: "memory-wiki-panel__excerpt-note",
 							"data-testid": "mw-draft-none",
-							children: "服务端还没有草稿：选中候选后「应用改选」才会生成（草稿不等于注入）。"
+							children: "选入页面后，点击「应用改选」预览将使用的依据。"
 						}) : /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 							"data-testid": "mw-draft",
 							children: [
@@ -12458,17 +12395,20 @@ function RemotePanel(props) {
 							]
 						})
 					]
-				})]
+				})
 			}),
 			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 				className: "memory-wiki-panel__col memory-wiki-panel__col--detail",
-				children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(SourceDetail, {
-					candidate: activeCandidate,
-					page,
-					loading: pageError === null && page === null && activePageId !== null,
-					error: pageError,
-					segments,
-					selected: activePageId !== null && selectedIds.has(activePageId)
+				children: [activeCandidate !== void 0 && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("details", {
+					className: "memory-wiki-panel__evidence-detail",
+					children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("summary", { children: "核对候选的片段与版本" }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(SourceDetail, {
+						candidate: activeCandidate,
+						page,
+						loading: pageError === null && page === null && activePageId !== null,
+						error: pageError,
+						segments,
+						selected: activePageId !== null && selectedIds.has(activePageId)
+					})]
 				}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 					className: "memory-wiki-panel__hist",
 					"data-testid": "mw-server-evidence",
@@ -12489,16 +12429,24 @@ function RemotePanel(props) {
 							return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 								className: "memory-wiki-panel__hist-row",
 								"data-testid": "mw-picked",
-								children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("strong", { children: pageId }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-									className: "memory-wiki-panel__hist-facts",
-									children: contentHash === void 0 ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-										"data-testid": "mw-picked-unfrozen",
-										children: "未冻结·不可提交"
-									}) : /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-										"data-testid": "mw-picked-hash",
-										children: contentHash.slice(0, 12)
+								children: [
+									/* @__PURE__ */ (0, react_jsx_runtime.jsx)("strong", { children: pageId }),
+									/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+										className: "memory-wiki-panel__hist-facts",
+										children: contentHash === void 0 ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+											"data-testid": "mw-picked-unfrozen",
+											children: "未冻结·不可提交"
+										}) : /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+											"data-testid": "mw-picked-hash",
+											children: contentHash.slice(0, 12)
+										})
+									}),
+									/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+										type: "button",
+										onClick: () => toggle(pageId),
+										children: "移除"
 									})
-								})]
+								]
 							}, pageId);
 						}),
 						/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("h4", {
@@ -12511,7 +12459,7 @@ function RemotePanel(props) {
 						view.prepared === void 0 ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
 							className: "memory-wiki-panel__excerpt-note",
 							"data-testid": "mw-prepared-none",
-							children: "未准备：prepareOverride 之后才有快照，且只被下一轮提交消费一次。"
+							children: "尚未准备手动覆盖，继续使用自动检索。"
 						}) : /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 							className: "memory-wiki-panel__hist-row",
 							"data-testid": "mw-prepared",
@@ -12635,319 +12583,470 @@ function CaptureStatus({ capture, onOpen }) {
 //#region src/client/MemoryPanel.tsx
 function useSessionKey(uiSession) {
 	const binding = uiSession?.adapter?.current;
-	const subscribe = (0, react.useCallback)((listener) => binding && typeof binding.subscribe === "function" ? binding.subscribe(listener) : () => {}, [binding]);
-	const getSnapshot = (0, react.useCallback)(() => binding && typeof binding.getSnapshot === "function" ? binding.getSnapshot()?.key ?? null : null, [binding]);
-	return (0, react.useSyncExternalStore)(subscribe, getSnapshot, getSnapshot);
+	const subscribe = (0, react.useCallback)((listener) => binding?.subscribe(listener) ?? (() => {}), [binding]);
+	const snapshot = (0, react.useCallback)(() => binding?.getSnapshot()?.key ?? null, [binding]);
+	return (0, react.useSyncExternalStore)(subscribe, snapshot, snapshot);
 }
-/** B12: "when did the panel last hear from the server" must be readable, not guessed. */
-const formatClock = (at) => new Date(at).toLocaleTimeString("zh-CN", { hour12: false });
-/**
-* The panel knows exactly one thing about its data: `source: MemoryWikiSource`.
-* Everything below consumes DTOs from that source; no fixture module is imported
-* here (a dev source, when one is registered, is injected at the switch point).
-*
-* Session rules (client review B1–B12):
-*   - no session → no request, and a neutral 未绑定会话 state (B4);
-*   - reads never carry `expectedRevision`; the ref exists only to pin WRITES,
-*     and it is cleared whenever the session changes (B1/B2);
-*   - a view/revision is stored together with the session that produced it, so
-*     a late answer for session A can never render in session B (B2/B3);
-*   - a read whose response carries `error` never pins a write revision (B4).
-*/
-function MemoryPanel(props) {
-	const sessionKey = useSessionKey(props.uiSession);
-	const source = props.source;
-	const [budget, setBudget] = (0, react.useState)(4e3);
-	const [preset, setPreset] = (0, react.useState)("auto1");
-	const [viewState, setViewState] = (0, react.useState)(null);
-	const [error, setError] = (0, react.useState)(null);
-	const [activePageId, setActivePageId] = (0, react.useState)(null);
-	const [page, setPage] = (0, react.useState)(null);
-	const [capturePage, setCapturePage] = (0, react.useState)(null);
-	const [pageError, setPageError] = (0, react.useState)(null);
-	const [lastReadAt, setLastReadAt] = (0, react.useState)(null);
-	const [readNonce, setReadNonce] = (0, react.useState)(0);
-	/** Write pin only. Never sent on a read (B1), never fed by a dirty read (B4). */
-	const revisionRef = (0, react.useRef)(void 0);
+const KIND = {
+	concept: "概念",
+	entity: "实体",
+	source: "来源",
+	synthesis: "综合",
+	output: "产出"
+};
+const messageOf = (cause) => cause instanceof Error ? cause.message : String(cause);
+/** The full library is global; only context editing belongs to a session. */
+function MemoryPanel({ source, uiSession }) {
+	const sessionKey = useSessionKey(uiSession);
 	const sessionRef = (0, react.useRef)(sessionKey);
-	const previousSessionRef = (0, react.useRef)(sessionKey);
+	sessionRef.current = sessionKey;
+	const [graph, setGraph] = (0, react.useState)(null);
+	const [graphError, setGraphError] = (0, react.useState)(null);
+	const [graphBusy, setGraphBusy] = (0, react.useState)(true);
+	const [graphNonce, setGraphNonce] = (0, react.useState)(0);
+	const [query, setQuery] = (0, react.useState)("");
+	const [searchOpen, setSearchOpen] = (0, react.useState)(false);
+	const [activePageId, setActivePageId] = (0, react.useState)(null);
+	const [drawer, setDrawer] = (0, react.useState)(null);
+	const [reset, setReset] = (0, react.useState)(0);
+	const [pageState, setPageState] = (0, react.useState)(null);
+	const [pageError, setPageError] = (0, react.useState)(null);
+	const [viewState, setViewState] = (0, react.useState)(null);
+	const [viewError, setViewError] = (0, react.useState)(null);
+	const [viewNonce, setViewNonce] = (0, react.useState)(0);
+	const [lastReadAt, setLastReadAt] = (0, react.useState)(null);
+	const [pendingPage, setPendingPage] = (0, react.useState)(null);
+	const searchInput = (0, react.useRef)(null);
 	(0, react.useEffect)(() => {
-		sessionRef.current = sessionKey;
-		if (previousSessionRef.current === sessionKey) return;
-		previousSessionRef.current = sessionKey;
-		revisionRef.current = void 0;
-		setViewState(null);
-		setError(null);
-		setPage(null);
-		setCapturePage(null);
-		setPageError(null);
-		setActivePageId(null);
+		let cancelled = false;
+		setGraphBusy(true);
+		setGraphError(null);
+		source.getGraph().then((next) => {
+			if (cancelled) return;
+			setGraph(next);
+			setGraphBusy(false);
+		}, (cause) => {
+			if (cancelled) return;
+			setGraphError(messageOf(cause));
+			setGraphBusy(false);
+		});
+		return () => {
+			cancelled = true;
+		};
+	}, [source, graphNonce]);
+	(0, react.useEffect)(() => {
+		setPendingPage(null);
+		setViewError(null);
 		setLastReadAt(null);
-	}, [sessionKey]);
-	(0, react.useEffect)(() => {
-		const scope = launchScope(sessionKey);
-		if (scope === null) {
+		if (!boundSession(sessionKey)) {
 			setViewState(null);
-			setError(null);
 			return;
 		}
 		let cancelled = false;
-		(async () => {
-			try {
-				const next = await source.getView({
-					sessionId: scope.sessionId,
-					preset,
-					budget
-				});
-				if (cancelled || !stillCurrent(scope, sessionRef.current)) return;
-				setViewState({
-					session: scope.sessionId,
-					view: next
-				});
-				if (next.error === void 0) revisionRef.current = next.revision;
-				setError(null);
-				setLastReadAt(Date.now());
-				setActivePageId((current) => current ?? next.report?.candidates[0]?.pageId ?? null);
-			} catch (cause) {
-				if (cancelled || !stillCurrent(scope, sessionRef.current)) return;
-				const code = cause instanceof RemoteCallError ? cause.code : "unknown-error";
-				const message = cause instanceof Error ? cause.message : String(cause);
-				setError(code + ": " + message);
-			}
-		})();
+		source.getView({ sessionId: sessionKey }).then((next) => {
+			if (cancelled || sessionRef.current !== sessionKey) return;
+			setViewState({
+				session: sessionKey,
+				view: next,
+				...next.error === void 0 ? { cleanRevision: next.revision } : {}
+			});
+			setLastReadAt(Date.now());
+		}, (cause) => {
+			if (!cancelled && sessionRef.current === sessionKey) setViewError(messageOf(cause));
+		});
 		return () => {
 			cancelled = true;
 		};
 	}, [
 		source,
 		sessionKey,
-		preset,
-		budget,
-		readNonce
+		viewNonce
 	]);
 	(0, react.useEffect)(() => {
-		if (sessionKey === null) return;
-		const reRead = () => {
-			if (sessionRef.current === null) return;
-			if (typeof document !== "undefined" && document.visibilityState === "hidden") return;
-			setReadNonce((value) => value + 1);
+		const refresh = () => {
+			if (document.visibilityState !== "hidden" && boundSession(sessionRef.current)) setViewNonce((n) => n + 1);
 		};
-		window.addEventListener("focus", reRead);
-		document.addEventListener("visibilitychange", reRead);
+		window.addEventListener("focus", refresh);
+		document.addEventListener("visibilitychange", refresh);
 		return () => {
-			window.removeEventListener("focus", reRead);
-			document.removeEventListener("visibilitychange", reRead);
+			window.removeEventListener("focus", refresh);
+			document.removeEventListener("visibilitychange", refresh);
 		};
-	}, [sessionKey]);
-	const view = viewState !== null && viewState.session === sessionKey ? viewState.view : null;
-	const devView = view !== null && view.report !== void 0 && view.compile !== void 0 && view.current !== void 0 && view.history !== void 0 ? {
-		report: view.report,
-		compile: view.compile,
-		current: view.current,
-		history: view.history
-	} : null;
-	const active = (0, react.useMemo)(() => view?.report?.candidates.find((candidate) => candidate.pageId === activePageId), [view, activePageId]);
-	(0, react.useEffect)(() => {
-		const scope = launchScope(sessionKey);
-		if (activePageId === null || scope === null) return;
-		let cancelled = false;
-		setPageError(null);
-		(async () => {
-			try {
-				const next = await source.readPage({
-					pageId: activePageId,
-					...active?.contentHash === void 0 ? {} : { contentHash: active.contentHash },
-					sessionId: scope.sessionId
-				});
-				if (cancelled || !stillCurrent(scope, sessionRef.current)) return;
-				setPage(next);
-			} catch (cause) {
-				if (cancelled || !stillCurrent(scope, sessionRef.current)) return;
-				setPage(null);
-				setPageError(String(cause instanceof Error ? cause.message : cause));
-			}
-		})();
-		return () => {
-			cancelled = true;
-		};
-	}, [
-		source,
-		sessionKey,
-		activePageId,
-		active?.contentHash
-	]);
-	/**
-	* Adopt a server view handed back by a write or a re-read.
-	*
-	* B3: the caller passes the session the read was launched under, and a
-	* mismatch is dropped here as well (second gate, cheap).
-	* B4: only a clean view updates the write pin.
-	*/
+	}, []);
+	const view = viewState?.session === sessionKey ? viewState.view : null;
+	const writeRevision = viewState?.session === sessionKey ? viewState.cleanRevision : void 0;
 	const applyView = (0, react.useCallback)((next, requestSession) => {
 		if (sessionRef.current !== requestSession) return;
-		if (next.error === void 0) revisionRef.current = next.revision;
-		setViewState({
+		setViewState((current) => ({
 			session: requestSession,
-			view: next
-		});
-		setError(null);
+			view: next,
+			cleanRevision: next.error === void 0 ? next.revision : current?.session === requestSession ? current.cleanRevision : void 0
+		}));
+		setViewError(null);
 		setLastReadAt(Date.now());
 	}, []);
-	const draftPreview = view?.draft?.preview;
-	const over = devView !== null ? !devView.compile.fits : draftPreview !== void 0 && draftPreview.fits === false;
-	const fitText = view === null ? "加载中" : over ? "超额" : devView === null && view.draft === void 0 ? "无草稿" : "额度内";
+	const pageIndex = (0, react.useMemo)(() => new Map(graph?.pages.map((entry) => [entry.pageId, entry])), [graph]);
+	const active = activePageId === null ? void 0 : pageIndex.get(activePageId);
+	const term = query.trim().toLocaleLowerCase();
+	const results = (0, react.useMemo)(() => term === "" ? [] : (graph?.pages ?? []).filter((entry) => entry.title.toLocaleLowerCase().includes(term) || entry.pageId.toLocaleLowerCase().includes(term)), [graph, term]);
+	const matches = (0, react.useMemo)(() => new Set(results.map((entry) => entry.pageId)), [results]);
+	const outgoing = (0, react.useMemo)(() => [...new Set(graph?.edges.filter((edge) => edge.from === activePageId).map((edge) => edge.to))], [graph, activePageId]);
+	const incoming = (0, react.useMemo)(() => [...new Set(graph?.edges.filter((edge) => edge.to === activePageId).map((edge) => edge.from))], [graph, activePageId]);
+	(0, react.useEffect)(() => {
+		setPageState(null);
+		setPageError(null);
+		if (active === void 0) return;
+		let cancelled = false;
+		source.readPage({
+			pageId: active.pageId,
+			contentHash: active.contentHash
+		}).then((next) => {
+			if (!cancelled) setPageState({
+				hash: active.contentHash,
+				page: next
+			});
+		}, (cause) => {
+			if (!cancelled) setPageError({
+				id: active.pageId,
+				message: messageOf(cause)
+			});
+		});
+		return () => {
+			cancelled = true;
+		};
+	}, [
+		source,
+		graph,
+		active?.pageId,
+		active?.contentHash
+	]);
+	const page = pageState !== null && pageState.page.pageId === active?.pageId && pageState.hash === active?.contentHash ? pageState.page : null;
+	const openPage = (0, react.useCallback)((id) => {
+		setActivePageId(id);
+		setDrawer("detail");
+		setSearchOpen(false);
+	}, []);
+	const clearSearch = () => {
+		setQuery("");
+		setSearchOpen(false);
+		setActivePageId(null);
+		setDrawer(null);
+		setReset((n) => n + 1);
+	};
+	const refreshGraph = () => {
+		clearSearch();
+		setGraphNonce((n) => n + 1);
+	};
+	const close = () => {
+		setDrawer(null);
+		setActivePageId(null);
+		setReset((n) => n + 1);
+	};
+	const readFailure = pageError?.id === activePageId ? pageError.message : null;
+	const relations = [["关联知识", outgoing], ["引用了本页", incoming]];
 	return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("section", {
 		className: "memory-wiki-panel",
 		"data-testid": "mw-panel",
-		children: [
-			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("header", {
-				className: "memory-wiki-panel__head",
-				children: [
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h2", {
-						className: "memory-wiki-panel__title",
-						children: "记忆 Wiki · 双链依据"
-					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-						className: "memory-wiki-panel__badge",
-						"data-testid": "mw-mode",
-						children: source.mode
-					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-						className: "memory-wiki-panel__badge" + (over ? " memory-wiki-panel__badge--gold" : ""),
-						"data-testid": "mw-fit-badge",
-						children: fitText
-					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-						className: "memory-wiki-panel__head-meta",
-						children: [
-							/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
-								"data-testid": "mw-session",
-								children: ["会话 ", sessionKey ?? "未绑定"]
-							}),
-							view !== null && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [view.libraryRevision !== void 0 && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
-								"data-testid": "mw-lib",
-								children: ["库 ", view.libraryRevision]
-							}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
-								"data-testid": "mw-rev",
-								children: ["视图 rev ", view.revision]
-							})] }),
-							/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
-								"data-testid": "mw-last-read",
-								children: ["上次读取 ", lastReadAt === null ? "尚未读取" : formatClock(lastReadAt)]
-							})
-						]
-					})
-				]
-			}),
-			view?.capture && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(CaptureStatus, {
-				capture: view.capture,
-				onOpen: (pageId) => {
-					const session = sessionKey;
-					source.readPage({
-						pageId,
-						sessionId: session
-					}).then((result) => {
-						if (sessionRef.current === session) setCapturePage(result);
-					}, (cause) => {
-						if (sessionRef.current === session) setError(String(cause));
-					});
-				}
-			}),
-			capturePage && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-				className: "memory-wiki-panel__fault",
-				children: [
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
-						type: "button",
-						onClick: () => setCapturePage(null),
-						children: "关闭经验正文"
-					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", { children: capturePage.title }),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(MarkdownView, { source: capturePage.body })
-				]
-			}),
-			error !== null && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-				className: "memory-wiki-panel__fault",
-				"data-testid": "mw-error",
-				role: "alert",
-				children: [
-					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("strong", { children: [
-						"读取视图失败（",
-						source.mode,
-						"）"
-					] }),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: error }),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
-						className: "memory-wiki-panel__excerpt-note",
-						children: "面板不展示回落数据：抓不到宿主视图时，它宁可停在已显示的 revision。"
-					})
-				]
-			}),
-			!boundSession(sessionKey) ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-				className: "memory-wiki-panel__fault",
-				"data-testid": "mw-unbound",
-				children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("strong", { children: "未绑定会话" }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "本面板不向服务端发请求：先在一个会话里打开它，视图随会话绑定。" })]
-			}) : view === null ? error === null ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-				className: "memory-wiki-panel__fault",
-				"data-testid": "mw-loading",
-				children: [
-					"正在从 ",
-					source.mode,
-					" 数据源取视图…"
-				]
-			}) : null : devView === null ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)(RemotePanel, {
-				source,
-				sessionId: sessionKey,
-				view,
-				writeRevision: revisionRef.current,
-				onView: applyView
-			}, sessionKey) : /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-				className: "memory-wiki-panel__body",
-				"data-testid": "mw-dev-view",
-				children: [
-					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
-						className: "memory-wiki-panel__col memory-wiki-panel__col--list",
-						children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(CandidateList, {
-							report: devView.report,
-							activePageId,
-							onSelect: setActivePageId
+		"data-source": source.mode,
+		onKeyDown: (event) => {
+			if (event.key === "Escape") {
+				setSearchOpen(false);
+				close();
+			}
+			if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
+				event.preventDefault();
+				searchInput.current?.focus();
+			}
+		},
+		children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("header", {
+			className: "memory-wiki-panel__head",
+			children: [
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+					className: "memory-wiki-panel__brand",
+					children: [
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "graph" }),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h2", { children: "记忆 Wiki" }),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: "知识图谱" })
+					]
+				}),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+					className: "memory-wiki-panel__searchbox",
+					children: [
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "search" }),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("input", {
+							ref: searchInput,
+							value: query,
+							placeholder: "搜索页面标题或路径",
+							"aria-label": "搜索知识",
+							"data-testid": "mw-browse-query",
+							"aria-expanded": searchOpen && term !== "",
+							"aria-controls": "mw-browse-results",
+							autoComplete: "off",
+							onFocus: () => setSearchOpen(true),
+							onChange: (event) => {
+								setQuery(event.target.value);
+								setSearchOpen(true);
+							},
+							onKeyDown: (event) => {
+								if (event.key === "Enter" && results[0] !== void 0) openPage(results[0].pageId);
+							}
+						}),
+						query !== "" ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+							type: "button",
+							onClick: clearSearch,
+							"aria-label": "清空搜索",
+							children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "close" })
+						}) : /* @__PURE__ */ (0, react_jsx_runtime.jsx)("kbd", { children: "⌘ K" }),
+						searchOpen && term !== "" && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+							className: "memory-wiki-panel__search-results",
+							id: "mw-browse-results",
+							"data-testid": "mw-browse-results",
+							children: [
+								/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+									role: "status",
+									children: results.length === 0 ? "没有找到页面，试试其他标题或路径。" : results.length + " 个匹配页面"
+								}),
+								results.slice(0, 30).map((entry) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("button", {
+									type: "button",
+									onClick: () => openPage(entry.pageId),
+									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", { children: [entry.title, /* @__PURE__ */ (0, react_jsx_runtime.jsx)("small", { children: entry.pageId })] }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "arrow" })]
+								}, entry.pageId)),
+								results.length > 30 && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: [
+									"还有 ",
+									results.length - 30,
+									" 页，请缩小搜索范围。"
+								] })
+							]
 						})
-					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-						className: "memory-wiki-panel__col memory-wiki-panel__col--center",
-						children: [
-							/* @__PURE__ */ (0, react_jsx_runtime.jsx)(EvidenceGraph, {
-								report: devView.report,
-								activePageId,
-								onSelect: setActivePageId
+					]
+				}),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+					className: "memory-wiki-panel__head-actions",
+					children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+						type: "button",
+						className: "memory-wiki-panel__icon",
+						onClick: refreshGraph,
+						"aria-label": "刷新知识图谱",
+						disabled: graphBusy,
+						children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "refresh" })
+					}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("button", {
+						type: "button",
+						"data-testid": "mw-context-toggle",
+						"aria-expanded": drawer === "context",
+						"aria-controls": "mw-context",
+						onClick: () => {
+							setSearchOpen(false);
+							setDrawer((current) => current === "context" ? null : "context");
+						},
+						children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "graph" }), "上下文"]
+					})]
+				})
+			]
+		}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+			className: "memory-wiki-panel__workspace",
+			children: [
+				graph !== null && graph.pages.length > 0 && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(EvidenceGraph, {
+					graph,
+					activePageId,
+					onSelect: openPage,
+					matches,
+					drawer: drawer !== null,
+					reset
+				}),
+				graphError !== null ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+					className: "memory-wiki-panel__empty",
+					role: "alert",
+					"data-testid": "mw-graph-error",
+					children: [
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "graph" }),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", { children: "暂时无法读取知识图谱" }),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: graphError }),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+							type: "button",
+							onClick: refreshGraph,
+							children: "重新读取"
+						})
+					]
+				}) : graph === null ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+					className: "memory-wiki-panel__empty",
+					role: "status",
+					"data-testid": "mw-loading",
+					children: [
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "graph" }),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", { children: "正在展开知识图谱" }),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "读取 Wiki 页面与链接…" })
+					]
+				}) : graph.pages.length === 0 ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+					className: "memory-wiki-panel__empty",
+					"data-testid": "mw-graph-empty",
+					children: [
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "graph" }),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", { children: "Wiki 里还没有可展示的页面" }),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "添加有效的 Markdown 知识页面后，刷新即可看到关系图。" })
+					]
+				}) : null,
+				graphBusy && graph !== null && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+					className: "memory-wiki-panel__updating",
+					role: "status",
+					children: "正在更新图谱…"
+				}),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
+					className: "memory-wiki-panel__canvas-status",
+					"data-testid": "mw-browse-status",
+					children: [source.mode === "fixture" ? "设计预览 · 示例内容" : !boundSession(sessionKey) ? "浏览模式 · 未绑定会话" : view === null ? "上下文未就绪" : view.prepared !== void 0 ? "已准备下一轮手选依据" : "自动模式", graph !== null && graph.brokenLinks > 0 ? " · " + graph.brokenLinks + " 个未解析链接" : ""]
+				}),
+				drawer === "detail" && active !== void 0 && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("aside", {
+					className: "memory-wiki-panel__drawer",
+					"aria-label": "知识详情",
+					"data-testid": "mw-knowledge-detail",
+					children: [
+						/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+							className: "memory-wiki-panel__drawer-head",
+							children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", { children: active.title }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+								type: "button",
+								className: "memory-wiki-panel__icon",
+								onClick: close,
+								"aria-label": "关闭知识详情",
+								children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "close" })
+							})]
+						}),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+							className: "memory-wiki-panel__reader",
+							children: [
+								/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", {
+									className: "memory-wiki-panel__page-meta",
+									children: [KIND[active.kind] ?? active.kind, active.asOf === void 0 ? "" : " · " + active.asOf]
+								}),
+								readFailure !== null ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+									role: "alert",
+									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: readFailure }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+										type: "button",
+										onClick: () => setGraphNonce((n) => n + 1),
+										children: "刷新图谱后重读"
+									})]
+								}) : page === null ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+									role: "status",
+									children: "正在读取页面…"
+								}) : /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(MarkdownView, {
+									source: page.body,
+									title: active.title,
+									testId: "mw-knowledge-body"
+								}), page.truncated && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", {
+									className: "memory-wiki-panel__excerpt-note",
+									children: [
+										"正文较长，当前展示前 ",
+										page.limitChars?.toLocaleString(),
+										" 字符。"
+									]
+								})] }),
+								relations.map(([title, ids]) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("section", {
+									className: "memory-wiki-panel__relations",
+									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h4", { children: title }), ids.length === 0 ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: ["暂无", title === "关联知识" ? "出链" : "反链"] }) : ids.map((id) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("button", {
+										type: "button",
+										onClick: () => openPage(id),
+										children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: pageIndex.get(id)?.title ?? id }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "arrow" })]
+									}, id))]
+								}, String(title))),
+								/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("details", {
+									className: "memory-wiki-panel__page-info",
+									children: [
+										/* @__PURE__ */ (0, react_jsx_runtime.jsx)("summary", { children: "页面信息" }),
+										/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: active.pageId }),
+										/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: ["版本 ", active.contentHash.slice(0, 12)] })
+									]
+								})
+							]
+						}, active.pageId),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("footer", {
+							className: "memory-wiki-panel__reader-footer",
+							children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("button", {
+								type: "button",
+								"data-testid": "mw-add-evidence",
+								disabled: !boundSession(sessionKey) || view === null || writeRevision === void 0 || source.reviseDraft === void 0,
+								onClick: () => {
+									setPendingPage({ ...active });
+									setDrawer("context");
+								},
+								children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "plus" }), "选为下一轮依据"]
+							}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: boundSession(sessionKey) ? "先选入，再在上下文中预览和准备。" : "浏览无需会话；选为依据需先打开一个会话。" })]
+						})
+					]
+				}),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("aside", {
+					id: "mw-context",
+					className: "memory-wiki-panel__drawer memory-wiki-panel__drawer--context",
+					"aria-label": "会话上下文",
+					hidden: drawer !== "context",
+					children: [
+						view?.capture && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(CaptureStatus, {
+							capture: view.capture,
+							onOpen: (pageId) => {
+								setGraphNonce((n) => n + 1);
+								openPage(pageId);
+							}
+						}),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+							className: "memory-wiki-panel__drawer-head",
+							children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", { children: "会话上下文" }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "自动检索，或为下一轮指定依据。" })] }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+								type: "button",
+								className: "memory-wiki-panel__icon",
+								onClick: close,
+								"aria-label": "关闭上下文",
+								children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "close" })
+							})]
+						}),
+						!boundSession(sessionKey) ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+							className: "memory-wiki-panel__context-note",
+							"data-testid": "mw-unbound",
+							children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h4", { children: "打开一个会话后即可选择依据" }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "你可以继续浏览整库图谱和知识正文。" })]
+						}) : view === null ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+							className: "memory-wiki-panel__context-note",
+							role: viewError === null ? "status" : "alert",
+							children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: viewError ?? "正在读取会话状态…" }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+								type: "button",
+								onClick: () => setViewNonce((n) => n + 1),
+								children: "重新读取"
+							})]
+						}) : /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [
+							/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+								className: "memory-wiki-panel__context-meta",
+								children: [
+									/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+										"data-testid": "mw-mode",
+										children: source.mode
+									}),
+									/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
+										"data-testid": "mw-session",
+										children: ["会话 ", sessionKey]
+									}),
+									/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
+										"data-testid": "mw-rev",
+										children: ["视图 rev ", view.revision]
+									}),
+									/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
+										"data-testid": "mw-last-read",
+										children: ["上次读取 ", lastReadAt === null ? "尚未读取" : new Date(lastReadAt).toLocaleTimeString("zh-CN", { hour12: false })]
+									})
+								]
 							}),
-							/* @__PURE__ */ (0, react_jsx_runtime.jsx)(BudgetBar, {
-								result: devView.compile,
-								budget,
-								selection: preset,
-								onBudget: setBudget,
-								onSelection: setPreset
+							viewError !== null && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+								role: "alert",
+								"data-testid": "mw-error",
+								children: viewError
 							}),
-							/* @__PURE__ */ (0, react_jsx_runtime.jsx)(PreviewPane, { result: devView.compile })
-						]
-					}),
-					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-						className: "memory-wiki-panel__col memory-wiki-panel__col--detail",
-						children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(SourceDetail, {
-							candidate: active,
-							page,
-							loading: pageError === null && page === null,
-							error: pageError,
-							segments: active?.segments ?? null,
-							selected: active?.selected ?? false
-						}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(HistoryPane, {
-							current: devView.compile,
-							pending: devView.current,
-							history: devView.history
-						})]
-					})
-				]
-			})
-		]
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)(RemotePanel, {
+								source,
+								sessionId: sessionKey,
+								view,
+								writeRevision,
+								onView: applyView,
+								pendingPage
+							}, sessionKey)
+						] })
+					]
+				})
+			]
+		})]
 	});
 }
 //#endregion
@@ -12980,6 +13079,9 @@ function unregisteredFixtureSource(reason) {
 	};
 	return {
 		mode: "fixture",
+		async getGraph() {
+			return fail();
+		},
 		async getView() {
 			return fail();
 		},
@@ -12996,7 +13098,7 @@ function createSource(mode = SOURCE_MODE, remote) {
 	return unregisteredFixtureSource("no fixture source registered; production bundles none");
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/@deepseek-ai+dsh-typert-protocol@0.2.1-rc.3_@deepseek-ai+cordis@4.0.5/node_modules/@deepseek-ai/dsh-typert-protocol/lib/types/remote-info.js
+//#region ../../node_modules/.pnpm/@deepseek-ai+dsh-typert-protocol@0.2.1-rc.3_@deepseek-ai+cordis@4.0.5/node_modules/@deepseek-ai/dsh-typert-protocol/lib/types/remote-info.js
 /** Lazy assembly of generated Remote definitions using caller-supplied Zod; no runtime imports. */
 /**
 * Retain one generated definition per endpoint without constructing parsers or projections.
@@ -13202,6 +13304,78 @@ const dsh_memory_wiki_memoryWiki_clearOverride_result$schema = () => dsh_memory_
 		zod.z.object({
 			"code": zod.z.literal("no-usable-block"),
 			"pageIds": zod.z.array(zod.z.string())
+		}),
+		zod.z.object({
+			"code": zod.z.literal("wiki-unavailable"),
+			"reason": zod.z.union([zod.z.literal("not-configured"), zod.z.literal("read-failed")])
+		})
+	]).optional()
+});
+let dsh_memory_wiki_memoryWiki_graph_parameter_0$schema$value;
+const dsh_memory_wiki_memoryWiki_graph_parameter_0$schema = () => dsh_memory_wiki_memoryWiki_graph_parameter_0$schema$value ??= zod.z.object({});
+let dsh_memory_wiki_memoryWiki_graph_result$schema$value;
+const dsh_memory_wiki_memoryWiki_graph_result$schema = () => dsh_memory_wiki_memoryWiki_graph_result$schema$value ??= zod.z.object({
+	"libraryRevision": zod.z.string(),
+	"pages": zod.z.array(zod.z.object({
+		"pageId": zod.z.string(),
+		"title": zod.z.string(),
+		"kind": zod.z.union([
+			zod.z.literal("source"),
+			zod.z.literal("entity"),
+			zod.z.literal("concept"),
+			zod.z.literal("synthesis"),
+			zod.z.literal("output")
+		]),
+		"contentHash": zod.z.string(),
+		"asOf": zod.z.union([zod.z.undefined(), zod.z.string()]).optional()
+	})),
+	"edges": zod.z.array(zod.z.object({
+		"from": zod.z.string(),
+		"to": zod.z.string(),
+		"source": zod.z.union([zod.z.literal("body"), zod.z.literal("related")]),
+		"line": zod.z.union([zod.z.undefined(), zod.z.number()]).optional().describe("1-based file line for body edges; undefined for `related` edges.")
+	})),
+	"brokenLinks": zod.z.number(),
+	"error": zod.z.union([
+		zod.z.undefined(),
+		zod.z.object({
+			"code": zod.z.literal("unknown-session"),
+			"sessionId": zod.z.string()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("stale-revision"),
+			"expected": zod.z.number(),
+			"actual": zod.z.number()
+		}),
+		zod.z.object({ "code": zod.z.literal("nothing-selected") }),
+		zod.z.object({
+			"code": zod.z.literal("unknown-page"),
+			"pageId": zod.z.string()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("library-changed"),
+			"expected": zod.z.string(),
+			"actual": zod.z.string()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("page-version-mismatch"),
+			"pageId": zod.z.string(),
+			"expected": zod.z.string(),
+			"actual": zod.z.string()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("manual-over-budget"),
+			"overBy": zod.z.number(),
+			"budgetChars": zod.z.number(),
+			"selectedChars": zod.z.number()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("no-usable-block"),
+			"pageIds": zod.z.array(zod.z.string())
+		}),
+		zod.z.object({
+			"code": zod.z.literal("wiki-unavailable"),
+			"reason": zod.z.union([zod.z.literal("not-configured"), zod.z.literal("read-failed")])
 		})
 	]).optional()
 });
@@ -13305,18 +13479,20 @@ const dsh_memory_wiki_memoryWiki_prepareOverride_result$schema = () => dsh_memor
 		zod.z.object({
 			"code": zod.z.literal("no-usable-block"),
 			"pageIds": zod.z.array(zod.z.string())
+		}),
+		zod.z.object({
+			"code": zod.z.literal("wiki-unavailable"),
+			"reason": zod.z.union([zod.z.literal("not-configured"), zod.z.literal("read-failed")])
 		})
 	]).optional()
 });
 let dsh_memory_wiki_memoryWiki_readPage_parameter_0$schema$value;
 const dsh_memory_wiki_memoryWiki_readPage_parameter_0$schema = () => dsh_memory_wiki_memoryWiki_readPage_parameter_0$schema$value ??= zod.z.object({
-	"sessionId": zod.z.string(),
 	"pageId": zod.z.string(),
 	"contentHash": zod.z.union([zod.z.undefined(), zod.z.string()]).optional().describe("When present, a page whose content hash differs is rejected rather than shown.")
 });
 let dsh_memory_wiki_memoryWiki_readPage_result$schema$value;
 const dsh_memory_wiki_memoryWiki_readPage_result$schema = () => dsh_memory_wiki_memoryWiki_readPage_result$schema$value ??= zod.z.object({
-	"revision": zod.z.number(),
 	"page": zod.z.union([zod.z.undefined(), zod.z.object({
 		"pageId": zod.z.string(),
 		"title": zod.z.string(),
@@ -13374,6 +13550,10 @@ const dsh_memory_wiki_memoryWiki_readPage_result$schema = () => dsh_memory_wiki_
 		zod.z.object({
 			"code": zod.z.literal("no-usable-block"),
 			"pageIds": zod.z.array(zod.z.string())
+		}),
+		zod.z.object({
+			"code": zod.z.literal("wiki-unavailable"),
+			"reason": zod.z.union([zod.z.literal("not-configured"), zod.z.literal("read-failed")])
 		})
 	]).optional()
 });
@@ -13460,6 +13640,10 @@ const dsh_memory_wiki_memoryWiki_reviseDraft_result$schema = () => dsh_memory_wi
 		zod.z.object({
 			"code": zod.z.literal("no-usable-block"),
 			"pageIds": zod.z.array(zod.z.string())
+		}),
+		zod.z.object({
+			"code": zod.z.literal("wiki-unavailable"),
+			"reason": zod.z.union([zod.z.literal("not-configured"), zod.z.literal("read-failed")])
 		})
 	]).optional()
 });
@@ -13538,6 +13722,10 @@ const dsh_memory_wiki_memoryWiki_search_result$schema = () => dsh_memory_wiki_me
 		zod.z.object({
 			"code": zod.z.literal("no-usable-block"),
 			"pageIds": zod.z.array(zod.z.string())
+		}),
+		zod.z.object({
+			"code": zod.z.literal("wiki-unavailable"),
+			"reason": zod.z.union([zod.z.literal("not-configured"), zod.z.literal("read-failed")])
 		})
 	]).optional()
 });
@@ -13714,6 +13902,10 @@ const dsh_memory_wiki_memoryWiki_view_result$schema = () => dsh_memory_wiki_memo
 		zod.z.object({
 			"code": zod.z.literal("no-usable-block"),
 			"pageIds": zod.z.array(zod.z.string())
+		}),
+		zod.z.object({
+			"code": zod.z.literal("wiki-unavailable"),
+			"reason": zod.z.union([zod.z.literal("not-configured"), zod.z.literal("read-failed")])
 		})
 	]).optional()
 });
@@ -13722,6 +13914,8 @@ const dsh_memory_wiki_memoryWiki_clearOverride_parameter_0_strict$schema = () =>
 	"sessionId": zod.z.string(),
 	"expectedRevision": zod.z.number()
 });
+let dsh_memory_wiki_memoryWiki_graph_parameter_0_strict$schema$value;
+const dsh_memory_wiki_memoryWiki_graph_parameter_0_strict$schema = () => dsh_memory_wiki_memoryWiki_graph_parameter_0_strict$schema$value ??= zod.z.strictObject({});
 let dsh_memory_wiki_memoryWiki_prepareOverride_parameter_0_strict$schema$value;
 const dsh_memory_wiki_memoryWiki_prepareOverride_parameter_0_strict$schema = () => dsh_memory_wiki_memoryWiki_prepareOverride_parameter_0_strict$schema$value ??= zod.z.strictObject({
 	"sessionId": zod.z.string(),
@@ -13729,7 +13923,6 @@ const dsh_memory_wiki_memoryWiki_prepareOverride_parameter_0_strict$schema = () 
 });
 let dsh_memory_wiki_memoryWiki_readPage_parameter_0_strict$schema$value;
 const dsh_memory_wiki_memoryWiki_readPage_parameter_0_strict$schema = () => dsh_memory_wiki_memoryWiki_readPage_parameter_0_strict$schema$value ??= zod.z.strictObject({
-	"sessionId": zod.z.string(),
 	"pageId": zod.z.string(),
 	"contentHash": zod.z.union([zod.z.undefined(), zod.z.string()]).optional().describe("When present, a page whose content hash differs is rejected rather than shown.")
 });
@@ -13933,6 +14126,21 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 								},
 								"required": ["code", "pageIds"],
 								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "wiki-unavailable"
+									},
+									"reason": {
+										"type": "string",
+										"enum": ["not-configured", "read-failed"]
+									}
+								},
+								"required": ["code", "reason"],
+								"additionalProperties": true
 							}
 						] }
 					},
@@ -13942,7 +14150,252 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 180,
+				"line": 188,
+				"column": 9
+			}
+		},
+		"memoryWiki/graph": {
+			service: "memoryWiki",
+			description: "Read all library page metadata and resolved links without a session.",
+			invocation: { kind: "direct" },
+			parameters: [{
+				name: "input",
+				source: "json",
+				codec: {
+					mode: "strict",
+					typeSymbol: "dsh-memory-wiki/contracts#GraphInput",
+					create: dsh_memory_wiki_memoryWiki_graph_parameter_0$schema,
+					jsonSchema: {
+						"type": "object",
+						"properties": {},
+						"required": [],
+						"additionalProperties": true
+					}
+				},
+				strictCodec: {
+					mode: "strict",
+					typeSymbol: "dsh-memory-wiki/contracts#GraphInput",
+					create: dsh_memory_wiki_memoryWiki_graph_parameter_0_strict$schema,
+					jsonSchema: {
+						"type": "object",
+						"properties": {},
+						"required": [],
+						"additionalProperties": false
+					}
+				}
+			}],
+			result: {
+				mode: "strict",
+				typeSymbol: "dsh-memory-wiki/contracts#GraphResult",
+				create: dsh_memory_wiki_memoryWiki_graph_result$schema,
+				jsonSchema: {
+					"type": "object",
+					"properties": {
+						"libraryRevision": { "type": "string" },
+						"pages": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"pageId": { "type": "string" },
+									"title": { "type": "string" },
+									"kind": {
+										"type": "string",
+										"enum": [
+											"source",
+											"entity",
+											"concept",
+											"synthesis",
+											"output"
+										]
+									},
+									"contentHash": { "type": "string" },
+									"asOf": { "type": "string" }
+								},
+								"required": [
+									"pageId",
+									"title",
+									"kind",
+									"contentHash"
+								],
+								"additionalProperties": true
+							}
+						},
+						"edges": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"from": { "type": "string" },
+									"to": { "type": "string" },
+									"source": {
+										"type": "string",
+										"enum": ["body", "related"]
+									},
+									"line": {
+										"type": "number",
+										"description": "1-based file line for body edges; undefined for `related` edges."
+									}
+								},
+								"required": [
+									"from",
+									"to",
+									"source"
+								],
+								"additionalProperties": true
+							}
+						},
+						"brokenLinks": { "type": "number" },
+						"error": { "oneOf": [
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "unknown-session"
+									},
+									"sessionId": { "type": "string" }
+								},
+								"required": ["code", "sessionId"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "stale-revision"
+									},
+									"expected": { "type": "number" },
+									"actual": { "type": "number" }
+								},
+								"required": [
+									"code",
+									"expected",
+									"actual"
+								],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "nothing-selected"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "unknown-page"
+									},
+									"pageId": { "type": "string" }
+								},
+								"required": ["code", "pageId"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "library-changed"
+									},
+									"expected": { "type": "string" },
+									"actual": { "type": "string" }
+								},
+								"required": [
+									"code",
+									"expected",
+									"actual"
+								],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "page-version-mismatch"
+									},
+									"pageId": { "type": "string" },
+									"expected": { "type": "string" },
+									"actual": { "type": "string" }
+								},
+								"required": [
+									"code",
+									"pageId",
+									"expected",
+									"actual"
+								],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "manual-over-budget"
+									},
+									"overBy": { "type": "number" },
+									"budgetChars": { "type": "number" },
+									"selectedChars": { "type": "number" }
+								},
+								"required": [
+									"code",
+									"overBy",
+									"budgetChars",
+									"selectedChars"
+								],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "no-usable-block"
+									},
+									"pageIds": {
+										"type": "array",
+										"items": { "type": "string" }
+									}
+								},
+								"required": ["code", "pageIds"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "wiki-unavailable"
+									},
+									"reason": {
+										"type": "string",
+										"enum": ["not-configured", "read-failed"]
+									}
+								},
+								"required": ["code", "reason"],
+								"additionalProperties": true
+							}
+						] }
+					},
+					"required": [
+						"libraryRevision",
+						"pages",
+						"edges",
+						"brokenLinks"
+					],
+					"additionalProperties": true
+				}
+			},
+			sourceLocation: {
+				"file": "packages/dsh-memory-wiki/src/server/index.ts",
+				"line": 138,
 				"column": 9
 			}
 		},
@@ -14285,6 +14738,21 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 								},
 								"required": ["code", "pageIds"],
 								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "wiki-unavailable"
+									},
+									"reason": {
+										"type": "string",
+										"enum": ["not-configured", "read-failed"]
+									}
+								},
+								"required": ["code", "reason"],
+								"additionalProperties": true
 							}
 						] }
 					},
@@ -14294,7 +14762,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 170,
+				"line": 178,
 				"column": 9
 			}
 		},
@@ -14304,7 +14772,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			invocation: { kind: "direct" },
 			parameters: [{
 				name: "input",
-				description: "session, page id and the content hash the client saw.",
+				description: "page id and the content hash the client saw.",
 				source: "json",
 				codec: {
 					mode: "strict",
@@ -14313,14 +14781,13 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 					jsonSchema: {
 						"type": "object",
 						"properties": {
-							"sessionId": { "type": "string" },
 							"pageId": { "type": "string" },
 							"contentHash": {
 								"type": "string",
 								"description": "When present, a page whose content hash differs is rejected rather than shown."
 							}
 						},
-						"required": ["sessionId", "pageId"],
+						"required": ["pageId"],
 						"additionalProperties": true
 					}
 				},
@@ -14331,14 +14798,13 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 					jsonSchema: {
 						"type": "object",
 						"properties": {
-							"sessionId": { "type": "string" },
 							"pageId": { "type": "string" },
 							"contentHash": {
 								"type": "string",
 								"description": "When present, a page whose content hash differs is rejected rather than shown."
 							}
 						},
-						"required": ["sessionId", "pageId"],
+						"required": ["pageId"],
 						"additionalProperties": false
 					}
 				}
@@ -14351,7 +14817,6 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 				jsonSchema: {
 					"type": "object",
 					"properties": {
-						"revision": { "type": "number" },
 						"page": {
 							"type": "object",
 							"properties": {
@@ -14535,16 +15000,31 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 								},
 								"required": ["code", "pageIds"],
 								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "wiki-unavailable"
+									},
+									"reason": {
+										"type": "string",
+										"enum": ["not-configured", "read-failed"]
+									}
+								},
+								"required": ["code", "reason"],
+								"additionalProperties": true
 							}
 						] }
 					},
-					"required": ["revision"],
+					"required": [],
 					"additionalProperties": true
 				}
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 150,
+				"line": 158,
 				"column": 9
 			}
 		},
@@ -14870,6 +15350,21 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 								},
 								"required": ["code", "pageIds"],
 								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "wiki-unavailable"
+									},
+									"reason": {
+										"type": "string",
+										"enum": ["not-configured", "read-failed"]
+									}
+								},
+								"required": ["code", "reason"],
+								"additionalProperties": true
 							}
 						] }
 					},
@@ -14879,7 +15374,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 160,
+				"line": 168,
 				"column": 9
 			}
 		},
@@ -15157,6 +15652,21 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 								},
 								"required": ["code", "pageIds"],
 								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "wiki-unavailable"
+									},
+									"reason": {
+										"type": "string",
+										"enum": ["not-configured", "read-failed"]
+									}
+								},
+								"required": ["code", "reason"],
+								"additionalProperties": true
 							}
 						] }
 					},
@@ -15173,7 +15683,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 140,
+				"line": 148,
 				"column": 9
 			}
 		},
@@ -15722,6 +16232,21 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 								},
 								"required": ["code", "pageIds"],
 								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "wiki-unavailable"
+									},
+									"reason": {
+										"type": "string",
+										"enum": ["not-configured", "read-failed"]
+									}
+								},
+								"required": ["code", "reason"],
+								"additionalProperties": true
 							}
 						] }
 					},
@@ -15736,7 +16261,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 127,
+				"line": 129,
 				"column": 9
 			}
 		}
@@ -15829,6 +16354,7 @@ function createLazyRemoteClient(ctx) {
 		return fn(input);
 	};
 	return {
+		graph: call("graph"),
 		getView: call("view"),
 		search: call("search"),
 		readPage: call("readPage"),
@@ -15885,7 +16411,7 @@ function resolveService(ctx, name) {
 	} catch {}
 }
 function styles() {
-	return "/* this gets exported as style.css and can be used for the default theming */\n/* these are the necessary styles for React/Svelte Flow, they get used by base.css and style.css */\n.react-flow {\n  direction: ltr;\n\n  --xy-edge-stroke-default: #b1b1b7;\n  --xy-edge-stroke-width-default: 1;\n  --xy-edge-stroke-selected-default: #555;\n\n  --xy-connectionline-stroke-default: #b1b1b7;\n  --xy-connectionline-stroke-width-default: 1;\n\n  --xy-attribution-background-color-default: rgba(255, 255, 255, 0.5);\n\n  --xy-minimap-background-color-default: #fff;\n  --xy-minimap-mask-background-color-default: rgba(240, 240, 240, 0.6);\n  --xy-minimap-mask-stroke-color-default: transparent;\n  --xy-minimap-mask-stroke-width-default: 1;\n  --xy-minimap-node-background-color-default: #e2e2e2;\n  --xy-minimap-node-stroke-color-default: transparent;\n  --xy-minimap-node-stroke-width-default: 2;\n\n  --xy-background-color-default: transparent;\n  --xy-background-pattern-dots-color-default: #91919a;\n  --xy-background-pattern-lines-color-default: #eee;\n  --xy-background-pattern-cross-color-default: #e2e2e2;\n  background-color: var(--xy-background-color, var(--xy-background-color-default));\n  --xy-node-color-default: inherit;\n  --xy-node-border-default: 1px solid #1a192b;\n  --xy-node-background-color-default: #fff;\n  --xy-node-group-background-color-default: rgba(240, 240, 240, 0.25);\n  --xy-node-boxshadow-hover-default: 0 1px 4px 1px rgba(0, 0, 0, 0.08);\n  --xy-node-boxshadow-selected-default: 0 0 0 0.5px #1a192b;\n  --xy-node-border-radius-default: 3px;\n\n  --xy-handle-background-color-default: #1a192b;\n  --xy-handle-border-color-default: #fff;\n\n  --xy-selection-background-color-default: rgba(0, 89, 220, 0.08);\n  --xy-selection-border-default: 1px dotted rgba(0, 89, 220, 0.8);\n\n  --xy-controls-button-background-color-default: #fefefe;\n  --xy-controls-button-background-color-hover-default: #f4f4f4;\n  --xy-controls-button-color-default: inherit;\n  --xy-controls-button-color-hover-default: inherit;\n  --xy-controls-button-border-color-default: #eee;\n  --xy-controls-box-shadow-default: 0 0 2px 1px rgba(0, 0, 0, 0.08);\n\n  --xy-edge-label-background-color-default: #ffffff;\n  --xy-edge-label-color-default: inherit;\n  --xy-resize-background-color-default: #3367d9;\n}\n.react-flow.dark {\n  --xy-edge-stroke-default: #3e3e3e;\n  --xy-edge-stroke-width-default: 1;\n  --xy-edge-stroke-selected-default: #727272;\n\n  --xy-connectionline-stroke-default: #b1b1b7;\n  --xy-connectionline-stroke-width-default: 1;\n\n  --xy-attribution-background-color-default: rgba(150, 150, 150, 0.25);\n\n  --xy-minimap-background-color-default: #141414;\n  --xy-minimap-mask-background-color-default: rgba(60, 60, 60, 0.6);\n  --xy-minimap-mask-stroke-color-default: transparent;\n  --xy-minimap-mask-stroke-width-default: 1;\n  --xy-minimap-node-background-color-default: #2b2b2b;\n  --xy-minimap-node-stroke-color-default: transparent;\n  --xy-minimap-node-stroke-width-default: 2;\n\n  --xy-background-color-default: #141414;\n  --xy-background-pattern-dots-color-default: #555;\n  --xy-background-pattern-lines-color-default: #333;\n  --xy-background-pattern-cross-color-default: #333;\n  --xy-node-color-default: #f8f8f8;\n  --xy-node-border-default: 1px solid #3c3c3c;\n  --xy-node-background-color-default: #1e1e1e;\n  --xy-node-group-background-color-default: rgba(240, 240, 240, 0.25);\n  --xy-node-boxshadow-hover-default: 0 1px 4px 1px rgba(255, 255, 255, 0.08);\n  --xy-node-boxshadow-selected-default: 0 0 0 0.5px #999;\n\n  --xy-handle-background-color-default: #bebebe;\n  --xy-handle-border-color-default: #1e1e1e;\n\n  --xy-selection-background-color-default: rgba(200, 200, 220, 0.08);\n  --xy-selection-border-default: 1px dotted rgba(200, 200, 220, 0.8);\n\n  --xy-controls-button-background-color-default: #2b2b2b;\n  --xy-controls-button-background-color-hover-default: #3e3e3e;\n  --xy-controls-button-color-default: #f8f8f8;\n  --xy-controls-button-color-hover-default: #fff;\n  --xy-controls-button-border-color-default: #5b5b5b;\n  --xy-controls-box-shadow-default: 0 0 2px 1px rgba(0, 0, 0, 0.08);\n\n  --xy-edge-label-background-color-default: #141414;\n  --xy-edge-label-color-default: #f8f8f8;\n}\n.react-flow__background {\n  background-color: var(--xy-background-color-props, var(--xy-background-color, var(--xy-background-color-default)));\n  pointer-events: none;\n  z-index: -1;\n}\n.react-flow__container {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  top: 0;\n  left: 0;\n}\n.react-flow__pane {\n  z-index: 1;\n  touch-action: none;\n}\n.react-flow__pane.draggable {\n    cursor: grab;\n  }\n.react-flow__pane.dragging {\n    cursor: grabbing;\n  }\n.react-flow__pane.selection {\n    cursor: pointer;\n  }\n.react-flow__viewport {\n  transform-origin: 0 0;\n  z-index: 2;\n  pointer-events: none;\n}\n.react-flow__renderer {\n  z-index: 4;\n}\n.react-flow__selection {\n  z-index: 6;\n}\n.react-flow__nodesselection-rect:focus,\n.react-flow__nodesselection-rect:focus-visible {\n  outline: none;\n}\n.react-flow__edge-path {\n  stroke: var(--xy-edge-stroke, var(--xy-edge-stroke-default));\n  stroke-width: var(--xy-edge-stroke-width, var(--xy-edge-stroke-width-default));\n  fill: none;\n}\n.react-flow__connection-path {\n  stroke: var(--xy-connectionline-stroke, var(--xy-connectionline-stroke-default));\n  stroke-width: var(--xy-connectionline-stroke-width, var(--xy-connectionline-stroke-width-default));\n  fill: none;\n}\n.react-flow .react-flow__edges {\n  position: absolute;\n}\n.react-flow .react-flow__edges svg {\n    overflow: visible;\n    position: absolute;\n    pointer-events: none;\n  }\n.react-flow__edge {\n  pointer-events: visibleStroke;\n}\n.react-flow__edge.selectable {\n    cursor: pointer;\n  }\n.react-flow__edge.animated path {\n    stroke-dasharray: 5;\n    animation: dashdraw 0.5s linear infinite;\n  }\n.react-flow__edge.animated path.react-flow__edge-interaction {\n    stroke-dasharray: none;\n    animation: none;\n  }\n.react-flow__edge.inactive {\n    pointer-events: none;\n  }\n.react-flow__edge.selected,\n  .react-flow__edge:focus,\n  .react-flow__edge:focus-visible {\n    outline: none;\n  }\n.react-flow__edge.selected .react-flow__edge-path,\n  .react-flow__edge.selectable:focus .react-flow__edge-path,\n  .react-flow__edge.selectable:focus-visible .react-flow__edge-path {\n    stroke: var(--xy-edge-stroke-selected, var(--xy-edge-stroke-selected-default));\n  }\n.react-flow__edge-textwrapper {\n    pointer-events: all;\n  }\n.react-flow__edge .react-flow__edge-text {\n    pointer-events: none;\n    -webkit-user-select: none;\n       -moz-user-select: none;\n            user-select: none;\n  }\n/* Arrowhead marker styles - use CSS custom properties as default */\n.react-flow__arrowhead polyline {\n  stroke: var(--xy-edge-stroke, var(--xy-edge-stroke-default));\n}\n.react-flow__arrowhead polyline.arrowclosed {\n  fill: var(--xy-edge-stroke, var(--xy-edge-stroke-default));\n}\n.react-flow__connection {\n  pointer-events: none;\n}\n.react-flow__connection .animated {\n    stroke-dasharray: 5;\n    animation: dashdraw 0.5s linear infinite;\n  }\nsvg.react-flow__connectionline {\n  z-index: 1001;\n  overflow: visible;\n  position: absolute;\n}\n.react-flow__nodes {\n  pointer-events: none;\n  transform-origin: 0 0;\n}\n.react-flow__node {\n  position: absolute;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n          user-select: none;\n  pointer-events: all;\n  transform-origin: 0 0;\n  box-sizing: border-box;\n  cursor: default;\n}\n.react-flow__node.selectable {\n    cursor: pointer;\n  }\n.react-flow__node.draggable {\n    cursor: grab;\n    pointer-events: all;\n  }\n.react-flow__node.draggable.dragging {\n      cursor: grabbing;\n    }\n.react-flow__nodesselection {\n  z-index: 3;\n  transform-origin: left top;\n  pointer-events: none;\n}\n.react-flow__nodesselection-rect {\n    position: absolute;\n    pointer-events: all;\n    cursor: grab;\n  }\n.react-flow__handle {\n  position: absolute;\n  pointer-events: none;\n  min-width: 5px;\n  min-height: 5px;\n  width: 6px;\n  height: 6px;\n  background-color: var(--xy-handle-background-color, var(--xy-handle-background-color-default));\n  border: 1px solid var(--xy-handle-border-color, var(--xy-handle-border-color-default));\n  border-radius: 100%;\n}\n.react-flow__handle.connectingfrom {\n    pointer-events: all;\n  }\n.react-flow__handle.connectionindicator {\n    pointer-events: all;\n    cursor: crosshair;\n  }\n.react-flow__handle-bottom {\n    top: auto;\n    left: 50%;\n    bottom: 0;\n    transform: translate(-50%, 50%);\n  }\n.react-flow__handle-top {\n    top: 0;\n    left: 50%;\n    transform: translate(-50%, -50%);\n  }\n.react-flow__handle-left {\n    top: 50%;\n    left: 0;\n    transform: translate(-50%, -50%);\n  }\n.react-flow__handle-right {\n    top: 50%;\n    right: 0;\n    transform: translate(50%, -50%);\n  }\n.react-flow__edgeupdater {\n  cursor: move;\n  pointer-events: all;\n}\n.react-flow__pane.selection .react-flow__panel {\n  pointer-events: none;\n}\n.react-flow__panel {\n  position: absolute;\n  z-index: 5;\n  margin: 15px;\n}\n.react-flow__panel.top {\n    top: 0;\n  }\n.react-flow__panel.bottom {\n    bottom: 0;\n  }\n.react-flow__panel.top.center, .react-flow__panel.bottom.center {\n      left: 50%;\n      transform: translateX(-15px) translateX(-50%);\n    }\n.react-flow__panel.left {\n    left: 0;\n  }\n.react-flow__panel.right {\n    right: 0;\n  }\n.react-flow__panel.left.center, .react-flow__panel.right.center {\n      top: 50%;\n      transform: translateY(-15px) translateY(-50%);\n    }\n.react-flow__attribution {\n  font-size: 10px;\n  background: var(--xy-attribution-background-color, var(--xy-attribution-background-color-default));\n  padding: 2px 3px;\n  margin: 0;\n}\n.react-flow__attribution a {\n    text-decoration: none;\n    color: #999;\n  }\n@keyframes dashdraw {\n  from {\n    stroke-dashoffset: 10;\n  }\n}\n.react-flow__edgelabel-renderer {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  pointer-events: none;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n          user-select: none;\n  left: 0;\n  top: 0;\n}\n.react-flow__viewport-portal {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  left: 0;\n  top: 0;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n          user-select: none;\n}\n.react-flow__minimap {\n  background: var(\n    --xy-minimap-background-color-props,\n    var(--xy-minimap-background-color, var(--xy-minimap-background-color-default))\n  );\n}\n.react-flow__minimap-svg {\n    display: block;\n  }\n.react-flow__minimap-mask {\n    fill: var(\n      --xy-minimap-mask-background-color-props,\n      var(--xy-minimap-mask-background-color, var(--xy-minimap-mask-background-color-default))\n    );\n    stroke: var(\n      --xy-minimap-mask-stroke-color-props,\n      var(--xy-minimap-mask-stroke-color, var(--xy-minimap-mask-stroke-color-default))\n    );\n    stroke-width: var(\n      --xy-minimap-mask-stroke-width-props,\n      var(--xy-minimap-mask-stroke-width, var(--xy-minimap-mask-stroke-width-default))\n    );\n  }\n.react-flow__minimap-node {\n    fill: var(\n      --xy-minimap-node-background-color-props,\n      var(--xy-minimap-node-background-color, var(--xy-minimap-node-background-color-default))\n    );\n    stroke: var(\n      --xy-minimap-node-stroke-color-props,\n      var(--xy-minimap-node-stroke-color, var(--xy-minimap-node-stroke-color-default))\n    );\n    stroke-width: var(\n      --xy-minimap-node-stroke-width-props,\n      var(--xy-minimap-node-stroke-width, var(--xy-minimap-node-stroke-width-default))\n    );\n  }\n.react-flow__background-pattern.dots {\n    fill: var(\n      --xy-background-pattern-color-props,\n      var(--xy-background-pattern-color, var(--xy-background-pattern-dots-color-default))\n    );\n  }\n.react-flow__background-pattern.lines {\n    stroke: var(\n      --xy-background-pattern-color-props,\n      var(--xy-background-pattern-color, var(--xy-background-pattern-lines-color-default))\n    );\n  }\n.react-flow__background-pattern.cross {\n    stroke: var(\n      --xy-background-pattern-color-props,\n      var(--xy-background-pattern-color, var(--xy-background-pattern-cross-color-default))\n    );\n  }\n.react-flow__controls {\n  display: flex;\n  flex-direction: column;\n  box-shadow: var(--xy-controls-box-shadow, var(--xy-controls-box-shadow-default));\n}\n.react-flow__controls.horizontal {\n    flex-direction: row;\n  }\n.react-flow__controls-button {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    height: 26px;\n    width: 26px;\n    padding: 4px;\n    border: none;\n    background: var(--xy-controls-button-background-color, var(--xy-controls-button-background-color-default));\n    border-bottom: 1px solid\n      var(\n        --xy-controls-button-border-color-props,\n        var(--xy-controls-button-border-color, var(--xy-controls-button-border-color-default))\n      );\n    color: var(\n      --xy-controls-button-color-props,\n      var(--xy-controls-button-color, var(--xy-controls-button-color-default))\n    );\n    cursor: pointer;\n    -webkit-user-select: none;\n       -moz-user-select: none;\n            user-select: none;\n  }\n.react-flow__controls-button svg {\n      width: 100%;\n      max-width: 12px;\n      max-height: 12px;\n      fill: currentColor;\n    }\n.react-flow__edge.updating .react-flow__edge-path {\n      stroke: #777;\n    }\n.react-flow__edge-text {\n    font-size: 10px;\n  }\n.react-flow__node.selectable:focus,\n  .react-flow__node.selectable:focus-visible {\n    outline: none;\n  }\n.react-flow__node-input,\n.react-flow__node-default,\n.react-flow__node-output,\n.react-flow__node-group {\n  padding: 10px;\n  border-radius: var(--xy-node-border-radius, var(--xy-node-border-radius-default));\n  width: 150px;\n  font-size: 12px;\n  color: var(--xy-node-color, var(--xy-node-color-default));\n  text-align: center;\n  border: var(--xy-node-border, var(--xy-node-border-default));\n  background-color: var(--xy-node-background-color, var(--xy-node-background-color-default));\n}\n.react-flow__node-input.selectable:hover, .react-flow__node-default.selectable:hover, .react-flow__node-output.selectable:hover, .react-flow__node-group.selectable:hover {\n      box-shadow: var(--xy-node-boxshadow-hover, var(--xy-node-boxshadow-hover-default));\n    }\n.react-flow__node-input.selectable.selected,\n    .react-flow__node-input.selectable:focus,\n    .react-flow__node-input.selectable:focus-visible,\n    .react-flow__node-default.selectable.selected,\n    .react-flow__node-default.selectable:focus,\n    .react-flow__node-default.selectable:focus-visible,\n    .react-flow__node-output.selectable.selected,\n    .react-flow__node-output.selectable:focus,\n    .react-flow__node-output.selectable:focus-visible,\n    .react-flow__node-group.selectable.selected,\n    .react-flow__node-group.selectable:focus,\n    .react-flow__node-group.selectable:focus-visible {\n      box-shadow: var(--xy-node-boxshadow-selected, var(--xy-node-boxshadow-selected-default));\n    }\n.react-flow__node-group {\n  background-color: var(--xy-node-group-background-color, var(--xy-node-group-background-color-default));\n}\n.react-flow__nodesselection-rect,\n.react-flow__selection {\n  background: var(--xy-selection-background-color, var(--xy-selection-background-color-default));\n  border: var(--xy-selection-border, var(--xy-selection-border-default));\n}\n.react-flow__nodesselection-rect:focus,\n  .react-flow__nodesselection-rect:focus-visible,\n  .react-flow__selection:focus,\n  .react-flow__selection:focus-visible {\n    outline: none;\n  }\n.react-flow__controls-button:hover {\n      background: var(\n        --xy-controls-button-background-color-hover-props,\n        var(--xy-controls-button-background-color-hover, var(--xy-controls-button-background-color-hover-default))\n      );\n      color: var(\n        --xy-controls-button-color-hover-props,\n        var(--xy-controls-button-color-hover, var(--xy-controls-button-color-hover-default))\n      );\n    }\n.react-flow__controls-button:disabled {\n      pointer-events: none;\n    }\n.react-flow__controls-button:disabled svg {\n        fill-opacity: 0.4;\n      }\n.react-flow__controls-button:last-child {\n    border-bottom: none;\n  }\n.react-flow__controls.horizontal .react-flow__controls-button {\n    border-bottom: none;\n    border-right: 1px solid\n      var(\n        --xy-controls-button-border-color-props,\n        var(--xy-controls-button-border-color, var(--xy-controls-button-border-color-default))\n      );\n  }\n.react-flow__controls.horizontal .react-flow__controls-button:last-child {\n    border-right: none;\n  }\n.react-flow__resize-control {\n  position: absolute;\n}\n.react-flow__resize-control.left,\n.react-flow__resize-control.right {\n  cursor: ew-resize;\n}\n.react-flow__resize-control.top,\n.react-flow__resize-control.bottom {\n  cursor: ns-resize;\n}\n.react-flow__resize-control.top.left,\n.react-flow__resize-control.bottom.right {\n  cursor: nwse-resize;\n}\n.react-flow__resize-control.bottom.left,\n.react-flow__resize-control.top.right {\n  cursor: nesw-resize;\n}\n/* handle styles */\n.react-flow__resize-control.handle {\n  width: 5px;\n  height: 5px;\n  border: 1px solid #fff;\n  border-radius: 1px;\n  background-color: var(--xy-resize-background-color, var(--xy-resize-background-color-default));\n  translate: -50% -50%;\n}\n.react-flow__resize-control.handle.left {\n  left: 0;\n  top: 50%;\n}\n.react-flow__resize-control.handle.right {\n  left: 100%;\n  top: 50%;\n}\n.react-flow__resize-control.handle.top {\n  left: 50%;\n  top: 0;\n}\n.react-flow__resize-control.handle.bottom {\n  left: 50%;\n  top: 100%;\n}\n.react-flow__resize-control.handle.top.left {\n  left: 0;\n}\n.react-flow__resize-control.handle.bottom.left {\n  left: 0;\n}\n.react-flow__resize-control.handle.top.right {\n  left: 100%;\n}\n.react-flow__resize-control.handle.bottom.right {\n  left: 100%;\n}\n/* line styles */\n.react-flow__resize-control.line {\n  border-color: var(--xy-resize-background-color, var(--xy-resize-background-color-default));\n  border-width: 0;\n  border-style: solid;\n}\n.react-flow__resize-control.line.left,\n.react-flow__resize-control.line.right {\n  width: 1px;\n  transform: translate(-50%, 0);\n  top: 0;\n  height: 100%;\n}\n.react-flow__resize-control.line.left {\n  left: 0;\n  border-left-width: 1px;\n}\n.react-flow__resize-control.line.right {\n  left: 100%;\n  border-right-width: 1px;\n}\n.react-flow__resize-control.line.top,\n.react-flow__resize-control.line.bottom {\n  height: 1px;\n  transform: translate(0, -50%);\n  left: 0;\n  width: 100%;\n}\n.react-flow__resize-control.line.top {\n  top: 0;\n  border-top-width: 1px;\n}\n.react-flow__resize-control.line.bottom {\n  border-bottom-width: 1px;\n  top: 100%;\n}\n.react-flow__edge-textbg {\n  fill: var(--xy-edge-label-background-color, var(--xy-edge-label-background-color-default));\n}\n.react-flow__edge-text {\n  fill: var(--xy-edge-label-color, var(--xy-edge-label-color-default));\n}\n\n/*\n * dsh-memory-wiki panel styles (P3a).\n *\n * Design tokens live on the panel root, not :root, and every selector starts\n * with .memory-wiki-panel — mounting or unmounting the panel cannot restyle the\n * host. The vendored React Flow sheet is injected separately and stays inside\n * its own .react-flow* namespace (see client/index.tsx).\n */\n.memory-wiki-panel {\n  --mw-bg: #171f27;\n  --mw-panel: #212d39;\n  --mw-panel-2: #1c2733;\n  --mw-line: #2c3a49;\n  --mw-line-soft: #354555;\n  --mw-text: #e8edf4;\n  --mw-muted: #a1b3c9;\n  --mw-blue: #8bc7f4;\n  --mw-gold: #efc366;\n\n  display: flex;\n  flex-direction: column;\n  height: 100%;\n  min-height: 0;\n  min-width: 0;\n  background: var(--mw-bg);\n  color: var(--mw-text);\n  font-size: 13px;\n  line-height: 1.6;\n  text-align: left;\n}\n\n.memory-wiki-panel *,\n.memory-wiki-panel *::before,\n.memory-wiki-panel *::after {\n  box-sizing: border-box;\n}\n\n.memory-wiki-panel__head {\n  display: flex;\n  align-items: baseline;\n  gap: 12px;\n  padding: 9px 14px;\n  border-bottom: 1px solid var(--mw-line);\n  flex: 0 0 auto;\n  flex-wrap: wrap;\n  row-gap: 2px;\n}\n\n.memory-wiki-panel__title {\n  margin: 0;\n  font-size: 14px;\n  font-weight: 600;\n  letter-spacing: 0.01em;\n}\n\n.memory-wiki-panel__badge {\n  padding: 1px 7px;\n  border: 1px solid var(--mw-line-soft);\n  border-radius: 999px;\n  font-size: 11px;\n  color: var(--mw-muted);\n  white-space: nowrap;\n}\n\n.memory-wiki-panel__badge--gold {\n  border-color: #6a5730;\n  color: var(--mw-gold);\n}\n\n.memory-wiki-panel__head-meta {\n  margin-left: auto;\n  display: flex;\n  flex-wrap: wrap;\n  justify-content: flex-end;\n  min-width: 0;\n  gap: 4px 14px;\n  font-size: 11px;\n  color: var(--mw-muted);\n  font-variant-numeric: tabular-nums;\n  white-space: nowrap;\n}\n\n.memory-wiki-panel__fault {\n  margin: 16px;\n  padding: 14px 16px;\n  border: 1px solid var(--mw-line-soft);\n  border-radius: 8px;\n  background: var(--mw-panel-2);\n  color: var(--mw-text);\n  font-size: 12px;\n  line-height: 1.7;\n}\n\n.memory-wiki-panel__fault strong {\n  display: block;\n  margin-bottom: 4px;\n  font-size: 13px;\n}\n\n.memory-wiki-panel__fault p {\n  margin: 4px 0 0;\n  color: var(--mw-muted);\n  overflow-wrap: anywhere;\n}\n\n.memory-wiki-panel__body {\n  flex: 1 1 auto;\n  min-height: 0;\n  display: grid;\n  grid-template-columns: 300px minmax(0, 1fr) 366px;\n}\n\n.memory-wiki-panel__col {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  min-height: 0;\n}\n\n.memory-wiki-panel__col--list {\n  border-right: 1px solid var(--mw-line);\n}\n\n.memory-wiki-panel__col--detail {\n  border-left: 1px solid var(--mw-line);\n}\n\n.memory-wiki-panel__scroll {\n  overflow: auto;\n  min-height: 0;\n}\n\n.memory-wiki-panel__section-head {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  padding: 10px 12px 6px;\n  font-size: 11px;\n  font-weight: 600;\n  letter-spacing: 0.06em;\n  color: var(--mw-muted);\n  text-transform: uppercase;\n}\n\n.memory-wiki-panel__section-head span:last-child {\n  margin-left: auto;\n  font-weight: 500;\n  letter-spacing: 0;\n  text-transform: none;\n}\n\n.memory-wiki-panel__candidate {\n  display: block;\n  width: 100%;\n  padding: 8px 12px;\n  border: 0;\n  border-left: 2px solid transparent;\n  background: none;\n  color: inherit;\n  font: inherit;\n  text-align: left;\n  cursor: pointer;\n}\n\n.memory-wiki-panel__candidate:hover {\n  background: #1d2833;\n}\n\n.memory-wiki-panel__candidate.is-active {\n  border-left-color: var(--mw-blue);\n  background: #22303d;\n}\n\n.memory-wiki-panel__candidate-top {\n  display: flex;\n  align-items: baseline;\n  gap: 6px;\n}\n\n.memory-wiki-panel__dot {\n  width: 6px;\n  height: 6px;\n  border-radius: 50%;\n  flex: 0 0 auto;\n  border: 1px solid var(--mw-muted);\n}\n\n.memory-wiki-panel__dot.is-selected {\n  background: var(--mw-blue);\n  border-color: var(--mw-blue);\n}\n\n.memory-wiki-panel__dot.is-excluded {\n  background: transparent;\n  border-color: #55677c;\n}\n\n.memory-wiki-panel__candidate-title {\n  font-size: 13px;\n  font-weight: 550;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n\n.memory-wiki-panel__candidate-id {\n  display: block;\n  margin-top: 1px;\n  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;\n  font-size: 10px;\n  color: #7e93a8;\n  overflow-wrap: anywhere;\n}\n\n.memory-wiki-panel__chips {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n  margin-top: 5px;\n}\n\n.memory-wiki-panel__chip {\n  padding: 0 5px;\n  border-radius: 3px;\n  background: #24313d;\n  color: #b9cde0;\n  font-size: 10px;\n  line-height: 16px;\n  white-space: nowrap;\n}\n\n.memory-wiki-panel__chip--why {\n  background: #1f3341;\n  color: #a8d3f0;\n}\n\n.memory-wiki-panel__chip--budget {\n  background: #3a2c22;\n  color: var(--mw-gold);\n}\n\n.memory-wiki-panel__chip--no-usable-block {\n  background: #33232a;\n  color: #e1a0b0;\n}\n\n.memory-wiki-panel__chip--not-selected {\n  background: #232c36;\n  color: #93a6ba;\n}\n\n.memory-wiki-panel__via {\n  margin-top: 4px;\n  font-size: 11px;\n  color: #8fa6bd;\n}\n\n.memory-wiki-panel__graph-wrap {\n  flex: 1 1 auto;\n  min-height: 240px;\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n}\n\n.memory-wiki-panel__graph {\n  flex: 1 1 auto;\n  min-height: 0;\n  margin: 0 12px;\n  border: 1px solid var(--mw-line);\n  border-radius: 8px;\n  overflow: hidden;\n  background: #131b22;\n}\n\n.memory-wiki-panel__legend {\n  display: flex;\n  gap: 14px;\n  padding: 6px 14px 2px;\n  font-size: 11px;\n  color: var(--mw-muted);\n}\n\n.memory-wiki-panel__legend i {\n  display: inline-block;\n  width: 18px;\n  height: 0;\n  margin-right: 5px;\n  border-top: 2px solid var(--mw-blue);\n  vertical-align: middle;\n}\n\n.memory-wiki-panel__legend i.is-related {\n  border-top-style: dashed;\n  border-top-color: #6e86a2;\n}\n\n.memory-wiki-panel__node {\n  width: 168px;\n  padding: 6px 9px;\n  border: 1px solid var(--mw-line-soft);\n  border-radius: 6px;\n  background: var(--mw-panel);\n  color: var(--mw-text);\n  font-size: 11px;\n  line-height: 1.4;\n  text-align: left;\n  cursor: pointer;\n}\n\n.memory-wiki-panel__node.is-active {\n  border-color: var(--mw-blue);\n  box-shadow: 0 0 0 1px rgba(139, 199, 244, 0.35);\n}\n\n.memory-wiki-panel__node.is-excluded {\n  border-style: dashed;\n  opacity: 0.72;\n}\n\n.memory-wiki-panel__node strong {\n  display: block;\n  font-size: 12px;\n  font-weight: 600;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n\n.memory-wiki-panel__node small {\n  display: block;\n  margin-top: 2px;\n  color: var(--mw-muted);\n  font-size: 10px;\n}\n\n.memory-wiki-panel__budget {\n  flex: 0 0 auto;\n  padding: 8px 14px 10px;\n  border-top: 1px solid var(--mw-line);\n}\n\n.memory-wiki-panel__toolbar {\n  display: flex;\n  align-items: center;\n  gap: 8px;\n  flex-wrap: wrap;\n}\n\n.memory-wiki-panel__seg {\n  display: inline-flex;\n  border: 1px solid var(--mw-line-soft);\n  border-radius: 5px;\n  overflow: hidden;\n}\n\n.memory-wiki-panel__seg button {\n  padding: 2px 8px;\n  border: 0;\n  background: none;\n  color: var(--mw-muted);\n  font: inherit;\n  font-size: 11px;\n  cursor: pointer;\n}\n\n.memory-wiki-panel__seg button.is-current {\n  background: #26384a;\n  color: #c4e5ff;\n}\n\n.memory-wiki-panel__meter-line {\n  display: flex;\n  align-items: baseline;\n  gap: 10px;\n  margin-top: 7px;\n  font-size: 11px;\n  color: var(--mw-muted);\n  font-variant-numeric: tabular-nums;\n}\n\n.memory-wiki-panel__meter {\n  position: relative;\n  flex: 1 1 auto;\n  height: 4px;\n  border-radius: 2px;\n  background: #263340;\n  overflow: hidden;\n}\n\n.memory-wiki-panel__meter > span {\n  display: block;\n  height: 100%;\n  background: var(--mw-blue);\n}\n\n.memory-wiki-panel__meter.is-over > span {\n  background: var(--mw-gold);\n}\n\n.memory-wiki-panel__over {\n  margin: 5px 0 0;\n  font-size: 11px;\n  color: var(--mw-gold);\n}\n\n.memory-wiki-panel__preview {\n  flex: 0 0 auto;\n  max-height: 200px;\n  display: flex;\n  flex-direction: column;\n  border-top: 1px solid var(--mw-line);\n  min-height: 0;\n}\n\n.memory-wiki-panel__preview .memory-wiki-panel__section-head {\n  padding-bottom: 4px;\n}\n\n.memory-wiki-panel__pre {\n  margin: 0 14px 10px;\n  padding: 8px 10px;\n  flex: 1 1 auto;\n  min-height: 0;\n  overflow: auto;\n  border-radius: 6px;\n  background: var(--mw-panel-2);\n  color: #dbe6f1;\n  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;\n  font-size: 10.5px;\n  line-height: 1.65;\n  white-space: pre-wrap;\n  overflow-wrap: anywhere;\n}\n\n.memory-wiki-panel__detail {\n  padding: 12px 14px 14px;\n}\n\n.memory-wiki-panel__detail-title {\n  margin: 0;\n  font-size: 17px;\n  font-weight: 620;\n  line-height: 1.35;\n}\n\n.memory-wiki-panel__detail-path {\n  margin: 4px 0 0;\n  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;\n  font-size: 10px;\n  color: #8fa6bd;\n  overflow-wrap: anywhere;\n}\n\n.memory-wiki-panel__detail-meta {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 6px;\n  margin-top: 7px;\n}\n\n.memory-wiki-panel__excerpt {\n  margin-top: 9px;\n  padding: 9px 11px;\n  border-radius: 7px;\n  background: var(--mw-panel);\n  max-height: 150px;\n  overflow: auto;\n  font-size: 11.5px;\n  line-height: 1.75;\n  color: #e0e8f1;\n  white-space: pre-wrap;\n}\n\n/* ---------- markdown surface (scoped; the host's own markdown is untouched) ---------- */\n\n.memory-wiki-panel__md {\n  font-size: 12px;\n  line-height: 1.75;\n  color: #e0e8f1;\n}\n\n.memory-wiki-panel__md > *:first-child {\n  margin-top: 0;\n}\n\n.memory-wiki-panel__md > *:last-child {\n  margin-bottom: 0;\n}\n\n.memory-wiki-panel__md h1,\n.memory-wiki-panel__md h2,\n.memory-wiki-panel__md h3,\n.memory-wiki-panel__md h4 {\n  margin: 14px 0 6px;\n  font-weight: 620;\n  line-height: 1.4;\n  color: #eef4fb;\n}\n\n.memory-wiki-panel__md h1 {\n  font-size: 15px;\n}\n\n.memory-wiki-panel__md h2 {\n  font-size: 13.5px;\n  padding-bottom: 3px;\n  border-bottom: 1px solid var(--mw-line);\n}\n\n.memory-wiki-panel__md h3 {\n  font-size: 12.5px;\n}\n\n.memory-wiki-panel__md p {\n  margin: 7px 0;\n}\n\n.memory-wiki-panel__md ul,\n.memory-wiki-panel__md ol {\n  margin: 7px 0;\n  padding-left: 18px;\n}\n\n.memory-wiki-panel__md li {\n  margin: 3px 0;\n}\n\n.memory-wiki-panel__md li > p {\n  margin: 0;\n}\n\n.memory-wiki-panel__md strong {\n  color: #f2f7fc;\n  font-weight: 620;\n}\n\n.memory-wiki-panel__md a {\n  color: var(--mw-blue);\n  text-decoration: none;\n}\n\n.memory-wiki-panel__md a:hover {\n  text-decoration: underline;\n  text-underline-offset: 3px;\n}\n\n.memory-wiki-panel__md code {\n  padding: 1px 4px;\n  border-radius: 3px;\n  background: #1a242e;\n  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;\n  font-size: 10.5px;\n  color: #b8d6ef;\n}\n\n.memory-wiki-panel__md pre {\n  margin: 8px 0;\n  padding: 8px 10px;\n  border: 1px solid var(--mw-line);\n  border-radius: 6px;\n  background: #131b22;\n  overflow: auto;\n  max-height: 220px;\n}\n\n.memory-wiki-panel__md pre code {\n  padding: 0;\n  background: none;\n  font-size: 10.5px;\n  line-height: 1.6;\n  color: #cfe2f3;\n}\n\n.memory-wiki-panel__md table {\n  display: block;\n  width: 100%;\n  margin: 9px 0;\n  border-collapse: collapse;\n  font-size: 11px;\n  overflow: auto;\n}\n\n.memory-wiki-panel__md thead th {\n  text-align: left;\n  font-weight: 620;\n  color: #eef4fb;\n  background: #1d2833;\n}\n\n.memory-wiki-panel__md th,\n.memory-wiki-panel__md td {\n  padding: 4px 7px;\n  border: 1px solid var(--mw-line);\n  vertical-align: top;\n}\n\n.memory-wiki-panel__md tbody tr:nth-child(even) {\n  background: #1a232c;\n}\n\n.memory-wiki-panel__md blockquote {\n  margin: 8px 0;\n  padding: 2px 10px;\n  border-left: 2px solid var(--mw-line-soft);\n  color: var(--mw-muted);\n}\n\n.memory-wiki-panel__md hr {\n  margin: 12px 0;\n  border: 0;\n  border-top: 1px solid var(--mw-line);\n}\n\n.memory-wiki-panel__md .memory-wiki-panel__wikilink {\n  padding: 0 3px;\n  border-radius: 3px;\n  background: #1f3341;\n  color: #a8d3f0;\n  font-size: 10.5px;\n}\n\n.memory-wiki-panel__md-fallback {\n  color: var(--mw-muted);\n}\n\n.memory-wiki-panel__md.is-compact {\n  font-size: 11.5px;\n  line-height: 1.7;\n}\n\n.memory-wiki-panel__md.is-compact h1 {\n  font-size: 13.5px;\n}\n\n.memory-wiki-panel__md.is-compact h2 {\n  font-size: 12.5px;\n}\n\n.memory-wiki-panel__md.is-compact table {\n  font-size: 10.5px;\n}\n\n.memory-wiki-panel__excerpt--full {\n  max-height: 340px;\n}\n\n.memory-wiki-panel__excerpt-note {\n  margin: 6px 0 0;\n  font-size: 10px;\n  color: #8fa6bd;\n}\n\n.memory-wiki-panel__subhead {\n  margin: 13px 0 5px;\n  font-size: 11px;\n  font-weight: 600;\n  letter-spacing: 0.05em;\n  color: var(--mw-muted);\n  text-transform: uppercase;\n}\n\n.memory-wiki-panel__segments {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 4px;\n}\n\n.memory-wiki-panel__segment {\n  padding: 0 5px;\n  border: 1px solid var(--mw-line-soft);\n  border-radius: 3px;\n  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;\n  font-size: 10px;\n  color: #a8c0d8;\n}\n\n.memory-wiki-panel__col--detail > .memory-wiki-panel__detail {\n  flex: 1 1 auto;\n  min-height: 0;\n}\n\n.memory-wiki-panel__hist {\n  flex: 0 0 auto;\n  max-height: 40%;\n  overflow: auto;\n  padding: 0 14px 14px;\n  border-top: 1px solid var(--mw-line);\n}\n\n.memory-wiki-panel__hist-row {\n  padding: 7px 0;\n  border-top: 1px solid #24303c;\n  font-size: 11px;\n  color: var(--mw-muted);\n}\n\n.memory-wiki-panel__hist-row strong {\n  display: block;\n  color: var(--mw-text);\n  font-size: 11.5px;\n  font-weight: 550;\n}\n\n.memory-wiki-panel__hist-facts {\n  display: flex;\n  flex-wrap: wrap;\n  gap: 8px;\n  margin-top: 3px;\n  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;\n  font-size: 10px;\n  color: #8fa6bd;\n  font-variant-numeric: tabular-nums;\n}\n\n.memory-wiki-panel__readonly {\n  margin-left: 6px;\n  padding: 0 5px;\n  border: 1px solid var(--mw-line-soft);\n  border-radius: 3px;\n  font-size: 9.5px;\n  color: #8fa6bd;\n}\n\n/* ---- server view (P3b): query box, pick rows, stale-revision alert ---- */\n\n/* The server status card is not the fixture preview: it holds the mode/revision\n   header, the stale-revision alert, the write toolbar AND the draft text, so it\n   needs its own scroll box. Reusing __preview (max-height:200px, no overflow)\n   pushed the action buttons out of the viewport. */\n.memory-wiki-panel__server {\n  flex: 1 1 auto;\n  min-height: 300px;\n  display: flex;\n  flex-direction: column;\n  border-top: 1px solid var(--mw-line);\n  overflow: auto;\n}\n\n.memory-wiki-panel__query {\n  flex: 1 1 auto;\n  min-width: 0;\n  padding: 4px 8px;\n  border: 1px solid var(--mw-line);\n  border-radius: 4px;\n  background: #0d1721;\n  color: inherit;\n  font: inherit;\n  font-size: 11.5px;\n}\n\n.memory-wiki-panel__pick-toggle {\n  flex: 0 0 auto;\n  padding: 2px 8px;\n  border: 1px solid var(--mw-line);\n  border-radius: 4px;\n  background: transparent;\n  color: #8fa6bd;\n  font: inherit;\n  font-size: 10.5px;\n  cursor: pointer;\n}\n\n.memory-wiki-panel__pick-toggle[aria-pressed='true'] {\n  border-color: #3c6e4b;\n  color: #a9e0b8;\n}\n\n.memory-wiki-panel__pick-open {\n  flex: 1 1 auto;\n  min-width: 0;\n  padding: 0;\n  border: 0;\n  background: transparent;\n  color: inherit;\n  font: inherit;\n  font-size: 12px;\n  text-align: left;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n  cursor: pointer;\n}\n\n.memory-wiki-panel__stale {\n  margin: 8px 0;\n  padding: 8px 10px;\n  border: 1px solid #7a5a1e;\n  border-radius: 5px;\n  background: #241c0c;\n  color: #f0d79a;\n  font-size: 11.5px;\n}\n\n.memory-wiki-panel__stale strong {\n  display: block;\n  margin-bottom: 4px;\n}\n\n.memory-wiki-panel__stale button {\n  margin-top: 6px;\n  padding: 3px 10px;\n  border: 1px solid #7a5a1e;\n  border-radius: 4px;\n  background: transparent;\n  color: inherit;\n  font: inherit;\n  font-size: 11px;\n  cursor: pointer;\n}\n\n@media (max-width: 1080px) {\n  .memory-wiki-panel__body {\n    grid-template-columns: 236px minmax(0, 1fr);\n    grid-template-rows: minmax(0, 1fr) minmax(0, 300px);\n  }\n\n  .memory-wiki-panel__col--detail {\n    grid-column: 1 / -1;\n    border-left: 0;\n    border-top: 1px solid var(--mw-line);\n  }\n}\n\n/* Narrower than the host's centre column at small window sizes: one column,\n   stacked, each block keeping its own scroll. Declared after the 1080px block on\n   purpose — same specificity, so source order is what decides which wins. */\n@media (max-width: 860px) {\n  .memory-wiki-panel__body {\n    display: block;\n    overflow-y: auto;\n  }\n\n  .memory-wiki-panel__col--list {\n    max-height: 260px;\n    border-right: 0;\n    border-bottom: 1px solid var(--mw-line);\n  }\n\n  .memory-wiki-panel__col--center {\n    display: flex;\n    flex-direction: column;\n  }\n\n  .memory-wiki-panel__graph-wrap {\n    flex: 0 0 auto;\n    height: 340px;\n    min-height: 340px;\n  }\n\n  .memory-wiki-panel__col--detail {\n    display: flex;\n    flex-direction: column;\n    max-height: 540px;\n    border-left: 0;\n    border-top: 1px solid var(--mw-line);\n  }\n}";
+	return "/* this gets exported as style.css and can be used for the default theming */\n/* these are the necessary styles for React/Svelte Flow, they get used by base.css and style.css */\n.react-flow {\n  direction: ltr;\n\n  --xy-edge-stroke-default: #b1b1b7;\n  --xy-edge-stroke-width-default: 1;\n  --xy-edge-stroke-selected-default: #555;\n\n  --xy-connectionline-stroke-default: #b1b1b7;\n  --xy-connectionline-stroke-width-default: 1;\n\n  --xy-attribution-background-color-default: rgba(255, 255, 255, 0.5);\n\n  --xy-minimap-background-color-default: #fff;\n  --xy-minimap-mask-background-color-default: rgba(240, 240, 240, 0.6);\n  --xy-minimap-mask-stroke-color-default: transparent;\n  --xy-minimap-mask-stroke-width-default: 1;\n  --xy-minimap-node-background-color-default: #e2e2e2;\n  --xy-minimap-node-stroke-color-default: transparent;\n  --xy-minimap-node-stroke-width-default: 2;\n\n  --xy-background-color-default: transparent;\n  --xy-background-pattern-dots-color-default: #91919a;\n  --xy-background-pattern-lines-color-default: #eee;\n  --xy-background-pattern-cross-color-default: #e2e2e2;\n  background-color: var(--xy-background-color, var(--xy-background-color-default));\n  --xy-node-color-default: inherit;\n  --xy-node-border-default: 1px solid #1a192b;\n  --xy-node-background-color-default: #fff;\n  --xy-node-group-background-color-default: rgba(240, 240, 240, 0.25);\n  --xy-node-boxshadow-hover-default: 0 1px 4px 1px rgba(0, 0, 0, 0.08);\n  --xy-node-boxshadow-selected-default: 0 0 0 0.5px #1a192b;\n  --xy-node-border-radius-default: 3px;\n\n  --xy-handle-background-color-default: #1a192b;\n  --xy-handle-border-color-default: #fff;\n\n  --xy-selection-background-color-default: rgba(0, 89, 220, 0.08);\n  --xy-selection-border-default: 1px dotted rgba(0, 89, 220, 0.8);\n\n  --xy-controls-button-background-color-default: #fefefe;\n  --xy-controls-button-background-color-hover-default: #f4f4f4;\n  --xy-controls-button-color-default: inherit;\n  --xy-controls-button-color-hover-default: inherit;\n  --xy-controls-button-border-color-default: #eee;\n  --xy-controls-box-shadow-default: 0 0 2px 1px rgba(0, 0, 0, 0.08);\n\n  --xy-edge-label-background-color-default: #ffffff;\n  --xy-edge-label-color-default: inherit;\n  --xy-resize-background-color-default: #3367d9;\n}\n.react-flow.dark {\n  --xy-edge-stroke-default: #3e3e3e;\n  --xy-edge-stroke-width-default: 1;\n  --xy-edge-stroke-selected-default: #727272;\n\n  --xy-connectionline-stroke-default: #b1b1b7;\n  --xy-connectionline-stroke-width-default: 1;\n\n  --xy-attribution-background-color-default: rgba(150, 150, 150, 0.25);\n\n  --xy-minimap-background-color-default: #141414;\n  --xy-minimap-mask-background-color-default: rgba(60, 60, 60, 0.6);\n  --xy-minimap-mask-stroke-color-default: transparent;\n  --xy-minimap-mask-stroke-width-default: 1;\n  --xy-minimap-node-background-color-default: #2b2b2b;\n  --xy-minimap-node-stroke-color-default: transparent;\n  --xy-minimap-node-stroke-width-default: 2;\n\n  --xy-background-color-default: #141414;\n  --xy-background-pattern-dots-color-default: #555;\n  --xy-background-pattern-lines-color-default: #333;\n  --xy-background-pattern-cross-color-default: #333;\n  --xy-node-color-default: #f8f8f8;\n  --xy-node-border-default: 1px solid #3c3c3c;\n  --xy-node-background-color-default: #1e1e1e;\n  --xy-node-group-background-color-default: rgba(240, 240, 240, 0.25);\n  --xy-node-boxshadow-hover-default: 0 1px 4px 1px rgba(255, 255, 255, 0.08);\n  --xy-node-boxshadow-selected-default: 0 0 0 0.5px #999;\n\n  --xy-handle-background-color-default: #bebebe;\n  --xy-handle-border-color-default: #1e1e1e;\n\n  --xy-selection-background-color-default: rgba(200, 200, 220, 0.08);\n  --xy-selection-border-default: 1px dotted rgba(200, 200, 220, 0.8);\n\n  --xy-controls-button-background-color-default: #2b2b2b;\n  --xy-controls-button-background-color-hover-default: #3e3e3e;\n  --xy-controls-button-color-default: #f8f8f8;\n  --xy-controls-button-color-hover-default: #fff;\n  --xy-controls-button-border-color-default: #5b5b5b;\n  --xy-controls-box-shadow-default: 0 0 2px 1px rgba(0, 0, 0, 0.08);\n\n  --xy-edge-label-background-color-default: #141414;\n  --xy-edge-label-color-default: #f8f8f8;\n}\n.react-flow__background {\n  background-color: var(--xy-background-color-props, var(--xy-background-color, var(--xy-background-color-default)));\n  pointer-events: none;\n  z-index: -1;\n}\n.react-flow__container {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  top: 0;\n  left: 0;\n}\n.react-flow__pane {\n  z-index: 1;\n  touch-action: none;\n}\n.react-flow__pane.draggable {\n    cursor: grab;\n  }\n.react-flow__pane.dragging {\n    cursor: grabbing;\n  }\n.react-flow__pane.selection {\n    cursor: pointer;\n  }\n.react-flow__viewport {\n  transform-origin: 0 0;\n  z-index: 2;\n  pointer-events: none;\n}\n.react-flow__renderer {\n  z-index: 4;\n}\n.react-flow__selection {\n  z-index: 6;\n}\n.react-flow__nodesselection-rect:focus,\n.react-flow__nodesselection-rect:focus-visible {\n  outline: none;\n}\n.react-flow__edge-path {\n  stroke: var(--xy-edge-stroke, var(--xy-edge-stroke-default));\n  stroke-width: var(--xy-edge-stroke-width, var(--xy-edge-stroke-width-default));\n  fill: none;\n}\n.react-flow__connection-path {\n  stroke: var(--xy-connectionline-stroke, var(--xy-connectionline-stroke-default));\n  stroke-width: var(--xy-connectionline-stroke-width, var(--xy-connectionline-stroke-width-default));\n  fill: none;\n}\n.react-flow .react-flow__edges {\n  position: absolute;\n}\n.react-flow .react-flow__edges svg {\n    overflow: visible;\n    position: absolute;\n    pointer-events: none;\n  }\n.react-flow__edge {\n  pointer-events: visibleStroke;\n}\n.react-flow__edge.selectable {\n    cursor: pointer;\n  }\n.react-flow__edge.animated path {\n    stroke-dasharray: 5;\n    animation: dashdraw 0.5s linear infinite;\n  }\n.react-flow__edge.animated path.react-flow__edge-interaction {\n    stroke-dasharray: none;\n    animation: none;\n  }\n.react-flow__edge.inactive {\n    pointer-events: none;\n  }\n.react-flow__edge.selected,\n  .react-flow__edge:focus,\n  .react-flow__edge:focus-visible {\n    outline: none;\n  }\n.react-flow__edge.selected .react-flow__edge-path,\n  .react-flow__edge.selectable:focus .react-flow__edge-path,\n  .react-flow__edge.selectable:focus-visible .react-flow__edge-path {\n    stroke: var(--xy-edge-stroke-selected, var(--xy-edge-stroke-selected-default));\n  }\n.react-flow__edge-textwrapper {\n    pointer-events: all;\n  }\n.react-flow__edge .react-flow__edge-text {\n    pointer-events: none;\n    -webkit-user-select: none;\n       -moz-user-select: none;\n            user-select: none;\n  }\n/* Arrowhead marker styles - use CSS custom properties as default */\n.react-flow__arrowhead polyline {\n  stroke: var(--xy-edge-stroke, var(--xy-edge-stroke-default));\n}\n.react-flow__arrowhead polyline.arrowclosed {\n  fill: var(--xy-edge-stroke, var(--xy-edge-stroke-default));\n}\n.react-flow__connection {\n  pointer-events: none;\n}\n.react-flow__connection .animated {\n    stroke-dasharray: 5;\n    animation: dashdraw 0.5s linear infinite;\n  }\nsvg.react-flow__connectionline {\n  z-index: 1001;\n  overflow: visible;\n  position: absolute;\n}\n.react-flow__nodes {\n  pointer-events: none;\n  transform-origin: 0 0;\n}\n.react-flow__node {\n  position: absolute;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n          user-select: none;\n  pointer-events: all;\n  transform-origin: 0 0;\n  box-sizing: border-box;\n  cursor: default;\n}\n.react-flow__node.selectable {\n    cursor: pointer;\n  }\n.react-flow__node.draggable {\n    cursor: grab;\n    pointer-events: all;\n  }\n.react-flow__node.draggable.dragging {\n      cursor: grabbing;\n    }\n.react-flow__nodesselection {\n  z-index: 3;\n  transform-origin: left top;\n  pointer-events: none;\n}\n.react-flow__nodesselection-rect {\n    position: absolute;\n    pointer-events: all;\n    cursor: grab;\n  }\n.react-flow__handle {\n  position: absolute;\n  pointer-events: none;\n  min-width: 5px;\n  min-height: 5px;\n  width: 6px;\n  height: 6px;\n  background-color: var(--xy-handle-background-color, var(--xy-handle-background-color-default));\n  border: 1px solid var(--xy-handle-border-color, var(--xy-handle-border-color-default));\n  border-radius: 100%;\n}\n.react-flow__handle.connectingfrom {\n    pointer-events: all;\n  }\n.react-flow__handle.connectionindicator {\n    pointer-events: all;\n    cursor: crosshair;\n  }\n.react-flow__handle-bottom {\n    top: auto;\n    left: 50%;\n    bottom: 0;\n    transform: translate(-50%, 50%);\n  }\n.react-flow__handle-top {\n    top: 0;\n    left: 50%;\n    transform: translate(-50%, -50%);\n  }\n.react-flow__handle-left {\n    top: 50%;\n    left: 0;\n    transform: translate(-50%, -50%);\n  }\n.react-flow__handle-right {\n    top: 50%;\n    right: 0;\n    transform: translate(50%, -50%);\n  }\n.react-flow__edgeupdater {\n  cursor: move;\n  pointer-events: all;\n}\n.react-flow__pane.selection .react-flow__panel {\n  pointer-events: none;\n}\n.react-flow__panel {\n  position: absolute;\n  z-index: 5;\n  margin: 15px;\n}\n.react-flow__panel.top {\n    top: 0;\n  }\n.react-flow__panel.bottom {\n    bottom: 0;\n  }\n.react-flow__panel.top.center, .react-flow__panel.bottom.center {\n      left: 50%;\n      transform: translateX(-15px) translateX(-50%);\n    }\n.react-flow__panel.left {\n    left: 0;\n  }\n.react-flow__panel.right {\n    right: 0;\n  }\n.react-flow__panel.left.center, .react-flow__panel.right.center {\n      top: 50%;\n      transform: translateY(-15px) translateY(-50%);\n    }\n.react-flow__attribution {\n  font-size: 10px;\n  background: var(--xy-attribution-background-color, var(--xy-attribution-background-color-default));\n  padding: 2px 3px;\n  margin: 0;\n}\n.react-flow__attribution a {\n    text-decoration: none;\n    color: #999;\n  }\n@keyframes dashdraw {\n  from {\n    stroke-dashoffset: 10;\n  }\n}\n.react-flow__edgelabel-renderer {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  pointer-events: none;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n          user-select: none;\n  left: 0;\n  top: 0;\n}\n.react-flow__viewport-portal {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  left: 0;\n  top: 0;\n  -webkit-user-select: none;\n     -moz-user-select: none;\n          user-select: none;\n}\n.react-flow__minimap {\n  background: var(\n    --xy-minimap-background-color-props,\n    var(--xy-minimap-background-color, var(--xy-minimap-background-color-default))\n  );\n}\n.react-flow__minimap-svg {\n    display: block;\n  }\n.react-flow__minimap-mask {\n    fill: var(\n      --xy-minimap-mask-background-color-props,\n      var(--xy-minimap-mask-background-color, var(--xy-minimap-mask-background-color-default))\n    );\n    stroke: var(\n      --xy-minimap-mask-stroke-color-props,\n      var(--xy-minimap-mask-stroke-color, var(--xy-minimap-mask-stroke-color-default))\n    );\n    stroke-width: var(\n      --xy-minimap-mask-stroke-width-props,\n      var(--xy-minimap-mask-stroke-width, var(--xy-minimap-mask-stroke-width-default))\n    );\n  }\n.react-flow__minimap-node {\n    fill: var(\n      --xy-minimap-node-background-color-props,\n      var(--xy-minimap-node-background-color, var(--xy-minimap-node-background-color-default))\n    );\n    stroke: var(\n      --xy-minimap-node-stroke-color-props,\n      var(--xy-minimap-node-stroke-color, var(--xy-minimap-node-stroke-color-default))\n    );\n    stroke-width: var(\n      --xy-minimap-node-stroke-width-props,\n      var(--xy-minimap-node-stroke-width, var(--xy-minimap-node-stroke-width-default))\n    );\n  }\n.react-flow__background-pattern.dots {\n    fill: var(\n      --xy-background-pattern-color-props,\n      var(--xy-background-pattern-color, var(--xy-background-pattern-dots-color-default))\n    );\n  }\n.react-flow__background-pattern.lines {\n    stroke: var(\n      --xy-background-pattern-color-props,\n      var(--xy-background-pattern-color, var(--xy-background-pattern-lines-color-default))\n    );\n  }\n.react-flow__background-pattern.cross {\n    stroke: var(\n      --xy-background-pattern-color-props,\n      var(--xy-background-pattern-color, var(--xy-background-pattern-cross-color-default))\n    );\n  }\n.react-flow__controls {\n  display: flex;\n  flex-direction: column;\n  box-shadow: var(--xy-controls-box-shadow, var(--xy-controls-box-shadow-default));\n}\n.react-flow__controls.horizontal {\n    flex-direction: row;\n  }\n.react-flow__controls-button {\n    display: flex;\n    justify-content: center;\n    align-items: center;\n    height: 26px;\n    width: 26px;\n    padding: 4px;\n    border: none;\n    background: var(--xy-controls-button-background-color, var(--xy-controls-button-background-color-default));\n    border-bottom: 1px solid\n      var(\n        --xy-controls-button-border-color-props,\n        var(--xy-controls-button-border-color, var(--xy-controls-button-border-color-default))\n      );\n    color: var(\n      --xy-controls-button-color-props,\n      var(--xy-controls-button-color, var(--xy-controls-button-color-default))\n    );\n    cursor: pointer;\n    -webkit-user-select: none;\n       -moz-user-select: none;\n            user-select: none;\n  }\n.react-flow__controls-button svg {\n      width: 100%;\n      max-width: 12px;\n      max-height: 12px;\n      fill: currentColor;\n    }\n.react-flow__edge.updating .react-flow__edge-path {\n      stroke: #777;\n    }\n.react-flow__edge-text {\n    font-size: 10px;\n  }\n.react-flow__node.selectable:focus,\n  .react-flow__node.selectable:focus-visible {\n    outline: none;\n  }\n.react-flow__node-input,\n.react-flow__node-default,\n.react-flow__node-output,\n.react-flow__node-group {\n  padding: 10px;\n  border-radius: var(--xy-node-border-radius, var(--xy-node-border-radius-default));\n  width: 150px;\n  font-size: 12px;\n  color: var(--xy-node-color, var(--xy-node-color-default));\n  text-align: center;\n  border: var(--xy-node-border, var(--xy-node-border-default));\n  background-color: var(--xy-node-background-color, var(--xy-node-background-color-default));\n}\n.react-flow__node-input.selectable:hover, .react-flow__node-default.selectable:hover, .react-flow__node-output.selectable:hover, .react-flow__node-group.selectable:hover {\n      box-shadow: var(--xy-node-boxshadow-hover, var(--xy-node-boxshadow-hover-default));\n    }\n.react-flow__node-input.selectable.selected,\n    .react-flow__node-input.selectable:focus,\n    .react-flow__node-input.selectable:focus-visible,\n    .react-flow__node-default.selectable.selected,\n    .react-flow__node-default.selectable:focus,\n    .react-flow__node-default.selectable:focus-visible,\n    .react-flow__node-output.selectable.selected,\n    .react-flow__node-output.selectable:focus,\n    .react-flow__node-output.selectable:focus-visible,\n    .react-flow__node-group.selectable.selected,\n    .react-flow__node-group.selectable:focus,\n    .react-flow__node-group.selectable:focus-visible {\n      box-shadow: var(--xy-node-boxshadow-selected, var(--xy-node-boxshadow-selected-default));\n    }\n.react-flow__node-group {\n  background-color: var(--xy-node-group-background-color, var(--xy-node-group-background-color-default));\n}\n.react-flow__nodesselection-rect,\n.react-flow__selection {\n  background: var(--xy-selection-background-color, var(--xy-selection-background-color-default));\n  border: var(--xy-selection-border, var(--xy-selection-border-default));\n}\n.react-flow__nodesselection-rect:focus,\n  .react-flow__nodesselection-rect:focus-visible,\n  .react-flow__selection:focus,\n  .react-flow__selection:focus-visible {\n    outline: none;\n  }\n.react-flow__controls-button:hover {\n      background: var(\n        --xy-controls-button-background-color-hover-props,\n        var(--xy-controls-button-background-color-hover, var(--xy-controls-button-background-color-hover-default))\n      );\n      color: var(\n        --xy-controls-button-color-hover-props,\n        var(--xy-controls-button-color-hover, var(--xy-controls-button-color-hover-default))\n      );\n    }\n.react-flow__controls-button:disabled {\n      pointer-events: none;\n    }\n.react-flow__controls-button:disabled svg {\n        fill-opacity: 0.4;\n      }\n.react-flow__controls-button:last-child {\n    border-bottom: none;\n  }\n.react-flow__controls.horizontal .react-flow__controls-button {\n    border-bottom: none;\n    border-right: 1px solid\n      var(\n        --xy-controls-button-border-color-props,\n        var(--xy-controls-button-border-color, var(--xy-controls-button-border-color-default))\n      );\n  }\n.react-flow__controls.horizontal .react-flow__controls-button:last-child {\n    border-right: none;\n  }\n.react-flow__resize-control {\n  position: absolute;\n}\n.react-flow__resize-control.left,\n.react-flow__resize-control.right {\n  cursor: ew-resize;\n}\n.react-flow__resize-control.top,\n.react-flow__resize-control.bottom {\n  cursor: ns-resize;\n}\n.react-flow__resize-control.top.left,\n.react-flow__resize-control.bottom.right {\n  cursor: nwse-resize;\n}\n.react-flow__resize-control.bottom.left,\n.react-flow__resize-control.top.right {\n  cursor: nesw-resize;\n}\n/* handle styles */\n.react-flow__resize-control.handle {\n  width: 5px;\n  height: 5px;\n  border: 1px solid #fff;\n  border-radius: 1px;\n  background-color: var(--xy-resize-background-color, var(--xy-resize-background-color-default));\n  translate: -50% -50%;\n}\n.react-flow__resize-control.handle.left {\n  left: 0;\n  top: 50%;\n}\n.react-flow__resize-control.handle.right {\n  left: 100%;\n  top: 50%;\n}\n.react-flow__resize-control.handle.top {\n  left: 50%;\n  top: 0;\n}\n.react-flow__resize-control.handle.bottom {\n  left: 50%;\n  top: 100%;\n}\n.react-flow__resize-control.handle.top.left {\n  left: 0;\n}\n.react-flow__resize-control.handle.bottom.left {\n  left: 0;\n}\n.react-flow__resize-control.handle.top.right {\n  left: 100%;\n}\n.react-flow__resize-control.handle.bottom.right {\n  left: 100%;\n}\n/* line styles */\n.react-flow__resize-control.line {\n  border-color: var(--xy-resize-background-color, var(--xy-resize-background-color-default));\n  border-width: 0;\n  border-style: solid;\n}\n.react-flow__resize-control.line.left,\n.react-flow__resize-control.line.right {\n  width: 1px;\n  transform: translate(-50%, 0);\n  top: 0;\n  height: 100%;\n}\n.react-flow__resize-control.line.left {\n  left: 0;\n  border-left-width: 1px;\n}\n.react-flow__resize-control.line.right {\n  left: 100%;\n  border-right-width: 1px;\n}\n.react-flow__resize-control.line.top,\n.react-flow__resize-control.line.bottom {\n  height: 1px;\n  transform: translate(0, -50%);\n  left: 0;\n  width: 100%;\n}\n.react-flow__resize-control.line.top {\n  top: 0;\n  border-top-width: 1px;\n}\n.react-flow__resize-control.line.bottom {\n  border-bottom-width: 1px;\n  top: 100%;\n}\n.react-flow__edge-textbg {\n  fill: var(--xy-edge-label-background-color, var(--xy-edge-label-background-color-default));\n}\n.react-flow__edge-text {\n  fill: var(--xy-edge-label-color, var(--xy-edge-label-color-default));\n}\n\n/* Scoped to the plugin. DSH owns the surrounding application navigation. */\n.memory-wiki-panel {\n  --mw-bg: #171f27;\n  --mw-panel: #212d39;\n  --mw-panel-2: #1c2733;\n  --mw-line: #344350;\n  --mw-text: #e8edf4;\n  --mw-muted: #a8b7c8;\n  --mw-blue: #8bc7f4;\n  --mw-edge: #6988a5;\n  --mw-gold: #efc366;\n  display: flex;\n  flex-direction: column;\n  height: 100%;\n  min-height: 0;\n  min-width: 0;\n  background: var(--mw-bg);\n  color: var(--mw-text);\n  font: 13px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;\n  text-align: left;\n  color-scheme: dark;\n}\n.memory-wiki-panel *, .memory-wiki-panel *::before, .memory-wiki-panel *::after { box-sizing: border-box; }\n.memory-wiki-panel [hidden] { display: none !important; }\n.memory-wiki-panel ::selection { background: #355875; color: var(--mw-text); }\n.memory-wiki-panel button, .memory-wiki-panel input { font: inherit; color: inherit; }\n.memory-wiki-panel button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 7px 12px; border: 1px solid var(--mw-line); border-radius: 7px; background: transparent; cursor: pointer; }\n.memory-wiki-panel button:hover:not(:disabled) { background: #2a3948; }\n.memory-wiki-panel button:disabled { opacity: 0.48; cursor: default; }\n.memory-wiki-panel :focus-visible { outline: 2px solid var(--mw-blue); outline-offset: 3px; }\n.memory-wiki-panel input { min-width: 0; border: 1px solid var(--mw-line); border-radius: 6px; padding: 8px 10px; background: var(--mw-bg); caret-color: var(--mw-blue); }\n.memory-wiki-panel input::placeholder { color: var(--mw-muted); opacity: 1; }\n.memory-wiki-panel svg { flex: 0 0 auto; }\n.memory-wiki-panel__head { display: flex; align-items: center; gap: 24px; min-height: 72px; padding: 14px 24px; border-bottom: 1px solid var(--mw-line); z-index: 5; }\n.memory-wiki-panel__brand { display: flex; align-items: center; gap: 10px; white-space: nowrap; }\n.memory-wiki-panel__brand > svg { color: var(--mw-blue); }\n.memory-wiki-panel__brand h2 { margin: 0; font-size: 17px; font-weight: 600; }\n.memory-wiki-panel__brand > span { margin-left: 6px; padding-left: 16px; border-left: 1px solid var(--mw-line); font-size: 12px; color: var(--mw-muted); }\n.memory-wiki-panel__searchbox { position: relative; display: flex; align-items: center; gap: 10px; width: min(420px, 42%); padding: 7px 12px; border: 1px solid var(--mw-line); border-radius: 8px; background: var(--mw-panel-2); color: var(--mw-muted); }\n.memory-wiki-panel__searchbox > input { flex: 1; width: 100%; padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--mw-text); height: 24px; }\n.memory-wiki-panel__searchbox > input:focus { outline: none; }\n.memory-wiki-panel__searchbox:focus-within { outline: 1px solid var(--mw-blue); }\n.memory-wiki-panel__searchbox > button { border: 0; padding: 2px; }\n.memory-wiki-panel__searchbox kbd { font: 11px inherit; white-space: nowrap; }\n.memory-wiki-panel__search-results { position: absolute; top: calc(100% + 10px); left: 0; width: max(100%, 340px); max-height: 400px; overflow: auto; background: var(--mw-panel); border-radius: 10px; box-shadow: 0 12px 40px #07101980; padding: 6px; z-index: 10; color: var(--mw-text); }\n.memory-wiki-panel__search-results > p { margin: 8px 10px; color: var(--mw-muted); font-size: 12px; }\n.memory-wiki-panel__search-results > button { border: 0; display: flex; width: 100%; justify-content: space-between; text-align: left; padding: 10px; }\n.memory-wiki-panel__search-results small { display: block; font-size: 11px; color: var(--mw-muted); overflow-wrap: anywhere; }\n.memory-wiki-panel__head-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; white-space: nowrap; }\n.memory-wiki-panel button.memory-wiki-panel__icon { border: 0; padding: 8px; }\n.memory-wiki-panel__head-actions button[aria-expanded=true] { background: #2b4053; color: var(--mw-blue); }\n.memory-wiki-panel__workspace { position: relative; flex: 1; min-height: 0; overflow: hidden; }\n.memory-wiki-panel__graph { position: absolute; inset: 0; }\n.memory-wiki-panel .react-flow__node-page { width: 180px; background: transparent; border: 0; }\n.memory-wiki-panel .react-flow__node-page.selectable { cursor: pointer; }\n.memory-wiki-panel button.memory-wiki-panel__point { position: relative; width: 180px; height: 54px; padding: 7px 0 0; border: 0; border-radius: 0; background: transparent; display: flex; flex-direction: column; justify-content: flex-start; gap: 9px; transition: opacity 180ms ease; }\n.memory-wiki-panel__point > i { display: block; flex-shrink: 0; border-radius: 50%; background: #92a8bf; }\n.memory-wiki-panel__point > span { position: absolute; top: 26px; flex-shrink: 0; font-size: 13px; line-height: 1.4; text-align: center; overflow-wrap: anywhere; color: #d4deeb; }\n.memory-wiki-panel__point.is-active > i { background: var(--mw-blue); outline: 2px solid var(--mw-blue); outline-offset: 4px; }\n.memory-wiki-panel__point.is-active > span { color: var(--mw-text); font-weight: 600; }\n.memory-wiki-panel__point.is-match:not(.is-active) > i { background: var(--mw-gold); }\n.memory-wiki-panel__point.is-dim { opacity: 0.35; }\n.memory-wiki-panel__point.is-dim:hover, .memory-wiki-panel__point.is-dim:focus-visible { opacity: 1; }\n.memory-wiki-panel__point .react-flow__handle { top: 10px; left: 90px; opacity: 0; pointer-events: none; }\n.memory-wiki-panel__point[data-show-label='0']:not(:hover):not(:focus-visible) > span { visibility: hidden; }\n.memory-wiki-panel .react-flow__attribution { right: 16px; bottom: 4px; background: transparent; color: var(--mw-muted); font-size: 9px; }\n.memory-wiki-panel .react-flow__attribution a { color: inherit; }\n.memory-wiki-panel__canvas-tools { position: absolute; left: 24px; bottom: 24px; display: flex; align-items: center; gap: 4px; padding: 4px 6px 4px 14px; border: 1px solid var(--mw-line); border-radius: 9px; background: var(--mw-panel-2); z-index: 2; }\n.memory-wiki-panel__canvas-tools > span { margin-right: 12px; font-size: 12px; color: var(--mw-muted); font-variant-numeric: tabular-nums; }\n.memory-wiki-panel__canvas-tools > button { border: 0; padding: 6px; }\n.memory-wiki-panel__graph-legend { position: absolute; left: 26px; bottom: 76px; display: flex; gap: 14px; color: var(--mw-muted); font-size: 11px; pointer-events: none; }\n.memory-wiki-panel__canvas-status { position: absolute; right: 24px; bottom: 32px; color: var(--mw-muted); font-size: 12px; pointer-events: none; }\n.memory-wiki-panel__empty { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 32px; text-align: center; background: var(--mw-bg); }\n.memory-wiki-panel__empty > svg { color: var(--mw-muted); width: 30px; height: 30px; }\n.memory-wiki-panel__empty h3 { margin: 4px 0 0; font-size: 17px; font-weight: 500; }\n.memory-wiki-panel__empty p { margin: 0; max-width: 440px; color: var(--mw-muted); }\n.memory-wiki-panel__updating { position: absolute; left: 24px; top: 16px; color: var(--mw-muted); font-size: 12px; }\n.memory-wiki-panel__drawer { position: absolute; right: 20px; top: 20px; bottom: 84px; display: flex; flex-direction: column; width: 400px; max-width: 42%; border-radius: 12px; background: var(--mw-panel); box-shadow: 0 10px 36px #070e175c; z-index: 3; overflow: hidden; animation: mw-drawer-in 180ms ease-out; }\n.memory-wiki-panel__drawer-head { display: flex; align-items: flex-start; justify-content: space-between; flex-shrink: 0; gap: 16px; padding: 26px 26px 12px; }\n.memory-wiki-panel__drawer-head h3 { margin: 0; font-size: 23px; line-height: 1.4; font-weight: 600; overflow-wrap: anywhere; }\n.memory-wiki-panel__drawer-head p { margin: 6px 0 0; color: var(--mw-muted); font-size: 12px; }\n.memory-wiki-panel__drawer-head > button { margin: -4px -8px 0 0; color: var(--mw-muted); }\n.memory-wiki-panel__reader { overflow: auto; flex: 1; min-height: 0; padding: 0 26px 24px; scrollbar-width: thin; scrollbar-color: #536a80 transparent; }\n.memory-wiki-panel__page-meta { margin: 0 0 24px; color: var(--mw-muted); font-size: 12px; }\n.memory-wiki-panel__reader-footer { flex-shrink: 0; margin: 0 26px; padding: 18px 0; border-top: 1px solid var(--mw-line); }\n.memory-wiki-panel__reader-footer > button { width: 100%; background: #304253; }\n.memory-wiki-panel__reader-footer > p { margin: 8px 0 0; font-size: 11px; color: var(--mw-muted); }\n.memory-wiki-panel__relations { padding-top: 18px; margin-top: 24px; border-top: 1px solid var(--mw-line); }\n.memory-wiki-panel__relations h4 { margin: 0 0 10px; font-size: 13px; font-weight: 500; }\n.memory-wiki-panel__relations > p { font-size: 12px; color: var(--mw-muted); }\n.memory-wiki-panel__relations > button { display: flex; justify-content: space-between; width: 100%; padding: 10px 0; text-align: left; border: 0; border-radius: 0; color: var(--mw-blue); }\n.memory-wiki-panel__relations > button:hover:not(:disabled) { background: transparent; text-decoration: underline; text-underline-offset: 4px; }\n.memory-wiki-panel__page-info { margin-top: 24px; font-size: 11px; color: var(--mw-muted); overflow-wrap: anywhere; }\n.memory-wiki-panel summary { cursor: pointer; padding: 5px 0; }\n.memory-wiki-panel__drawer--context { width: 480px; max-width: 48%; bottom: 20px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #536a80 transparent; }\n.memory-wiki-panel__context-note { padding: 16px 26px; color: var(--mw-muted); }\n.memory-wiki-panel__context-note h4 { color: var(--mw-text); font-weight: 500; }\n.memory-wiki-panel__context-meta { display: flex; flex-wrap: wrap; gap: 4px 12px; padding: 0 26px 12px; color: var(--mw-muted); font-size: 11px; overflow-wrap: anywhere; }\n.memory-wiki-panel__body { display: flex; flex-direction: column; min-width: 0; padding: 0 26px 24px; }\n.memory-wiki-panel__col { min-width: 0; }\n.memory-wiki-panel__section-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; padding: 18px 0 9px; font-weight: 500; }\n.memory-wiki-panel__section-head > span:last-child:not(:first-child) { margin-left: auto; font-size: 11px; font-weight: 400; color: var(--mw-muted); }\n.memory-wiki-panel__toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }\n.memory-wiki-panel__query { flex: 1; width: 100px; }\n.memory-wiki-panel__candidate { padding: 12px 0; border-bottom: 1px solid var(--mw-line); }\n.memory-wiki-panel__candidate.is-active { background: #263747; }\n.memory-wiki-panel .memory-wiki-panel__pick-open { flex: 1; min-width: 80px; border: 0; padding: 3px; justify-content: flex-start; text-align: left; }\n.memory-wiki-panel .memory-wiki-panel__pick-toggle { padding: 3px 8px; font-size: 11px; }\n.memory-wiki-panel__pick-toggle[aria-pressed=true] { color: var(--mw-blue); border-color: var(--mw-blue); }\n.memory-wiki-panel__candidate-id, .memory-wiki-panel__via { display: block; margin-top: 5px; font-size: 11px; color: var(--mw-muted); overflow-wrap: anywhere; }\n.memory-wiki-panel__chips, .memory-wiki-panel__detail-meta { display: flex; flex-wrap: wrap; gap: 5px; margin: 8px 0; }\n.memory-wiki-panel__chip, .memory-wiki-panel__segment, .memory-wiki-panel__readonly { display: inline-block; padding: 1px 6px; background: #2c3c4c; border-radius: 4px; font-size: 11px; color: var(--mw-muted); overflow-wrap: anywhere; }\n.memory-wiki-panel__chip--why { color: var(--mw-blue); }\n.memory-wiki-panel__readonly { margin-left: 8px; }\n.memory-wiki-panel__over, .memory-wiki-panel__stale { color: var(--mw-gold); font-size: 12px; overflow-wrap: anywhere; }\n.memory-wiki-panel__stale { padding: 14px 0; }\n.memory-wiki-panel__stale p { margin: 8px 0; }\n.memory-wiki-panel__server { padding-bottom: 14px; border-bottom: 1px solid var(--mw-line); }\n.memory-wiki-panel__excerpt-note { margin: 10px 0; font-size: 12px; line-height: 1.7; color: var(--mw-muted); overflow-wrap: anywhere; }\n.memory-wiki-panel__pre { margin: 10px 0; padding: 12px; max-height: 260px; overflow: auto; border-radius: 6px; background: var(--mw-bg); color: var(--mw-text); font: 11px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }\n.memory-wiki-panel__hist { padding-top: 4px; }\n.memory-wiki-panel__subhead { margin: 22px 0 8px; font-size: 13px; font-weight: 500; }\n.memory-wiki-panel__hist-row { padding: 10px 0; border-bottom: 1px solid var(--mw-line); font-size: 12px; overflow-wrap: anywhere; }\n.memory-wiki-panel__hist-facts { display: flex; flex-wrap: wrap; gap: 8px; color: var(--mw-muted); font-size: 11px; margin-top: 5px; }\n.memory-wiki-panel__hist-row > button { margin-top: 6px; padding: 3px 8px; font-size: 11px; }\n.memory-wiki-panel__evidence-detail { margin-top: 16px; font-size: 12px; }\n.memory-wiki-panel__detail-title { margin: 12px 0 0; font-size: 16px; }\n.memory-wiki-panel__detail-path { overflow-wrap: anywhere; font-size: 11px; color: var(--mw-muted); }\n.memory-wiki-panel__segments { display: flex; gap: 5px; flex-wrap: wrap; }\n.memory-wiki-panel__excerpt { font-size: 12px; }\n.memory-wiki-panel__md { font-size: 14px; line-height: 1.85; color: var(--mw-text); overflow-wrap: anywhere; }\n.memory-wiki-panel__md > :first-child { margin-top: 0; }\n.memory-wiki-panel__md h1, .memory-wiki-panel__md h2, .memory-wiki-panel__md h3, .memory-wiki-panel__md h4 { margin: 24px 0 10px; font-size: 16px; font-weight: 600; line-height: 1.5; }\n.memory-wiki-panel__md p { margin: 12px 0; }\n.memory-wiki-panel__md ul, .memory-wiki-panel__md ol { margin: 12px 0; padding-left: 22px; }\n.memory-wiki-panel__md li { margin: 5px 0; }\n.memory-wiki-panel__md a, .memory-wiki-panel__wikilink { color: var(--mw-blue); text-decoration: underline; text-underline-offset: 3px; }\n.memory-wiki-panel__md code { padding: 2px 4px; border-radius: 3px; background: var(--mw-bg); font: 12px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace; }\n.memory-wiki-panel__md pre { margin: 14px 0; padding: 12px; background: var(--mw-bg); border-radius: 6px; overflow: auto; }\n.memory-wiki-panel__md pre code { padding: 0; white-space: pre; }\n.memory-wiki-panel__md table { display: block; max-width: 100%; overflow: auto; border-collapse: collapse; font-size: 12px; margin: 14px 0; }\n.memory-wiki-panel__md th, .memory-wiki-panel__md td { padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--mw-line); }\n.memory-wiki-panel__md blockquote { margin: 16px 0; padding-left: 14px; border-left: 1px solid var(--mw-muted); color: var(--mw-muted); }\n.memory-wiki-panel__md hr { border: 0; border-top: 1px solid var(--mw-line); margin: 24px 0; }\n.memory-wiki-panel__md-fallback { white-space: pre-wrap; }\n@keyframes mw-drawer-in { from { transform: translateX(14px); } to { transform: translateX(0); } }\n@media (max-width: 1000px) {\n  .memory-wiki-panel__head { gap: 16px; padding: 12px 16px; min-height: 64px; }\n  .memory-wiki-panel__brand > span { display: none; }\n  .memory-wiki-panel__searchbox { flex: 1; width: auto; }\n  .memory-wiki-panel__drawer { max-width: 48%; right: 12px; }\n  .memory-wiki-panel__drawer--context { max-width: 55%; }\n  .memory-wiki-panel__drawer-head { padding: 22px 22px 12px; }\n  .memory-wiki-panel__reader { padding: 0 22px 20px; }\n}\n@media (max-width: 700px) {\n  .memory-wiki-panel__head { flex-wrap: wrap; gap: 10px; padding: 12px; }\n  .memory-wiki-panel__brand h2 { font-size: 15px; }\n  .memory-wiki-panel__searchbox { order: 3; width: 100%; flex-basis: 100%; }\n  .memory-wiki-panel__searchbox input { font-size: 16px; }\n  .memory-wiki-panel__search-results { width: 100%; max-width: 100%; }\n  .memory-wiki-panel__head-actions { gap: 4px; }\n  .memory-wiki-panel__drawer, .memory-wiki-panel__drawer--context { inset: 8px; width: auto; max-width: none; border-radius: 10px; }\n  .memory-wiki-panel__drawer-head h3 { font-size: 21px; }\n  .memory-wiki-panel__canvas-tools { left: 12px; bottom: 44px; padding-left: 10px; }\n  .memory-wiki-panel__canvas-tools > span { margin-right: 4px; }\n  .memory-wiki-panel__graph-legend { left: 14px; bottom: 94px; }\n  .memory-wiki-panel__canvas-status { right: 14px; bottom: 14px; font-size: 11px; }\n}\n@media (prefers-reduced-motion: reduce) {\n  .memory-wiki-panel__drawer { animation: none; }\n  .memory-wiki-panel__point { transition: none; }\n}\n";
 }
 function installStyles() {
 	document.getElementById(STYLE_ID)?.remove();

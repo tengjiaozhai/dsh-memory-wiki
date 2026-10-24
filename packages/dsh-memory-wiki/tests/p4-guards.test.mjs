@@ -93,10 +93,12 @@ async function runtimeOutputs() {
     }),
   })
   const agent = { id: SESSION, session: { id: SESSION, deriveMessages: () => [] } }
+  record('graph', 'ok', await a.graph({}))
+  record('graph', 'not-configured', await new MemoryWikiAdapter({}, { enabled: true, wikiRoot: '', budgetChars: 4000 }).graph({}))
 
   // view: 空 / 草稿 / 待用 / 当前轮 / 错误 五个分支
   record('view', 'fresh', await a.getView({ sessionId: SESSION, expectedRevision: 1 }))
-  const page = await a.readPage({ sessionId: SESSION, pageId: 'wiki/concepts/短页' })
+  const page = await a.readPage({ pageId: 'wiki/concepts/短页' })
   const drafted = await a.reviseDraft({
     sessionId: SESSION, expectedRevision: 1, query: '短页',
     selectedPages: [{ pageId: page.page.pageId, contentHash: page.page.contentHash }], budgetChars: 4000, hops: 1,
@@ -111,8 +113,8 @@ async function runtimeOutputs() {
   record('search', 'ok', await a.search({ sessionId: SESSION, query: '短页', hops: 1 }))
   record('search', 'error', await a.search({ sessionId: 'nope', query: 'x', hops: 1 }))
 
-  record('readPage', 'ok', await a.readPage({ sessionId: SESSION, pageId: 'wiki/concepts/短页' }))
-  record('readPage', 'error', await a.readPage({ sessionId: SESSION, pageId: 'wiki/concepts/不存在' }))
+  record('readPage', 'ok', await a.readPage({ pageId: 'wiki/concepts/短页' }))
+  record('readPage', 'error', await a.readPage({ pageId: 'wiki/concepts/不存在' }))
 
   record('reviseDraft', 'ok', drafted)
   record('reviseDraft', 'error', await a.reviseDraft({
@@ -131,7 +133,7 @@ async function runtimeOutputs() {
 test('GUARD 2 schema 覆盖：运行时不得返回未声明的键（否则类型比运行时窄）', async () => {
   const outputs = await runtimeOutputs()
   const declared = Object.fromEntries(TYPERT.invocations.map(i => [i.method, declaredResultKeys(i.method)]))
-  assert.deepEqual(Object.keys(declared).sort(), ['clearOverride', 'prepareOverride', 'readPage', 'reviseDraft', 'search', 'view'])
+  assert.deepEqual(Object.keys(declared).sort(), ['clearOverride', 'graph', 'prepareOverride', 'readPage', 'reviseDraft', 'search', 'view'])
 
   const violations = []
   for (const [method, cases] of outputs) {

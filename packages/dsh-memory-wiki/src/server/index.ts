@@ -14,6 +14,8 @@ import type {
   ClearResult,
   DraftResult,
   GetViewInput,
+  GraphInput,
+  GraphResult,
   MemoryWikiSourceMeta,
   OverrideResult,
   PrepareOverrideInput,
@@ -131,6 +133,12 @@ export default class MemoryWikiService extends TypertRemoteService {
     return capture ? { ...view, capture } : view
   }
 
+  /** Read all library page metadata and resolved links without a session. */
+  @Remote('graph')
+  async graph(input: GraphInput): Promise<GraphResult> {
+    return this.adapter.graph(input)
+  }
+
   /**
    * Run page-level retrieval for one session without changing any state.
    * @param input - session, question and hop count.
@@ -143,7 +151,7 @@ export default class MemoryWikiService extends TypertRemoteService {
 
   /**
    * Read one page of the current library, optionally pinned to a version.
-   * @param input - session, page id and the content hash the client saw.
+   * @param input - page id and the content hash the client saw.
    * @returns the page, or a typed error when it is unknown or has changed.
    */
   @Remote('readPage')

@@ -41,7 +41,7 @@ test('库变更后 getView 的 revision 变、内容变；未变更时走 stat �
     // 快路径：没有任何改动时反复读不得重扫
     const again = await a.getView({ sessionId: SESSION, expectedRevision: first.revision })
     await a.search({ sessionId: SESSION, query: '短页', hops: 1 })
-    await a.readPage({ sessionId: SESSION, pageId: 'wiki/concepts/短页' })
+    await a.readPage({ pageId: 'wiki/concepts/短页' })
     assert.equal(again.error, undefined)
     assert.equal(a.stats.scans, 1, 'unchanged library must not be rescanned')
 
@@ -50,7 +50,7 @@ test('库变更后 getView 的 revision 变、内容变；未变更时走 stat �
     const afterEdit = await a.getView({ sessionId: SESSION })
     assert.notEqual(afterEdit.revision, first.revision, 'library change must move the view revision')
     assert.equal(a.stats.scans, 2, 'a real change rescans exactly once')
-    const doc = await a.readPage({ sessionId: SESSION, pageId: 'wiki/concepts/短页' })
+    const doc = await a.readPage({ pageId: 'wiki/concepts/短页' })
     assert.ok(doc.page.body.includes('这是库变更后的内容'), 'reads must return the new body')
 
     // 再读一次仍然是新视图，且不再重扫
@@ -68,7 +68,7 @@ test('库变更使未消费的 prepared 失效，且之后 prepareOverride 返�
   try {
     const a = new MemoryWikiAdapter(ctx, { enabled: true, wikiRoot: root, budgetChars: 4000 })
     const view = await a.getView({ sessionId: SESSION })
-    const doc = await a.readPage({ sessionId: SESSION, pageId: 'wiki/concepts/短页' })
+    const doc = await a.readPage({ pageId: 'wiki/concepts/短页' })
     const drafted = await a.reviseDraft({
       sessionId: SESSION, expectedRevision: view.revision, query: '短页',
       selectedPages: [{ pageId: doc.page.pageId, contentHash: doc.page.contentHash }], budgetChars: 4000, hops: 1,

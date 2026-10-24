@@ -125,8 +125,11 @@ function renderBlock(block: MarkdownBlock, index: number): ReactNode {
   }
 }
 
-export function MarkdownView(props: { source: string; compact?: boolean; testId?: string }) {
-  const blocks = splitBlocks(props.source, 1)
+export function MarkdownView(props: { source: string; compact?: boolean; testId?: string; title?: string }) {
+  const parsed = splitBlocks(props.source, 1)
+  const first = parsed[0]
+  const blocks = props.title !== undefined && first?.kind === 'heading' && first.text.replace(/^#+\s*/, '').trim() === props.title
+    ? parsed.slice(1) : parsed
   return (
     <div
       className={'memory-wiki-panel__md' + (props.compact === true ? ' is-compact' : '')}

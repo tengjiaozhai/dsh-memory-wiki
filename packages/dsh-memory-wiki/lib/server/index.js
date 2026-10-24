@@ -1918,52 +1918,85 @@ var MemoryWikiAdapter = class {
 			};
 		});
 	}
+	async graph(_input) {
+		const empty = {
+			libraryRevision: "",
+			pages: [],
+			edges: [],
+			brokenLinks: 0
+		};
+		if (this.config.wikiRoot.trim() === "") return {
+			...empty,
+			error: {
+				code: "wiki-unavailable",
+				reason: "not-configured"
+			}
+		};
+		try {
+			const corpus = this.loadCorpus();
+			return {
+				libraryRevision: corpus.revision,
+				pages: corpus.pageIds.map((pageId) => {
+					const page = corpus.pages.get(pageId);
+					return {
+						pageId,
+						title: page.title,
+						kind: page.kind,
+						contentHash: page.contentHash,
+						...page.asOf === void 0 ? {} : { asOf: page.asOf }
+					};
+				}),
+				edges: [...corpus.edges],
+				brokenLinks: corpus.brokenLinks.length
+			};
+		} catch {
+			return {
+				...empty,
+				error: {
+					code: "wiki-unavailable",
+					reason: "read-failed"
+				}
+			};
+		}
+	}
 	/**
 	* Read one page of the current library, optionally pinned to a version.
-	* @param input - session, page id and the hash the client saw.
+	* @param input - page id and the hash the client saw.
 	* @returns the page, or a typed error when it is unknown or has changed.
 	*/
 	async readPage(input) {
-		return this.withLock(input.sessionId, () => {
-			const resolved = this.resolve(input.sessionId);
-			if ("error" in resolved) return {
-				revision: 0,
-				error: resolved.error
-			};
-			const { state } = resolved;
-			const corpus = this.loadCorpus();
-			try {
-				const page = readPage(corpus, input.pageId, input.contentHash === void 0 ? {} : { revision: input.contentHash });
-				const limitChars = this.config.pageBodyLimitChars ?? 24e3;
-				const full = page.body;
-				const truncated = full.length > limitChars;
-				const body = truncated ? cutOnLineBoundary(full, limitChars) : full;
-				const document = {
-					pageId: page.pageId,
-					title: page.title,
-					kind: page.kind,
-					contentHash: page.contentHash,
-					...page.asOf === void 0 ? {} : { asOf: page.asOf },
-					body,
-					bodyStartLine: page.bodyStartLine,
-					totalLines: page.totalLines,
-					bodyChars: body.length,
-					bodyBytes: Buffer.byteLength(body, "utf8"),
-					fullChars: full.length,
-					truncated,
-					limitChars
-				};
-				return {
-					revision: state.revision,
-					page: document
-				};
-			} catch (error) {
-				return {
-					revision: state.revision,
-					error: this.toRemoteError(error, input)
-				};
-			}
-		});
+		if (this.config.wikiRoot.trim() === "") return { error: {
+			code: "wiki-unavailable",
+			reason: "not-configured"
+		} };
+		try {
+			const page = readPage(this.loadCorpus(), input.pageId, input.contentHash === void 0 ? {} : { revision: input.contentHash });
+			const limitChars = this.config.pageBodyLimitChars ?? 24e3;
+			const full = page.body;
+			const truncated = full.length > limitChars;
+			const body = truncated ? cutOnLineBoundary(full, limitChars) : full;
+			return { page: {
+				pageId: page.pageId,
+				title: page.title,
+				kind: page.kind,
+				contentHash: page.contentHash,
+				...page.asOf === void 0 ? {} : { asOf: page.asOf },
+				body,
+				bodyStartLine: page.bodyStartLine,
+				totalLines: page.totalLines,
+				bodyChars: body.length,
+				bodyBytes: Buffer.byteLength(body, "utf8"),
+				fullChars: full.length,
+				truncated,
+				limitChars
+			} };
+		} catch (error) {
+			if (error instanceof CorpusError && error.code !== "invalid-root") return { error: this.toRemoteError(error, input) };
+			return { error: {
+				code: "wiki-unavailable",
+				reason: "read-failed"
+			} };
+		}
 	}
 	/**
 	* Replace the server-owned draft with the user's selection.
@@ -3498,6 +3531,7 @@ let MemoryWikiService = (() => {
 	let _classSuper = TypertRemoteService;
 	let _instanceExtraInitializers = [];
 	let _getView_decorators;
+	let _graph_decorators;
 	let _search_decorators;
 	let _readPage_decorators;
 	let _reviseDraft_decorators;
@@ -3507,6 +3541,7 @@ let MemoryWikiService = (() => {
 		static {
 			const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create(_classSuper[Symbol.metadata] ?? null) : void 0;
 			_getView_decorators = [Remote("view")];
+			_graph_decorators = [Remote("graph")];
 			_search_decorators = [Remote("search")];
 			_readPage_decorators = [Remote("readPage")];
 			_reviseDraft_decorators = [Remote("reviseDraft")];
@@ -3520,6 +3555,17 @@ let MemoryWikiService = (() => {
 				access: {
 					has: (obj) => "getView" in obj,
 					get: (obj) => obj.getView
+				},
+				metadata: _metadata
+			}, null, _instanceExtraInitializers);
+			__esDecorate(this, null, _graph_decorators, {
+				kind: "method",
+				name: "graph",
+				static: false,
+				private: false,
+				access: {
+					has: (obj) => "graph" in obj,
+					get: (obj) => obj.graph
 				},
 				metadata: _metadata
 			}, null, _instanceExtraInitializers);
@@ -3649,6 +3695,10 @@ let MemoryWikiService = (() => {
 				capture
 			} : view;
 		}
+		/** Read all library page metadata and resolved links without a session. */
+		async graph(input) {
+			return this.adapter.graph(input);
+		}
 		/**
 		* Run page-level retrieval for one session without changing any state.
 		* @param input - session, question and hop count.
@@ -3659,7 +3709,7 @@ let MemoryWikiService = (() => {
 		}
 		/**
 		* Read one page of the current library, optionally pinned to a version.
-		* @param input - session, page id and the content hash the client saw.
+		* @param input - page id and the content hash the client saw.
 		* @returns the page, or a typed error when it is unknown or has changed.
 		*/
 		async readPage(input) {

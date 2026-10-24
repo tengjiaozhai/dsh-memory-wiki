@@ -29,6 +29,8 @@ import type {
   DraftSelection,
   DraftState,
   GetViewInput,
+  GraphInput,
+  GraphResult,
   MemoryWikiSourceMeta,
   OverrideResult,
   PageDocument,
@@ -363,20 +365,45 @@ export class MemoryWikiAdapter {
     })
   }
 
+  // ------------------------------------------------------------ Remote: graph
+
+  async graph(_input: GraphInput): Promise<GraphResult> {
+    const empty = { libraryRevision: '', pages: [], edges: [], brokenLinks: 0 }
+    if (this.config.wikiRoot.trim() === '') {
+      return { ...empty, error: { code: 'wiki-unavailable', reason: 'not-configured' } }
+    }
+    try {
+      const corpus = this.loadCorpus()
+      return {
+        libraryRevision: corpus.revision,
+        pages: corpus.pageIds.map((pageId) => {
+          const page = corpus.pages.get(pageId)!
+          return {
+            pageId, title: page.title, kind: page.kind, contentHash: page.contentHash,
+            ...(page.asOf === undefined ? {} : { asOf: page.asOf }),
+          }
+        }),
+        edges: [...corpus.edges],
+        brokenLinks: corpus.brokenLinks.length,
+      }
+    } catch {
+      return { ...empty, error: { code: 'wiki-unavailable', reason: 'read-failed' } }
+    }
+  }
+
   // ------------------------------------------------------------ Remote: readPage
 
   /**
    * Read one page of the current library, optionally pinned to a version.
-   * @param input - session, page id and the hash the client saw.
+   * @param input - page id and the hash the client saw.
    * @returns the page, or a typed error when it is unknown or has changed.
    */
   async readPage(input: ReadPageInput): Promise<ReadPageResult> {
-    return this.withLock(input.sessionId, () => {
-      const resolved = this.resolve(input.sessionId)
-      if ('error' in resolved) return { revision: 0, error: resolved.error }
-      const { state } = resolved
-      const corpus = this.loadCorpus()
+      if (this.config.wikiRoot.trim() === '') {
+        return { error: { code: 'wiki-unavailable', reason: 'not-configured' } }
+      }
       try {
+        const corpus = this.loadCorpus()
         const page = coreReadPage(corpus, input.pageId, input.contentHash === undefined ? {} : { revision: input.contentHash })
         const limitChars = this.config.pageBodyLimitChars ?? DEFAULT_PAGE_BODY_LIMIT_CHARS
         const full = page.body
@@ -397,12 +424,14 @@ export class MemoryWikiAdapter {
           truncated,
           limitChars,
         }
-        return { revision: state.revision, page: document }
+        return { page: document }
       }
       catch (error) {
-        return { revision: state.revision, error: this.toRemoteError(error, input) }
+        if (error instanceof CorpusError && error.code !== 'invalid-root') {
+          return { error: this.toRemoteError(error, input) }
+        }
+        return { error: { code: 'wiki-unavailable', reason: 'read-failed' } }
       }
-    })
   }
 
   // ------------------------------------------------------------ Remote: reviseDraft

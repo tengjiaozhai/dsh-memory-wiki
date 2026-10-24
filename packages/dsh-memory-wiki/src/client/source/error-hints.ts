@@ -5,6 +5,7 @@
  * panel must translate every code instead of showing "call failed".
  */
 const HINTS: Record<string, string> = {
+  'wiki-unavailable': '暂时无法读取 Wiki：请检查插件中的 wikiRoot 设置后重试。',
   'unknown-session': '会话已不存在或无权访问：请重新打开一个会话，本面板不会自行创建。',
   // B10: never claim a refresh is happening — the panel deliberately waits for
   // the user to press the button. B11: this code only ever comes from a WRITE,

@@ -15,6 +15,7 @@ import assert from 'node:assert/strict'
 import path from 'node:path'
 import test from 'node:test'
 import { pathToFileURL } from 'node:url'
+import { core } from './_load.mjs'
 
 const LIB = path.join(import.meta.dirname, '..', 'lib')
 const FIXTURE = path.join(import.meta.dirname, 'fixtures', 'library')
@@ -34,15 +35,17 @@ const adapter = () => new MemoryWikiAdapter(ctx, { enabled: true, wikiRoot: FIXT
 // ---------------------------------------------------------------- strict codec
 
 const VALID = {
+  graph: {},
   view: { sessionId: knownSession, expectedRevision: 1 },
   search: { sessionId: knownSession, query: '工具熔断', hops: 1 },
-  readPage: { sessionId: knownSession, pageId: 'wiki/concepts/工具熔断' },
+  readPage: { pageId: 'wiki/concepts/工具熔断' },
   reviseDraft: { sessionId: knownSession, expectedRevision: 1, query: '工具熔断', selectedPages: [], budgetChars: 4000, hops: 1 },
   prepareOverride: { sessionId: knownSession, expectedRevision: 1 },
   clearOverride: { sessionId: knownSession, expectedRevision: 1 },
 }
 
 const WITH_EXTRA = {
+  graph: { sessionId: knownSession },
   view: { ...VALID.view, injected: 'x' },
   search: { ...VALID.search, injected: 'x' },
   readPage: { ...VALID.readPage, injected: 'x' },
@@ -52,9 +55,10 @@ const WITH_EXTRA = {
 }
 
 const WRONG_TYPE = {
+  graph: null,
   view: { sessionId: 1, expectedRevision: 1 },
   search: { sessionId: knownSession, query: 1, hops: 1 },
-  readPage: { sessionId: knownSession, pageId: 1 },
+  readPage: { pageId: 1 },
   reviseDraft: { sessionId: knownSession, expectedRevision: 'x', query: 'q', selectedPages: [], budgetChars: 4000, hops: 1 },
   prepareOverride: { sessionId: knownSession, expectedRevision: 'x' },
   clearOverride: { sessionId: knownSession, expectedRevision: null },
@@ -143,6 +147,41 @@ test('expectedRevision 真的拒旧值，且不改状态', async () => {
 
 // ---------------------------------------------------------------- search / readPage
 
+test('graph：无需会话，返回全库页面和真实边，包含未被检索命中的页面', async () => {
+  const a = new MemoryWikiAdapter({}, { enabled: true, wikiRoot: FIXTURE, budgetChars: 4000 })
+  const graph = await a.graph({})
+  const corpus = core.scanCorpus({ root: FIXTURE })
+  assert.equal(graph.error, undefined)
+  assert.equal(graph.libraryRevision, corpus.revision)
+  assert.deepEqual(graph.pages.map(page => page.pageId), corpus.pageIds)
+  assert.deepEqual(graph.edges, corpus.edges)
+  assert.equal(graph.brokenLinks, corpus.brokenLinks.length)
+  for (const page of graph.pages) {
+    assert.equal(page.contentHash, corpus.pages.get(page.pageId).contentHash)
+    assert.equal('body' in page || 'path' in page, false, 'graph sends metadata, not page bodies or absolute paths')
+  }
+  const report = await adapter().search({ sessionId: knownSession, query: '工具熔断', hops: 1 })
+  assert.ok(graph.pages.length > report.candidates.length)
+  const read = await a.readPage({ pageId: graph.pages[0].pageId, contentHash: graph.pages[0].contentHash })
+  assert.equal(read.error, undefined)
+  assert.equal('revision' in read, false, 'library reads have no session revision')
+  const unauthorized = await a.getView({ sessionId: knownSession })
+  assert.equal(unauthorized.error.code, 'unknown-session', 'browsing does not grant access to session state')
+})
+
+test('graph/readPage：未配置与无法读取明确失败，不伪装成空库', async () => {
+  for (const [wikiRoot, reason] of [['', 'not-configured'], ['/__missing_memory_wiki__', 'read-failed']]) {
+    const a = new MemoryWikiAdapter({}, { enabled: true, wikiRoot, budgetChars: 4000 })
+    assert.deepEqual((await a.graph({})).error, { code: 'wiki-unavailable', reason })
+    assert.deepEqual((await a.readPage({ pageId: 'wiki/concepts/x' })).error, { code: 'wiki-unavailable', reason })
+  }
+})
+
+test('库级读取拒绝旧 readPage 会话参数，不能混用新旧契约', () => {
+  const codec = remote.methods['memoryWiki/readPage'].parameters[0].strictCodec.create()
+  assert.equal(codec.safeParse({ pageId: 'wiki/concepts/工具熔断', sessionId: knownSession }).success, false)
+})
+
 test('search 返回候选与库版本，且不改 revision', async () => {
   const a = adapter()
   const result = await a.search({ sessionId: knownSession, query: '工具熔断', hops: 1 })
@@ -154,18 +193,18 @@ test('search 返回候选与库版本，且不改 revision', async () => {
 
 test('readPage：正常读取、版本不符给 expected/actual、未知页给 unknown-page', async () => {
   const a = adapter()
-  const ok = await a.readPage({ sessionId: knownSession, pageId: 'wiki/concepts/工具熔断' })
+  const ok = await a.readPage({ pageId: 'wiki/concepts/工具熔断' })
   assert.equal(ok.error, undefined)
   assert.equal(ok.page.pageId, 'wiki/concepts/工具熔断')
   assert.ok(ok.page.body.length > 0)
   const hash = ok.page.contentHash
 
-  const mismatch = await a.readPage({ sessionId: knownSession, pageId: 'wiki/concepts/工具熔断', contentHash: 'deadbeef' })
+  const mismatch = await a.readPage({ pageId: 'wiki/concepts/工具熔断', contentHash: 'deadbeef' })
   assert.equal(mismatch.error.code, 'page-version-mismatch')
   assert.equal(mismatch.error.expected, 'deadbeef')
   assert.equal(mismatch.error.actual, hash)
 
-  const unknown = await a.readPage({ sessionId: knownSession, pageId: 'wiki/concepts/并不存在的页' })
+  const unknown = await a.readPage({ pageId: 'wiki/concepts/并不存在的页' })
   assert.equal(unknown.error.code, 'unknown-page')
 })
 
@@ -179,7 +218,7 @@ test('readPage 行号：bodyStartLine 是文件 1-based 行号，且与 totalLin
   }
 
   const a = adapter()
-  const fixture = (await a.readPage({ sessionId: knownSession, pageId: 'wiki/concepts/工具熔断' })).page
+  const fixture = (await a.readPage({ pageId: 'wiki/concepts/工具熔断' })).page
   assert.ok(fixture.bodyStartLine > 1, 'a page with frontmatter must start its body after line 1')
   assert.equal(fixture.bodyStartLine + countLines(fixture.body) - 1, fixture.totalLines, 'bodyStartLine + body lines - 1 == totalLines')
 
@@ -190,7 +229,7 @@ test('readPage 行号：bodyStartLine 是文件 1-based 行号，且与 totalLin
   const report = await real.search({ sessionId: knownSession, query: '工具熔断', hops: 1 })
   assert.ok(report.candidates.length > 0, 'real library must return a candidate')
   for (const candidate of report.candidates.slice(0, 3)) {
-    const page = (await real.readPage({ sessionId: knownSession, pageId: candidate.pageId })).page
+    const page = (await real.readPage({ pageId: candidate.pageId })).page
     assert.ok(page.bodyStartLine >= 1)
     assert.equal(page.bodyStartLine + countLines(page.body) - 1, page.totalLines, 'real page: ' + page.pageId)
     if (page.truncated) continue
@@ -202,7 +241,7 @@ test('readPage 行号：bodyStartLine 是文件 1-based 行号，且与 totalLin
 
 test('reviseDraft：超额给 overBy 且进入 manual-invalid；成功进入 manual-ready', async () => {
   const a = new MemoryWikiAdapter(ctx, { enabled: true, wikiRoot: P3_FIXTURE, budgetChars: 4000 })
-  const long = await a.readPage({ sessionId: knownSession, pageId: 'wiki/concepts/超长页' })
+  const long = await a.readPage({ pageId: 'wiki/concepts/超长页' })
   const over = await a.reviseDraft({
     sessionId: knownSession,
     expectedRevision: 1,
@@ -216,7 +255,7 @@ test('reviseDraft：超额给 overBy 且进入 manual-invalid；成功进入 man
   assert.equal(over.error.budgetChars, 4000)
   assert.equal(over.mode, 'manual-invalid')
 
-  const okPage = await a.readPage({ sessionId: knownSession, pageId: 'wiki/concepts/短页' })
+  const okPage = await a.readPage({ pageId: 'wiki/concepts/短页' })
   const good = await a.reviseDraft({
     sessionId: knownSession,
     expectedRevision: over.revision,
@@ -251,7 +290,7 @@ test('prepareOverride：无选择给 nothing-selected；有草稿则冻结快照
   assert.equal(empty.error.code, 'nothing-selected')
   assert.equal(empty.mode, 'manual-invalid')
 
-  const page = await a.readPage({ sessionId: knownSession, pageId: 'wiki/concepts/工具熔断' })
+  const page = await a.readPage({ pageId: 'wiki/concepts/工具熔断' })
   const draft = await a.reviseDraft({
     sessionId: knownSession,
     expectedRevision: empty.revision,
@@ -283,7 +322,7 @@ test('prepareOverride：无选择给 nothing-selected；有草稿则冻结快照
 
 test('同会话串行化：并发改选用同一个 revision，只有一个成功', async () => {
   const a = adapter()
-  const page = await a.readPage({ sessionId: knownSession, pageId: 'wiki/concepts/工具熔断' })
+  const page = await a.readPage({ pageId: 'wiki/concepts/工具熔断' })
   const input = {
     sessionId: knownSession,
     expectedRevision: 1,
@@ -310,7 +349,7 @@ test('不同会话互不影响（各自的 revision 与状态）', async () => {
   const b1 = await twoSessions.getView({ sessionId: 'b', expectedRevision: 1 })
   assert.equal(a1.revision, 1)
   assert.equal(b1.revision, 1)
-  const page = await twoSessions.readPage({ sessionId: 'a', pageId: 'wiki/concepts/工具熔断' })
+  const page = await twoSessions.readPage({ pageId: 'wiki/concepts/工具熔断' })
   const drafted = await twoSessions.reviseDraft({
     sessionId: 'a',
     expectedRevision: 1,
@@ -329,7 +368,7 @@ test('不同会话互不影响（各自的 revision 与状态）', async () => {
 
 test('B13：同值重提交不改 revision、不清 prepared（服务端幂等）', async () => {
   const a = new MemoryWikiAdapter(ctx, { enabled: true, wikiRoot: P3_FIXTURE, budgetChars: 4000 })
-  const page = await a.readPage({ sessionId: knownSession, pageId: 'wiki/concepts/短页' })
+  const page = await a.readPage({ pageId: 'wiki/concepts/短页' })
   const input = {
     sessionId: knownSession,
     expectedRevision: 1,
@@ -361,7 +400,7 @@ test('B13：同值重提交不改 revision、不清 prepared（服务端幂等�
 
 test('prepareOverride 冻结的就是预览正文（text/chars/payloadHash 逐字相同）', async () => {
   const a = new MemoryWikiAdapter(ctx, { enabled: true, wikiRoot: P3_FIXTURE, budgetChars: 4000 })
-  const page = await a.readPage({ sessionId: knownSession, pageId: 'wiki/concepts/短页' })
+  const page = await a.readPage({ pageId: 'wiki/concepts/短页' })
   const drafted = await a.reviseDraft({
     sessionId: knownSession, expectedRevision: 1, query: '短页',
     selectedPages: [{ pageId: page.page.pageId, contentHash: page.page.contentHash }], budgetChars: 4000, hops: 1,
@@ -374,7 +413,7 @@ test('prepareOverride 冻结的就是预览正文（text/chars/payloadHash 逐�
   assert.equal(prepared.prepared.libraryRevision, drafted.draft.libraryRevision)
 })
 
-test('显式刷新库后 prepareOverride 拒绝旧 revision，并要求重新预览', async () => {
+test('库变更后 prepareOverride 拒绝冻结（要求重新预览），并给出 expected/actual', async () => {
   const fs = await import('node:fs')
   const os = await import('node:os')
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'mw-library-'))
@@ -382,7 +421,7 @@ test('显式刷新库后 prepareOverride 拒绝旧 revision，并要求重新预
   fs.cpSync(P3_FIXTURE, root, { recursive: true })
   try {
     const a = new MemoryWikiAdapter(ctx, { enabled: true, wikiRoot: root, budgetChars: 4000 })
-    const page = await a.readPage({ sessionId: knownSession, pageId: 'wiki/concepts/短页' })
+    const page = await a.readPage({ pageId: 'wiki/concepts/短页' })
     const drafted = await a.reviseDraft({
       sessionId: knownSession, expectedRevision: 1, query: '短页',
       selectedPages: [{ pageId: page.page.pageId, contentHash: page.page.contentHash }], budgetChars: 4000, hops: 1,
@@ -394,10 +433,13 @@ test('显式刷新库后 prepareOverride 拒绝旧 revision，并要求重新预
     const after = a.refreshCorpus()
     assert.notEqual(after, before, 'rescan must observe a new revision')
 
-    const prepared = await a.prepareOverride({ sessionId: knownSession, expectedRevision: drafted.revision })
-    assert.equal(prepared.error.code, 'stale-revision')
-    assert.equal(prepared.error.expected, drafted.revision)
-    assert.equal(prepared.error.actual, drafted.revision + 1)
+    const stale = await a.prepareOverride({ sessionId: knownSession, expectedRevision: drafted.revision })
+    assert.equal(stale.error.code, 'stale-revision', 'a rescan invalidates the old session revision')
+    const refreshed = await a.getView({ sessionId: knownSession })
+    const prepared = await a.prepareOverride({ sessionId: knownSession, expectedRevision: refreshed.revision })
+    assert.equal(prepared.error.code, 'library-changed')
+    assert.equal(prepared.error.expected, before)
+    assert.equal(prepared.error.actual, after)
     assert.equal(prepared.mode, 'manual-invalid')
     assert.equal(a.memoryFor(knownSession).hasPendingOverride, false, 'a rejected prepare must not park a snapshot')
   }
@@ -408,7 +450,7 @@ test('显式刷新库后 prepareOverride 拒绝旧 revision，并要求重新预
 
 test('stale 的 getView 仍带完整当前视图（read 不藏状态）', async () => {
   const a = new MemoryWikiAdapter(ctx, { enabled: true, wikiRoot: P3_FIXTURE, budgetChars: 4000 })
-  const page = await a.readPage({ sessionId: knownSession, pageId: 'wiki/concepts/短页' })
+  const page = await a.readPage({ pageId: 'wiki/concepts/短页' })
   const drafted = await a.reviseDraft({
     sessionId: knownSession, expectedRevision: 1, query: '短页',
     selectedPages: [{ pageId: page.page.pageId, contentHash: page.page.contentHash }], budgetChars: 4000, hops: 1,

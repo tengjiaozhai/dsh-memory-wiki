@@ -94,22 +94,11 @@ test('B1：读路径类型上没有 expectedRevision，wire 请求里也没有',
 
 // ------------------------------------------------------------------ B2
 
-test('B2：切会话重挂载面板，并清掉本会话的全部本地状态与写 pin', () => {
+test('B2：切会话重挂载上下文，库级浏览独立于会话', () => {
   const panel = readSource('MemoryPanel.tsx')
   assert.match(panel, /<RemotePanel[\s\S]*?key=\{sessionKey\}/, 'RemotePanel must be keyed by sessionKey')
-  assert.match(panel, /previousSessionRef\.current === sessionKey/, 'a session change must be detected')
-  const resetBlock = panel.slice(
-    panel.indexOf('previousSessionRef.current = sessionKey'),
-    panel.indexOf('}, [sessionKey])'),
-  )
-  for (const reset of [
-    'revisionRef.current = undefined',
-    'setViewState(null)',
-    'setActivePageId(null)',
-    'setLastReadAt(null)',
-  ]) {
-    assert.ok(resetBlock.includes(reset), 'session change must reset ' + reset)
-  }
+  assert.match(panel, /viewState\?\.session === sessionKey/, 'a view and its write pin are scoped to the session')
+  assert.match(panel, /source\.getGraph\(\)/, 'library browsing does not require a conversation')
 
   // The child keeps its own reset as a second line of defence (a caller could
   // forget the key): picks, report, query, notices all go.
@@ -145,25 +134,22 @@ test('B3：异步结果只在发起会话仍是当前会话时才允许回 UI', 
 
 // ------------------------------------------------------------------ B4
 
-test('B4：未绑定会话不发请求；错误响应的 revision 不写进写 pin', () => {
+test('B4：未绑定不读会话；错误响应的 revision 不写进写 pin', () => {
   assert.equal(guard.boundSession('s'), true)
   assert.equal(guard.boundSession(null), false)
   assert.equal(guard.boundSession(''), false)
 
   const panel = readSource('MemoryPanel.tsx')
-  const effect = panel.slice(panel.indexOf('const scope = launchScope(sessionKey)'), panel.indexOf('}, [source, sessionKey, preset, budget, readNonce])'))
-  const scopeAt = effect.indexOf('launchScope(sessionKey)')
+  const effect = panel.slice(panel.indexOf('if (!boundSession(sessionKey))'), panel.indexOf('}, [source, sessionKey, viewNonce])'))
+  const scopeAt = effect.indexOf('if (!boundSession(sessionKey))')
   const callAt = effect.indexOf('source.getView(')
   assert.ok(scopeAt >= 0 && scopeAt < callAt, 'the read must be gated before getView is called')
-  assert.match(effect, /if \(scope === null\) \{[\s\S]*?return\n/, 'an unbound session returns before any call')
+  assert.match(effect, /if \(!boundSession\(sessionKey\)\) \{[^\n]*return \}/, 'an unbound session returns before reading session state')
   assert.match(panel, /data-testid="mw-unbound"/, 'unbound renders a neutral state')
 
   // A dirty view is displayed but never pins a write.
-  assert.match(effect, /if \(next\.error === undefined\) revisionRef\.current = next\.revision/)
-  assert.match(
-    panel,
-    /applyView = useCallback\(\(next: MemoryWikiView, requestSession: string\) => \{[\s\S]*?if \(next\.error === undefined\) revisionRef\.current = next\.revision/,
-  )
+  assert.match(effect, /next\.error === undefined \? \{ cleanRevision: next\.revision \}/)
+  assert.match(panel, /cleanRevision: next\.error === undefined \? next\.revision/)
 })
 
 // ------------------------------------------------------------------ B5
@@ -242,10 +228,21 @@ test('B8：选中态 = draft ∪ picks（含本地取消），不读 search 报�
 
   const remote = readSource('RemotePanel.tsx')
   assert.doesNotMatch(remote, /candidate\.selected/, 'the server writes selected:false for every candidate')
-  assert.match(remote, /selectedPageIds=\{selection\.selectedPageIds\}/)
+  assert.match(remote, /picked=\{selectedIds\.has\(candidate\.pageId\)\}/)
 })
 
 // ------------------------------------------------------------------ B9
+
+test('准备只允许当前问题、页面顺序和版本与草稿一致，禁止冻结旧草稿', () => {
+  const pages = [{ pageId: 'a', contentHash: 'ha' }, { pageId: 'b', contentHash: 'hb' }]
+  const draft = { query: 'q', selectedPages: pages }
+  assert.equal(guard.draftMatchesSelection(draft, 'q', pages), true)
+  assert.equal(guard.draftMatchesSelection(undefined, 'q', pages), false)
+  assert.equal(guard.draftMatchesSelection(draft, 'changed question', pages), false)
+  assert.equal(guard.draftMatchesSelection(draft, 'q', [...pages, { pageId: 'c', contentHash: 'hc' }]), false)
+  assert.equal(guard.draftMatchesSelection(draft, 'q', [{ ...pages[0], contentHash: 'new' }, pages[1]]), false)
+  assert.equal(guard.draftMatchesSelection(draft, 'q', [...pages].reverse()), false)
+})
 
 test('B9：片段边界只来自 preview.sources；没有就明说，不回退整页、不拼接', () => {
   const view = viewWith(
@@ -302,7 +299,7 @@ test('B12：窗口 focus/可见时重读，并在标题标注上次读取时刻'
   const panel = readSource('MemoryPanel.tsx')
   assert.match(panel, /addEventListener\('focus'/)
   assert.match(panel, /addEventListener\('visibilitychange'/)
-  assert.match(panel, /setReadNonce\(\(value\) => value \+ 1\)/)
+  assert.match(panel, /setViewNonce\(\(n\) => n \+ 1\)/)
   assert.match(panel, /data-testid="mw-last-read"/)
   assert.match(panel, /上次读取/)
 

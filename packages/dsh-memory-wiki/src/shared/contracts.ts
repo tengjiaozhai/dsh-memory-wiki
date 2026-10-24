@@ -15,6 +15,7 @@ import type {
   EvidenceSnapshot,
   Hops,
   PageKind,
+  PageLink,
   PageRef,
   PageSegment,
   RetrievalEdge,
@@ -37,6 +38,29 @@ export type RemoteError =
   | { code: 'page-version-mismatch', pageId: string, expected: string, actual: string }
   | { code: 'manual-over-budget', overBy: number, budgetChars: number, selectedChars: number }
   | { code: 'no-usable-block', pageIds: string[] }
+  | { code: 'wiki-unavailable', reason: 'not-configured' | 'read-failed' }
+
+// ---------------------------------------------------------------- graph
+
+/** Library browsing is independent of conversation state. */
+export interface GraphInput {}
+
+export interface GraphPage {
+  pageId: string
+  title: string
+  kind: PageKind
+  contentHash: string
+  asOf?: string
+}
+
+/** Full library metadata and real links; never a retrieval candidate report. */
+export interface GraphResult {
+  libraryRevision: string
+  pages: GraphPage[]
+  edges: PageLink[]
+  brokenLinks: number
+  error?: RemoteError
+}
 
 // ---------------------------------------------------------------- getView
 
@@ -142,7 +166,6 @@ export interface SearchResult {
 
 /** Request of `memoryWiki/readPage`. */
 export interface ReadPageInput {
-  sessionId: string
   pageId: string
   /** When present, a page whose content hash differs is rejected rather than shown. */
   contentHash?: string
@@ -181,7 +204,6 @@ export interface PageDocument {
 
 /** Response of `memoryWiki/readPage`. */
 export interface ReadPageResult {
-  revision: number
   page?: PageDocument
   error?: RemoteError
 }

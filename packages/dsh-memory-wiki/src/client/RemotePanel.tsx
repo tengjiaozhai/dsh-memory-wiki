@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { Candidate, RetrievalReport } from '../core/types.js'
-import type { RemoteError, SessionMode } from '../shared/contracts.js'
+import type { DraftSelection, GraphPage, RemoteError, SessionMode } from '../shared/contracts.js'
 import { reasonLabel } from './CandidateList.js'
-import { EvidenceGraph } from './EvidenceGraph.js'
 import { SourceDetail } from './SourceDetail.js'
 import { describeBusinessError, hintFor } from './source/error-hints.js'
 import { RemoteCallError } from './source/unwrap.js'
 import { errorDetail } from './source/remote-source.js'
 import {
   committableSelection,
+  draftMatchesSelection,
   committedReadFailureCopy,
   effectiveSelection,
   isCurrentRequest,
@@ -145,8 +145,9 @@ export function RemotePanel(props: {
   writeRevision: number | undefined
   /** B3: the callee must hand back the session the read was launched under. */
   onView(next: MemoryWikiView, requestSession: string): void
+  pendingPage?: GraphPage | null
 }) {
-  const { source, sessionId, view, writeRevision, onView } = props
+  const { source, sessionId, view, writeRevision, onView, pendingPage } = props
   const [override, setOverride] = useState<SelectionOverride>({})
   const [query, setQuery] = useState(view.draft?.query ?? '')
   const [report, setReport] = useState<RetrievalReport | null>(null)
@@ -159,6 +160,13 @@ export function RemotePanel(props: {
   const [activePageId, setActivePageId] = useState<string | null>(null)
   const [page, setPage] = useState<PageView | null>(null)
   const [pageError, setPageError] = useState<string | null>(null)
+  const [pickedVersions, setPickedVersions] = useState<DraftSelection[]>([])
+
+  useEffect(() => {
+    if (pendingPage === null || pendingPage === undefined) return
+    setPickedVersions((current) => [...current.filter((entry) => entry.pageId !== pendingPage.pageId), { pageId: pendingPage.pageId, contentHash: pendingPage.contentHash }])
+    setOverride((current) => ({ ...current, [pendingPage.pageId]: true }))
+  }, [pendingPage])
 
   /** B3: the only session this component's answers may land on. */
   const sessionRef = useRef(sessionId)
@@ -187,6 +195,7 @@ export function RemotePanel(props: {
     setActivePageId(null)
     setPage(null)
     setPageError(null)
+    setPickedVersions([])
   }, [sessionId])
 
   const revision = view.revision
@@ -201,9 +210,10 @@ export function RemotePanel(props: {
 
   // B8: selection = server draft ∪ local picks (minus explicit removals).
   const draftSelected = view.draft?.selectedPages ?? []
+  const versionedPages = useMemo(() => [...candidates, ...pickedVersions], [report, pickedVersions])
   const selection = useMemo(
-    () => committableSelection(effectiveSelection(draftSelected, override), view, candidates),
-    [draftSelected, override, view, candidates],
+    () => committableSelection(effectiveSelection(draftSelected, override), view, versionedPages),
+    [draftSelected, override, view, versionedPages],
   )
   const selectedIds = useMemo(() => new Set(selection.selectedPageIds), [selection])
 
@@ -213,11 +223,12 @@ export function RemotePanel(props: {
   const hashOf = useMemo(() => {
     const map = new Map<string, string>()
     for (const candidate of report?.candidates ?? []) map.set(candidate.pageId, candidate.contentHash)
+    for (const pageRef of pickedVersions) map.set(pageRef.pageId, pageRef.contentHash)
     for (const pageRef of view.draft?.selectedPages ?? []) {
       if (!map.has(pageRef.pageId)) map.set(pageRef.pageId, pageRef.contentHash)
     }
     return map
-  }, [report, view.draft])
+  }, [report, view.draft, pickedVersions])
   const activeHash = activePageId === null ? undefined : hashOf.get(activePageId)
 
   const activeCandidate = useMemo<Candidate | undefined>(
@@ -242,7 +253,6 @@ export function RemotePanel(props: {
         const next = await source.readPage({
           pageId: activePageId,
           ...(contentHash === undefined ? {} : { contentHash }),
-          sessionId: scope.sessionId,
         })
         if (cancelled || !stillCurrent(scope, sessionRef.current)) return
         setPage(next)
@@ -363,6 +373,7 @@ export function RemotePanel(props: {
   const canWrite = source.reviseDraft !== undefined && writeRevision !== undefined
   const canRevise = canWrite && !locked && budgetChars !== undefined && hops !== undefined && selection.unfrozen.length === 0
   const canSearch = hops !== undefined && !locked
+  const draftDirty = selection.unfrozen.length > 0 || !draftMatchesSelection(view.draft, query, selection.committable)
 
   const revise = (): Promise<void> => {
     const reviseDraft = source.reviseDraft
@@ -385,7 +396,7 @@ export function RemotePanel(props: {
 
   const prepare = (): Promise<void> => {
     const prepareOverride = source.prepareOverride
-    if (prepareOverride === undefined || !canWrite || locked) return Promise.resolve()
+    if (prepareOverride === undefined || !canWrite || locked || draftDirty) return Promise.resolve()
     return performWrite('prepare-override', (scope, expectedRevision) =>
       prepareOverride({ sessionId: scope.sessionId, expectedRevision }),
     )
@@ -426,6 +437,9 @@ export function RemotePanel(props: {
 
   const toggle = (pageId: string): void => {
     const selected = selectedIds.has(pageId)
+    if (!selected && candidates.some((candidate) => candidate.pageId === pageId)) {
+      setPickedVersions((current) => current.filter((entry) => entry.pageId !== pageId))
+    }
     setOverride((current) => toggleSelection(current, pageId, selected))
   }
 
@@ -454,7 +468,7 @@ export function RemotePanel(props: {
             className="memory-wiki-panel__query"
             data-testid="mw-query"
             value={query}
-            placeholder="本轮问题（交给服务端检索）"
+            placeholder="按本轮问题检索依据"
             aria-label="检索问题"
             onChange={(event) => setQuery(event.target.value)}
           />
@@ -469,7 +483,7 @@ export function RemotePanel(props: {
         )}
         {report === null ? (
           <p className="memory-wiki-panel__excerpt-note" data-testid="mw-candidates-empty">
-            候选来自服务端 search：不检索就没有候选，也不在客户端本地打分。
+            输入本轮问题查找依据，也可以从图谱中选入页面。
           </p>
         ) : (
           <div className="memory-wiki-panel__scroll" data-testid="mw-pick-list">
@@ -496,14 +510,6 @@ export function RemotePanel(props: {
       </div>
 
       <div className="memory-wiki-panel__col memory-wiki-panel__col--center">
-        {report !== null && (
-          <EvidenceGraph
-            report={report}
-            activePageId={activePageId}
-            onSelect={setActivePageId}
-            selectedPageIds={selection.selectedPageIds}
-          />
-        )}
         <div className="memory-wiki-panel__server" data-testid="mw-server-status">
           <div className="memory-wiki-panel__section-head">
             <span data-testid="mw-server-mode">mode {MODE_TEXT[mode]}</span>
@@ -567,18 +573,19 @@ export function RemotePanel(props: {
             <button
               type="button"
               data-testid="mw-prepare"
-              disabled={!canWrite || locked || draft === undefined}
+              disabled={!canWrite || locked || draft === undefined || draftDirty}
               onClick={() => void prepare()}
             >
-              准备覆盖
+              准备下一轮
             </button>
             <button type="button" data-testid="mw-clear" disabled={!canWrite || locked} onClick={() => void clear()}>
               清除覆盖
             </button>
           </div>
           <p className="memory-wiki-panel__excerpt-note" data-testid="mw-write-note">
-            改选无改动时服务端不会清除已准备的覆盖（幂等）；写入只提交带 contentHash 的页。
+            改选只更新草稿；准备后用于下一轮，不会立即发送消息。
           </p>
+          {draft !== undefined && draftDirty && <p className="memory-wiki-panel__over" data-testid="mw-draft-dirty">选择已修改，请先应用改选，再准备下一轮。</p>}
           {selection.unfrozen.length > 0 && (
             <p className="memory-wiki-panel__over" role="alert" data-testid="mw-unfrozen">
               未冻结·不可提交（{selection.unfrozen.length} 页）：{selection.unfrozen.join('、')} —— 没有服务端
@@ -588,7 +595,7 @@ export function RemotePanel(props: {
 
           {preview === undefined || draft === undefined ? (
             <p className="memory-wiki-panel__excerpt-note" data-testid="mw-draft-none">
-              服务端还没有草稿：选中候选后「应用改选」才会生成（草稿不等于注入）。
+              选入页面后，点击「应用改选」预览将使用的依据。
             </p>
           ) : (
             <div data-testid="mw-draft">
@@ -613,14 +620,14 @@ export function RemotePanel(props: {
       </div>
 
       <div className="memory-wiki-panel__col memory-wiki-panel__col--detail">
-        <SourceDetail
+        {activeCandidate !== undefined && <details className="memory-wiki-panel__evidence-detail"><summary>核对候选的片段与版本</summary><SourceDetail
           candidate={activeCandidate}
           page={page}
           loading={pageError === null && page === null && activePageId !== null}
           error={pageError}
           segments={segments}
           selected={activePageId !== null && selectedIds.has(activePageId)}
-        />
+        /></details>}
         <div className="memory-wiki-panel__hist" data-testid="mw-server-evidence">
           <h4 className="memory-wiki-panel__subhead">手选选入（{selection.selectedPageIds.length} 页）</h4>
           {selection.selectedPageIds.length === 0 ? (
@@ -638,6 +645,7 @@ export function RemotePanel(props: {
                       <span data-testid="mw-picked-hash">{contentHash.slice(0, 12)}</span>
                     )}
                   </div>
+                  <button type="button" onClick={() => toggle(pageId)}>移除</button>
                 </div>
               )
             })
@@ -648,7 +656,7 @@ export function RemotePanel(props: {
           </h4>
           {view.prepared === undefined ? (
             <p className="memory-wiki-panel__excerpt-note" data-testid="mw-prepared-none">
-              未准备：prepareOverride 之后才有快照，且只被下一轮提交消费一次。
+              尚未准备手动覆盖，继续使用自动检索。
             </p>
           ) : (
             <div className="memory-wiki-panel__hist-row" data-testid="mw-prepared">

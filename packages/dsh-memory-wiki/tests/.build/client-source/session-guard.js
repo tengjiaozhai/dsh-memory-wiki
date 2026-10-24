@@ -11,7 +11,7 @@
  * `tests/client-session-guard.test.mjs` exercises them without a DOM.
  */
                                                                        
-                                                                         
+                                                                                     
                                                        
 
 /** The three mutations the panel can ask for. Kept next to their labels so a
@@ -120,7 +120,7 @@ export function toggleSelection(
 export function committableSelection(
   pageIds                   ,
   view                ,
-  candidates                      ,
+  candidates                                                      ,
 )                       {
   const hashes = new Map                ()
   // The search report is what the user just looked at, so it wins over an older
@@ -144,6 +144,14 @@ export function committableSelection(
     committable.push({ pageId, contentHash })
   }
   return { selectedPageIds, committable, unfrozen }
+}
+
+/** Preparing must freeze exactly the selection the user is looking at. */
+export function draftMatchesSelection(draft                        , query        , pages                           )          {
+  return draft !== undefined && draft.query === query && draft.selectedPages.length === pages.length && pages.every((page, index) => {
+    const saved = draft.selectedPages[index]
+    return saved?.pageId === page.pageId && saved.contentHash === page.contentHash
+  })
 }
 
 /**
