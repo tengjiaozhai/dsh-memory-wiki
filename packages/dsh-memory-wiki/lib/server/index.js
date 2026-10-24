@@ -2493,7 +2493,7 @@ var PublicationConflict = class extends Error {
 	partial = true;
 };
 function redact(text) {
-	return text.replace(/-----BEGIN [^-]*PRIVATE KEY-----[\s\S]*?-----END [^-]*PRIVATE KEY-----/g, "[REDACTED PRIVATE KEY]").replace(/\bapikey_[A-Za-z0-9_]+/g, "[REDACTED]").replace(/\bsk-[A-Za-z0-9_-]{12,}/g, "[REDACTED]").replace(/(Bearer\s+)[A-Za-z0-9._~+\/-]+/gi, "$1[REDACTED]").replace(/(["']?(?:api[_-]?key|access[_-]?token|refresh[_-]?token|password|secret|authorization|cookie|client[_-]?secret)["']?\s*[=:]\s*)(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|[^\s,"'}]+)/gi, "$1\"[REDACTED]\"");
+	return text.replace(/-----BEGIN [^-]*PRIVATE KEY-----[\s\S]*?-----END [^-]*PRIVATE KEY-----/g, "[REDACTED PRIVATE KEY]").replace(/\bapikey_[A-Za-z0-9_]+/g, "[REDACTED]").replace(/\buser_[A-Za-z0-9_-]{40,}/g, "[REDACTED]").replace(/\bsk-[A-Za-z0-9_-]{12,}/g, "[REDACTED]").replace(/(Bearer\s+)[A-Za-z0-9._~+\/-]+/gi, "$1[REDACTED]").replace(/(["']?(?:api[_-]?key|access[_-]?token|refresh[_-]?token|password|secret|authorization|cookie|client[_-]?secret)["']?\s*[=:]\s*)(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|[^\s,"'}]+)/gi, "$1\"[REDACTED]\"");
 }
 function safeError(error) {
 	return redact(error instanceof Error ? error.message : String(error)).slice(0, 500);
@@ -2951,6 +2951,8 @@ var ExperienceCapture = class {
 };
 //#endregion
 //#region src/server/capture/jev.ts
+const COMMANDCODE_BASE_URL = "https://api.commandcode.ai/provider/v1";
+const DEFAULT_JEV_MODEL = "typesafe/jev-1.14.0";
 function probability(value) {
 	if (typeof value !== "number" || !Number.isFinite(value) || value < 0 || value > 1) throw new Error("Invalid Jev probability");
 	return value;
@@ -2975,10 +2977,20 @@ var JevJudge = class {
 	client;
 	model;
 	constructor(options) {
+		if (options.model !== "typesafe/jev-1.14.0") throw new Error(`CommandCode Jev 必须使用固定版本 ID ${DEFAULT_JEV_MODEL}`);
+		const endpoint = new URL(options.baseURL ?? "https://api.commandcode.ai/provider/v1");
+		if (!["https:", "http:"].includes(endpoint.protocol) || endpoint.username || endpoint.password || endpoint.search || endpoint.hash) throw new Error("Invalid CommandCode API base URL");
+		if (endpoint.protocol === "http:" && ![
+			"localhost",
+			"127.0.0.1",
+			"[::1]"
+		].includes(endpoint.hostname)) throw new Error("CommandCode API requires HTTPS except for loopback verification");
+		const baseURL = endpoint.href.replace(/\/+$/, "");
+		if (!baseURL.endsWith("/v1")) throw new Error("CommandCode API base URL must end with /v1");
 		this.model = options.model;
 		this.client = new TypeSafeClient({
 			apiKey: options.apiKey,
-			baseURL: options.baseURL,
+			baseURL: baseURL.slice(0, -3),
 			defaultModel: this.model,
 			compression: false,
 			timeout: 1e4,
@@ -3442,17 +3454,17 @@ function createWikiWriter(llm) {
 }
 function createHostCapture(ctx, wikiRoot, config, callbacks) {
 	if (!config.skillPath) throw new Error("请配置 llm-wiki 的 skillPath");
-	const keyFile = dshHomePath("credentials", "memory-wiki-typesafe.key");
-	const apiKey = process.env.TYPESAFE_API_KEY?.trim() || (fs.existsSync(keyFile) ? fs.readFileSync(keyFile, "utf8").trim() : "");
-	if (!apiKey) throw new Error("Jev 未配置：请设置 TYPESAFE_API_KEY 或本地私有凭据文件");
-	if (!/^jev-\d+\.\d+\.\d+$/.test(config.judgeModel)) throw new Error("Jev 必须使用固定版本模型 ID");
+	const keyFile = dshHomePath("credentials", "memory-wiki-commandcode.key");
+	const apiKey = process.env.CMD_API_KEY?.trim() || (fs.existsSync(keyFile) ? fs.readFileSync(keyFile, "utf8").trim() : "");
+	if (!apiKey) throw new Error("CommandCode Jev 未配置：请设置 CMD_API_KEY 或 memory-wiki-commandcode.key");
 	const dataRoot = dshHomePath("storages", "memory-wiki-auto-capture", hash(fs.realpathSync(wikiRoot)));
 	return new ExperienceCapture({
 		wikiRoot,
 		dataRoot,
 		judge: new JevJudge({
 			apiKey,
-			model: config.judgeModel
+			model: config.judgeModel,
+			baseURL: config.judgeBaseURL
 		}),
 		ingest: new WikiIngest({
 			wikiRoot,
@@ -3515,11 +3527,13 @@ const Config = z.object({
 	budgetChars: z.union([z.const(4e3), z.const(8e3)]).default(4e3),
 	capture: z.object({
 		enabled: z.boolean().default(false),
-		judgeModel: z.string().default("jev-1.14.0"),
+		judgeModel: z.string().default(DEFAULT_JEV_MODEL),
+		judgeBaseURL: z.string().default(COMMANDCODE_BASE_URL),
 		skillPath: z.string().default("")
 	}).default({
 		enabled: false,
-		judgeModel: "jev-1.14.0",
+		judgeModel: DEFAULT_JEV_MODEL,
+		judgeBaseURL: COMMANDCODE_BASE_URL,
 		skillPath: ""
 	})
 }).default({
@@ -3657,7 +3671,8 @@ let MemoryWikiService = (() => {
 				try {
 					this.capture = createHostCapture(captureContext, this.resolved.wikiRoot, {
 						enabled: true,
-						judgeModel: raw.capture.judgeModel ?? "jev-1.14.0",
+						judgeModel: raw.capture.judgeModel ?? "typesafe/jev-1.14.0",
+						judgeBaseURL: raw.capture.judgeBaseURL ?? "https://api.commandcode.ai/provider/v1",
 						skillPath: raw.capture.skillPath ?? ""
 					}, {
 						publishing: (active) => this.adapter.setPublishing(active),

@@ -16,7 +16,7 @@ test('a completed human turn is frozen once, survives restart, and does not capt
   ]
   const session = { id: 'human-session', header: { cwd: '/fixture' }, snapshotEvents: () => events, requestHeader: () => ({ config: { provider: 'fixture', model: 'writer' } }) }
   const options = { wikiRoot: dataRoot, dataRoot: path.join(dataRoot, 'jobs'), judge: {
-    assess: async evidence => { assessed++; assert.equal(evidence.origin.turnStartSeq, 0); return { disposition: 'skipped', reason: 'routine formatting', model: 'jev-1.14.0' } },
+    assess: async evidence => { assessed++; assert.equal(evidence.origin.turnStartSeq, 0); return { disposition: 'skipped', reason: 'routine formatting', model: 'typesafe/jev-1.14.0' } },
     verify: async () => { throw new Error('No writer should run for skipped work') },
   }, ingest: {}, readEvents: async () => events }
   const capture = new ExperienceCapture(options)
@@ -57,7 +57,7 @@ test('Jev failure is visible, never writes, and leaves later human turns usable'
   const capture = new ExperienceCapture({ wikiRoot: root, dataRoot: path.join(root, 'jobs'), judge: { assess: async evidence => {
     attempts++
     if (attempts === 1) { assert.equal(evidence.outcome, 'error'); throw new Error('Typesafe HTTP 451') }
-    return { disposition: 'skipped', reason: 'Routine', model: 'jev-1.14.0' }
+    return { disposition: 'skipped', reason: 'Routine', model: 'typesafe/jev-1.14.0' }
   } }, ingest: {}, readEvents: async () => events })
   const session = { id: 'human', header: {}, requestHeader: () => ({ config: { provider: 'test', model: 'test' } }) }
   capture.observe(session, events[2])
@@ -75,11 +75,12 @@ test('Jev failure is visible, never writes, and leaves later human turns usable'
 test('structured credentials are removed before either model receives the evidence', async t => {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), 'capture-redaction-'))
   t.after(() => fs.rm(root, { recursive: true, force: true }))
-  const events = [{ seq: 0, type: 'turn/start', data: { turn: 1 } }, { seq: 1, type: 'user/message', data: { source: { kind: 'user' }, content: [{ type: 'text', text: 'Debug with {"password":"not-for-the-model"}' }], credentials: { arbitrary: 'nested-credential' } } }, { seq: 2, type: 'tool/result', data: { path: '/fixture/auth.json', text: 'do-not-send-auth-file' } }, { seq: 3, type: 'turn/end', data: { turn: 1, reason: { kind: 'completed' } } }]
+  const providerKey = 'user_' + 'X'.repeat(88)
+  const events = [{ seq: 0, type: 'turn/start', data: { turn: 1 } }, { seq: 1, type: 'user/message', data: { source: { kind: 'user' }, content: [{ type: 'text', text: 'Debug with {"password":"not-for-the-model"} ' + providerKey }], credentials: { arbitrary: 'nested-credential' } } }, { seq: 2, type: 'tool/result', data: { path: '/fixture/auth.json', text: 'do-not-send-auth-file' } }, { seq: 3, type: 'turn/end', data: { turn: 1, reason: { kind: 'completed' } } }]
   const capture = new ExperienceCapture({ wikiRoot: root, dataRoot: path.join(root, 'jobs'), judge: { assess: async evidence => {
     const data = JSON.stringify(evidence)
-    for (const privateValue of ['not-for-the-model', 'nested-credential', 'do-not-send-auth-file', '/private/customer-project']) assert.equal(data.includes(privateValue), false)
-    return { disposition: 'deferred', reason: 'Sensitive evidence omitted', model: 'jev-1.14.0' }
+    for (const privateValue of [providerKey, 'not-for-the-model', 'nested-credential', 'do-not-send-auth-file', '/private/customer-project']) assert.equal(data.includes(privateValue), false)
+    return { disposition: 'deferred', reason: 'Sensitive evidence omitted', model: 'typesafe/jev-1.14.0' }
   } }, ingest: {}, readEvents: async () => events })
   capture.observe({ id: 'human', header: { cwd: '/private/customer-project' } }, events[3])
   await capture.whenIdle()
@@ -94,7 +95,7 @@ test('the next successful log read catches up a previously unread completed turn
   const events = [1, 2].flatMap((turn, index) => [{ seq: index * 3, type: 'turn/start', data: { turn } }, { seq: index * 3 + 1, type: 'user/message', data: { source: { kind: 'user' }, content: [{ type: 'text', text: `Task ${turn}` }] } }, { seq: index * 3 + 2, type: 'turn/end', data: { turn, reason: { kind: 'completed' } } }])
   const turns = []
   let reads = 0
-  const capture = new ExperienceCapture({ wikiRoot: root, dataRoot: path.join(root, 'jobs'), judge: { assess: async evidence => { turns.push(evidence.origin.turn); return { disposition: 'skipped', reason: 'routine', model: 'jev-1.14.0' } } }, ingest: {}, readEvents: async () => { if (++reads === 1) throw new Error('Temporary read failure'); return events } })
+  const capture = new ExperienceCapture({ wikiRoot: root, dataRoot: path.join(root, 'jobs'), judge: { assess: async evidence => { turns.push(evidence.origin.turn); return { disposition: 'skipped', reason: 'routine', model: 'typesafe/jev-1.14.0' } } }, ingest: {}, readEvents: async () => { if (++reads === 1) throw new Error('Temporary read failure'); return events } })
   const session = { id: 'human', header: {} }
   capture.observe(session, events[2])
   await capture.whenIdle()
@@ -111,7 +112,7 @@ test('a partially published approved job resumes after restart without re-genera
   let generations = 0
   let publications = 0
   const options = { wikiRoot: root, dataRoot: path.join(root, 'jobs'), readEvents: async () => events,
-    judge: { assess: async () => ({ disposition: 'prepare', reason: 'supported', model: 'jev-1.14.0' }), verify: async () => ({ disposition: 'publish', reason: 'supported', model: 'jev-1.14.0' }) },
+    judge: { assess: async () => ({ disposition: 'prepare', reason: 'supported', model: 'typesafe/jev-1.14.0' }), verify: async () => ({ disposition: 'publish', reason: 'supported', model: 'typesafe/jev-1.14.0' }) },
     ingest: { prepare: async () => { generations++; return { patchHash: 'approved-exact-text', files: [] } }, publish: async manifest => {
       assert.equal(manifest.patchHash, 'approved-exact-text')
       if (++publications === 1) throw Object.assign(new Error('Temporary filesystem I/O error'), { code: 'EIO' })

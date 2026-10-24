@@ -73,11 +73,14 @@ dsh plugin --profile desktop add dsh-memory-wiki
 ```yaml
 capture:
   enabled: true
-  judgeModel: jev-1.14.0
+  judgeModel: typesafe/jev-1.14.0
+  judgeBaseURL: https://api.commandcode.ai/provider/v1
   skillPath: /absolute/path/to/llm-wiki/SKILL.md
 ```
 
-服务端从 `TYPESAFE_API_KEY` 或 `$DSH_HOME/credentials/memory-wiki-typesafe.key` 读取 Jev key；本地凭据文件应为 `0600`，不要放进插件配置或 Git。Jev 使用官方 System One API，生成笔记使用原轮次已解析的普通 LLM provider/model，写作调用没有工具权限。
+服务端从 `CMD_API_KEY` 或 `$DSH_HOME/credentials/memory-wiki-commandcode.key` 读取 CommandCode key；本地凭据文件应为 `0600`，不要放进插件配置或 Git。Jev 通过 CommandCode 的 `/provider/v1/systemone` 调用，仍使用 TypeSafe System One 协议和 SDK。`judgeBaseURL` 填含 `/v1` 的完整 API 根，程序处理 SDK 的路径拼接。生成笔记使用原轮次已解析的普通 LLM provider/model，写作调用没有工具权限。
+
+原直连配置应改为上述模型 ID 和地址；项目不再读取 `TYPESAFE_API_KEY`、`TYPESAFE_BASE_URL` 或旧 TypeSafe key 文件，也不回退到旧服务。当前只接受 `typesafe/jev-1.14.0`；其他版本或别名需先调整固定版本并重新校准。远端地址要求 HTTPS，本机受控验证可用 loopback HTTP。
 
 目标 Wiki 必须按自己的 `AGENTS.md` 显式允许自动经验来源，含 `<!-- dsh-memory-wiki:auto-capture=v1 -->` 标记。来源写到 `experiences/<jobId>.md`，source 沿用 `note`；真实 Skill、operations、模板与 schema 每次读取并记录版本。默认安装不会获得写权限。启用后的高置信任务不逐条请求确认，中低置信或冲突保留候选。
 
@@ -85,7 +88,9 @@ capture:
 
 任务与恢复清单保存在 `$DSH_HOME/storages/memory-wiki-auto-capture/<库哈希>/`，不保存 API key。重复终态、重启和同库并发用稳定 jobId 与文件锁处理；既有页面保留正文并补实例，发布前发现外部修改则停止，避免覆盖。发布是可恢复的逐文件替换，不是跨文件原子事务。
 
-当前验证边界：受控接口可以验证完整流程；本机对官方 TypeSafe 的合成请求返回 HTTP 451 地区不可用，尚未完成真实 Jev 自动沉淀验收。网络/API 错误会显示失败，不会换模型或把未验证内容写入 Wiki。没有修改当前 Desktop profile 或重启应用。
+当前验证边界：CommandCode 的固定版本模型真实请求已返回 HTTP 200，实际 `JevJudge` 的两阶段调用也成功完成。合成样本未达到高置信条件，按设计保留候选，没有写入真实 Wiki；尚未完成生产样本校准及真实经验自动沉淀验收。网络/API 错误会显示失败，不会换模型或把未验证内容写入 Wiki。没有修改当前 Desktop profile 或重启应用。
+
+接口依据：[CommandCode Provider API](https://commandcode.ai/docs/provider)。
 
 ## 开发
 

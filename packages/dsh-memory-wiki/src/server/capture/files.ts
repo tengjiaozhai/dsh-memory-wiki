@@ -13,6 +13,7 @@ export class PublicationConflict extends Error {
 export function redact(text: string): string {
   return text.replace(/-----BEGIN [^-]*PRIVATE KEY-----[\s\S]*?-----END [^-]*PRIVATE KEY-----/g, '[REDACTED PRIVATE KEY]')
     .replace(/\bapikey_[A-Za-z0-9_]+/g, '[REDACTED]')
+    .replace(/\buser_[A-Za-z0-9_-]{40,}/g, '[REDACTED]')
     .replace(/\bsk-[A-Za-z0-9_-]{12,}/g, '[REDACTED]')
     .replace(/(Bearer\s+)[A-Za-z0-9._~+\/-]+/gi, '$1[REDACTED]')
     .replace(/(["']?(?:api[_-]?key|access[_-]?token|refresh[_-]?token|password|secret|authorization|cookie|client[_-]?secret)["']?\s*[=:]\s*)(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|[^\s,"'}]+)/gi, '$1"[REDACTED]"')

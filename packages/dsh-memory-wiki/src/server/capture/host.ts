@@ -9,7 +9,7 @@ import { WikiIngest } from './ingest.js'
 import { hash, safeError } from './files.js'
 import type { GenerateWiki } from './ingest.js'
 
-export type CaptureConfig = { enabled: boolean; judgeModel: string; skillPath: string }
+export type CaptureConfig = { enabled: boolean; judgeModel: string; judgeBaseURL: string; skillPath: string }
 
 /** Independent one-shot model request: an empty tool set is a permission limit. */
 export function createWikiWriter(llm: { stream(options: GenerateOptions): AsyncIterable<any> }): GenerateWiki {
@@ -36,12 +36,11 @@ export function createWikiWriter(llm: { stream(options: GenerateOptions): AsyncI
 
 export function createHostCapture(ctx: any, wikiRoot: string, config: CaptureConfig, callbacks: { publishing(active: boolean): void; published(): void }): ExperienceCapture {
   if (!config.skillPath) throw new Error('请配置 llm-wiki 的 skillPath')
-  const keyFile = dshHomePath('credentials', 'memory-wiki-typesafe.key')
-  const apiKey = process.env.TYPESAFE_API_KEY?.trim() || (fs.existsSync(keyFile) ? fs.readFileSync(keyFile, 'utf8').trim() : '')
-  if (!apiKey) throw new Error('Jev 未配置：请设置 TYPESAFE_API_KEY 或本地私有凭据文件')
-  if (!/^jev-\d+\.\d+\.\d+$/.test(config.judgeModel)) throw new Error('Jev 必须使用固定版本模型 ID')
+  const keyFile = dshHomePath('credentials', 'memory-wiki-commandcode.key')
+  const apiKey = process.env.CMD_API_KEY?.trim() || (fs.existsSync(keyFile) ? fs.readFileSync(keyFile, 'utf8').trim() : '')
+  if (!apiKey) throw new Error('CommandCode Jev 未配置：请设置 CMD_API_KEY 或 memory-wiki-commandcode.key')
   const dataRoot = dshHomePath('storages', 'memory-wiki-auto-capture', hash(fs.realpathSync(wikiRoot)))
-  const judge = new JevJudge({ apiKey, model: config.judgeModel })
+  const judge = new JevJudge({ apiKey, model: config.judgeModel, baseURL: config.judgeBaseURL })
   const ingest = new WikiIngest({ wikiRoot, dataRoot, skillPath: path.resolve(config.skillPath), generate: createWikiWriter(ctx.llm) })
   return new ExperienceCapture({ wikiRoot, dataRoot, judge, ingest,
     readEvents: async sessionId => (await ctx.sessionQuery.readSession(sessionId)).events,

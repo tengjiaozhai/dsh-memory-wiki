@@ -4,6 +4,9 @@ import { redact } from './files.js'
 
 type Answer = { type: string; choice?: string; confidence?: number; probabilities?: Record<string, number>; noul?: number }
 
+export const COMMANDCODE_BASE_URL = 'https://api.commandcode.ai/provider/v1'
+export const DEFAULT_JEV_MODEL = 'typesafe/jev-1.14.0'
+
 function probability(value: unknown): number {
   if (typeof value !== 'number' || !Number.isFinite(value) || value < 0 || value > 1) throw new Error('Invalid Jev probability')
   return value
@@ -29,8 +32,15 @@ export class JevJudge {
   private readonly model: string
 
   constructor(options: { apiKey: string; model: string; baseURL?: string }) {
+    if (options.model !== DEFAULT_JEV_MODEL) throw new Error(`CommandCode Jev 必须使用固定版本 ID ${DEFAULT_JEV_MODEL}`)
+    const endpoint = new URL(options.baseURL ?? COMMANDCODE_BASE_URL)
+    if (!['https:', 'http:'].includes(endpoint.protocol) || endpoint.username || endpoint.password || endpoint.search || endpoint.hash) throw new Error('Invalid CommandCode API base URL')
+    if (endpoint.protocol === 'http:' && !['localhost', '127.0.0.1', '[::1]'].includes(endpoint.hostname)) throw new Error('CommandCode API requires HTTPS except for loopback verification')
+    const baseURL = endpoint.href.replace(/\/+$/, '')
+    if (!baseURL.endsWith('/v1')) throw new Error('CommandCode API base URL must end with /v1')
     this.model = options.model
-    this.client = new TypeSafeClient({ apiKey: options.apiKey, baseURL: options.baseURL, defaultModel: this.model,
+    // This SDK adds /v1/systemone itself; callers supply the documented v1 root.
+    this.client = new TypeSafeClient({ apiKey: options.apiKey, baseURL: baseURL.slice(0, -3), defaultModel: this.model,
       compression: false, timeout: 10_000, retry: { maxRetries: 1 } })
   }
 

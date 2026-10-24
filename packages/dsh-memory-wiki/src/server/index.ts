@@ -28,6 +28,7 @@ import type {
 } from '../shared/contracts.js'
 import { MemoryWikiAdapter } from './dsh-adapter.js'
 import { createHostCapture } from './capture/host.js'
+import { COMMANDCODE_BASE_URL, DEFAULT_JEV_MODEL } from './capture/jev.js'
 import type { ExperienceCapture } from './capture/experience.js'
 import type { CaptureView } from '../shared/contracts.js'
 
@@ -62,9 +63,10 @@ export const Config = z
     budgetChars: z.union([z.const(4000), z.const(8000)]).default(4000),
     capture: z.object({
       enabled: z.boolean().default(false),
-      judgeModel: z.string().default('jev-1.14.0'),
+      judgeModel: z.string().default(DEFAULT_JEV_MODEL),
+      judgeBaseURL: z.string().default(COMMANDCODE_BASE_URL),
       skillPath: z.string().default(''),
-    }).default({ enabled: false, judgeModel: 'jev-1.14.0', skillPath: '' }),
+    }).default({ enabled: false, judgeModel: DEFAULT_JEV_MODEL, judgeBaseURL: COMMANDCODE_BASE_URL, skillPath: '' }),
   })
   .default({ enabled: true, wikiRoot: '', budgetChars: 4000 })
 
@@ -106,7 +108,7 @@ export default class MemoryWikiService extends TypertRemoteService {
       ctx.inject(['llm', 'sessionQuery'], (captureContext: any) => {
         try {
           this.capture = createHostCapture(captureContext, this.resolved.wikiRoot, {
-            enabled: true, judgeModel: raw.capture.judgeModel ?? 'jev-1.14.0', skillPath: raw.capture.skillPath ?? '',
+            enabled: true, judgeModel: raw.capture.judgeModel ?? DEFAULT_JEV_MODEL, judgeBaseURL: raw.capture.judgeBaseURL ?? COMMANDCODE_BASE_URL, skillPath: raw.capture.skillPath ?? '',
           }, { publishing: active => this.adapter.setPublishing(active), published: () => this.adapter.refreshCorpus() })
           const capture = this.capture
           captureContext.on('session/event', (session: any, event: any) => capture.observe(session, event))
