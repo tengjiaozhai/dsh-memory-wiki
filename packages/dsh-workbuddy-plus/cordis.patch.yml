@@ -1,0 +1,5 @@
+# 把 WorkBuddy provider 挂进 profile，但不改当前默认模型。
+# 插件复用 WorkBuddy 桌面 App 里已有的登录态，不另起 OAuth。
+- insert:
+    - id: llm-workbuddy
+      name: 'dsh-workbuddy-plus'
