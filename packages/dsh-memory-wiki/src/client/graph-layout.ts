@@ -1,60 +1,96 @@
-import type { GraphPage } from '../shared/contracts.js'
-import type { PageLink } from '../core/types.js'
+import Graph from 'graphology'
+import forceAtlas2 from 'graphology-layout-forceatlas2'
+import noverlap from 'graphology-layout-noverlap'
+import type { GraphPage, GraphResult } from '../shared/contracts.js'
 
-/** Stable positions from real links. Local spatial repulsion keeps labels apart. */
-export function layoutGraph(pages: readonly GraphPage[], edges: readonly PageLink[]) {
-  const index = new Map(pages.map((page, i) => [page.pageId, i]))
-  const links = edges.flatMap((edge) => {
-    const from = index.get(edge.from)
-    const to = index.get(edge.to)
-    return from === undefined || to === undefined || from === to ? [] : [{ from, to }]
-  })
-  const degree = pages.map(() => 0)
-  for (const link of links) { degree[link.from]!++; degree[link.to]!++ }
-  const order = pages.map((_, i) => i).sort((a, b) => degree[b]! - degree[a]! || a - b)
-  const points = pages.map(() => ({ x: 0, y: 0, vx: 0, vy: 0 }))
-  order.forEach((id, rank) => {
-    const angle = rank * 2.399963
-    const radius = Math.sqrt(rank) * 115
-    points[id] = { x: Math.cos(angle) * radius, y: Math.sin(angle) * radius * 0.75, vx: 0, vy: 0 }
-  })
-  for (let iteration = 0; iteration < 160; iteration++) {
-    const cells = new Map<string, number[]>()
-    points.forEach((point, i) => {
-      const key = Math.floor(point.x / 240) + ':' + Math.floor(point.y / 120)
-      const cell = cells.get(key)
-      if (cell === undefined) cells.set(key, [i])
-      else cell.push(i)
-    })
-    points.forEach((point, i) => {
-      const cx = Math.floor(point.x / 240), cy = Math.floor(point.y / 120)
-      for (let x = cx - 1; x <= cx + 1; x++) for (let y = cy - 1; y <= cy + 1; y++) {
-        for (const j of cells.get(x + ':' + y) ?? []) {
-          if (j <= i) continue
-          const other = points[j]!
-          const dx = point.x - other.x || 0.1, dy = (point.y - other.y) * 2 || 0.1
-          const distance = Math.max(1, Math.hypot(dx, dy))
-          const force = Math.max(0, 230 - distance) * 0.045
-          point.vx += dx / distance * force; other.vx -= dx / distance * force
-          point.vy += dy / distance * force; other.vy -= dy / distance * force
-        }
-      }
-    })
-    for (const link of links) {
-      const a = points[link.from]!, b = points[link.to]!
-      const dx = b.x - a.x, dy = b.y - a.y
-      const distance = Math.max(1, Math.hypot(dx, dy))
-      const force = (distance - 210) * 0.012
-      a.vx += dx / distance * force; b.vx -= dx / distance * force
-      a.vy += dy / distance * force; b.vy -= dy / distance * force
-    }
-    const cooling = 1 - iteration / 180
-    for (const point of points) {
-      point.vx = (point.vx - point.x * 0.001) * 0.72
-      point.vy = (point.vy - point.y * 0.001) * 0.72
-      point.x += Math.max(-15, Math.min(15, point.vx)) * cooling
-      point.y += Math.max(-15, Math.min(15, point.vy)) * cooling
-    }
+export interface LayoutNode {
+  page: GraphPage
+  x: number
+  y: number
+  size: number
+  degree: number
+  hub: boolean
+  labelSize: number
+}
+
+export interface GraphLayout {
+  graph: Graph
+  nodes: Map<string, LayoutNode>
+  hubs: Set<string>
+}
+
+/** Visual hierarchy comes only from real, undirected link degree. */
+export function graphStructure(result: GraphResult) {
+  const degree = new Map(result.pages.map(page => [page.pageId, 0]))
+  const neighbors = new Map(result.pages.map(page => [page.pageId, new Set<string>()]))
+  for (const edge of result.edges) {
+    if (!degree.has(edge.from) || !degree.has(edge.to) || edge.from === edge.to) continue
+    degree.set(edge.from, degree.get(edge.from)! + 1)
+    degree.set(edge.to, degree.get(edge.to)! + 1)
+    neighbors.get(edge.from)!.add(edge.to)
+    neighbors.get(edge.to)!.add(edge.from)
   }
-  return new Map(pages.map((page, i) => [page.pageId, { x: points[i]!.x, y: points[i]!.y }]))
+  const limit = Math.min(10, Math.max(1, Math.ceil(result.pages.length * 0.1)))
+  const hubs = new Set([...degree].filter(([, value]) => value >= 10).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, limit).map(([id]) => id))
+  return { degree, neighbors, hubs }
+}
+
+/** Deterministic, bounded layout: FA2 clusters real links, noverlap separates hubs. */
+export function layoutGraph(result: GraphResult): GraphLayout {
+  const { degree, hubs } = graphStructure(result)
+  const graph = new Graph({ multi: true, allowSelfLoops: false })
+  const ordered = [...result.pages].sort((a, b) => a.pageId.localeCompare(b.pageId))
+  const nodes = new Map<string, LayoutNode>()
+  ordered.forEach((page, index) => {
+    const count = degree.get(page.pageId) ?? 0
+    const hub = hubs.has(page.pageId)
+    const angle = index * 2.399963229728653
+    const radius = Math.sqrt(index + 1) * 8
+    const node: LayoutNode = {
+      page,
+      x: Math.cos(angle) * radius,
+      y: Math.sin(angle) * radius,
+      size: hub ? Math.min(9, 6 + Math.sqrt(count) * 0.3) : 3.4 + Math.min(2.2, Math.sqrt(count) * 0.35),
+      degree: count,
+      hub,
+      labelSize: hub ? 15 : 12,
+    }
+    nodes.set(page.pageId, node)
+    graph.addNode(page.pageId, {
+      ...node,
+      label: page.title,
+      color: hub ? '#c7e4fa' : '#829ab2',
+      labelColor: hub ? '#eef6ff' : '#c2cfdd',
+      labelSize: node.labelSize,
+      labelVisibility: hub ? 'visible' : 'auto',
+      zIndex: hub ? 2 : 1,
+    })
+  })
+  result.edges.forEach((edge, index) => {
+    if (!graph.hasNode(edge.from) || !graph.hasNode(edge.to) || edge.from === edge.to) return
+    const structural = Math.max(degree.get(edge.from) ?? 0, degree.get(edge.to) ?? 0) >= 20
+    graph.addEdgeWithKey('edge-' + index, edge.from, edge.to, {
+      source: edge.source,
+      path: 'curved',
+      color: structural ? '#405a72' : '#2e4053',
+      size: structural ? 0.8 : 0.55,
+      opacity: structural ? 0.62 : 0.4,
+    })
+  })
+  const inferred = forceAtlas2.inferSettings(graph)
+  forceAtlas2.assign(graph, {
+    iterations: graph.order < 10 ? 80 : 180,
+    settings: { ...inferred, gravity: 1.6, scalingRatio: 12, slowDown: 5, barnesHutOptimize: graph.order > 60 },
+  })
+  noverlap.assign(graph, {
+    maxIterations: 140,
+    inputReducer: (id, attrs) => ({ x: attrs.x, y: attrs.y, size: hubs.has(id) ? 34 : 12 }),
+    settings: { margin: 4, ratio: 1, expansion: 1.15, speed: 2 },
+  })
+  graph.forEachNode((id, attrs) => {
+    const node = nodes.get(id)!
+    node.x = attrs.x
+    node.y = attrs.y
+  })
+  return { graph, nodes, hubs }
 }

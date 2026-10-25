@@ -1,96 +1,188 @@
-import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
-import { Handle, Position, ReactFlow, ReactFlowProvider, useReactFlow, useViewport, type Node, type NodeProps, type Edge } from '@xyflow/react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import Sigma from 'sigma'
+import { createEdgeCurveProgram, indexParallelEdgesIndex } from '@sigma/edge-curve'
+import { drawDiscNodeLabel } from 'sigma/rendering'
 import type { GraphResult } from '../shared/contracts.js'
-import { layoutGraph } from './graph-layout.js'
+import { graphStructure, layoutGraph } from './graph-layout.js'
+import { applyGraphEmphasis, applyParallelCurvatures } from './graph-style.js'
 import { Icon } from './icons.js'
 
-type PageNode = Node<{ title: string; active: boolean; dim: boolean; degree: number; match: boolean; label: boolean; scale: number }, 'page'>
-const PagePoint = memo(function PagePoint({ data, id }: NodeProps<PageNode>) {
-  return (
-    <button type="button" className={'memory-wiki-panel__point' + (data.active ? ' is-active' : '') + (data.dim ? ' is-dim' : '') + (data.match ? ' is-match' : '')}
-      data-testid="mw-node" data-page-id={id} data-show-label={data.label ? '1' : '0'} title={data.title} aria-label={'查看 ' + data.title} aria-pressed={data.active}>
-      <Handle type="target" position={Position.Top} id="in" />
-      <i style={{ width: Math.min(16, 8 + Math.sqrt(data.degree) * 2), height: Math.min(16, 8 + Math.sqrt(data.degree) * 2) }} />
-      <span style={{ fontSize: 13 * data.scale, width: 180 * data.scale }}>{data.title}</span>
-      <Handle type="source" position={Position.Top} id="out" />
-    </button>
-  )
-})
-const NODE_TYPES = { page: PagePoint }
-
 type Props = { graph: GraphResult; activePageId: string | null; onSelect(pageId: string): void; matches: ReadonlySet<string>; drawer: boolean; reset: number }
+type Renderer = Sigma<Record<string, any>, Record<string, any>, Record<string, any>>
+type LabelData = Parameters<typeof drawDiscNodeLabel>[1]
+const motion = () => !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+const FONT = '-apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif'
+const curves = createEdgeCurveProgram({ defaultCurvature: 0.12 })
+
+function drawLabel(context: CanvasRenderingContext2D, data: LabelData) {
+  if (!data.label) return
+  const size = data.labelSize ?? 13
+  context.font = (data.hub ? '600 ' : '400 ') + size + 'px ' + FONT
+  context.fillStyle = data.labelColor ?? '#c2cfdd'
+  context.lineWidth = 3
+  context.strokeStyle = '#171f27'
+  context.lineJoin = 'round'
+  context.strokeText(data.label, data.x + data.size + 6, data.y + size / 3)
+  context.fillText(data.label, data.x + data.size + 6, data.y + size / 3)
+}
 
 function Canvas({ graph, activePageId, onSelect, matches, drawer, reset }: Props) {
-  const flow = useReactFlow<PageNode>()
-  const root = useRef<HTMLDivElement>(null)
-  const { zoom } = useViewport()
-  const positions = useMemo(() => layoutGraph(graph.pages, graph.edges), [graph])
-  const neighborhood = useMemo(() => {
-    const connected = new Set([activePageId])
-    for (const edge of graph.edges) {
-      if (edge.from === activePageId) connected.add(edge.to)
-      if (edge.to === activePageId) connected.add(edge.from)
+  const host = useRef<HTMLDivElement>(null)
+  const renderer = useRef<Renderer | null>(null)
+  const select = useRef(onSelect)
+  const [generation, setGeneration] = useState(0)
+  const [failed, setFailed] = useState(false)
+  const [zoom, setZoom] = useState(100)
+  const layout = useMemo(() => layoutGraph(graph), [graph])
+  const structure = useMemo(() => graphStructure(graph), [graph])
+  select.current = onSelect
+
+  useEffect(() => {
+    const element = host.current
+    if (!element) return
+    const mount = document.createElement('div')
+    mount.className = 'memory-wiki-panel__sigma-instance'
+    element.appendChild(mount)
+    let instance: Renderer | null = null
+    let frame = 0
+    let observer: ResizeObserver | null = null
+    let currentGeneration = 0
+    const cleanup = () => {
+      observer?.disconnect()
+      if (frame !== 0) cancelAnimationFrame(frame)
+      if (instance !== null) {
+        instance.getCamera().removeAllListeners('updated')
+        instance.kill()
+        instance = null
+      }
+      mount.remove()
+      renderer.current = null
     }
-    return connected
-  }, [graph, activePageId])
-  const degree = useMemo(() => {
-    const map = new Map<string, number>()
-    for (const edge of graph.edges) for (const id of [edge.from, edge.to]) map.set(id, (map.get(id) ?? 0) + 1)
-    return map
-  }, [graph])
-  // Greedily reserve room for readable labels, prioritizing selection and search.
-  const labels = useMemo(() => {
-    const visible = new Set<string>()
-    const boxes: Array<{ x: number; y: number }> = []
-    const priority = (id: string) => id === activePageId ? 100000 : matches.has(id) ? 10000 : neighborhood.has(id) ? 1000 : 0
-    const order = [...graph.pages].sort((a, b) => priority(b.pageId) + (degree.get(b.pageId) ?? 0) - priority(a.pageId) - (degree.get(a.pageId) ?? 0))
-    for (const page of order) {
-      const point = positions.get(page.pageId)!
-      const force = page.pageId === activePageId || matches.has(page.pageId)
-      if (force || !boxes.some((box) => Math.abs(box.x - point.x) * zoom < 195 && Math.abs(box.y - point.y) * zoom < 46)) {
-        visible.add(page.pageId)
-        boxes.push(point)
+    const create = () => {
+      currentGeneration += 1
+      const expected = currentGeneration
+      try {
+        indexParallelEdgesIndex(layout.graph)
+        applyParallelCurvatures(layout)
+        const next = new Sigma(layout.graph, mount, {
+          defaultEdgeType: 'curved',
+          edgeProgramClasses: { curved: curves },
+          defaultDrawNodeLabel: drawLabel,
+          labelColor: { attribute: 'labelColor', color: '#c2cfdd' },
+          labelFont: FONT,
+          labelWeight: '400',
+          autoRescale: true,
+          autoCenter: true,
+          itemSizesReference: 'screen',
+          labelDensity: 0.7,
+          labelGridCellSize: 165,
+          labelRenderedSizeThreshold: 7,
+          hideEdgesOnMove: false,
+          hideLabelsOnMove: false,
+          enableEdgeEvents: false,
+          zIndex: true,
+          minCameraRatio: 0.08,
+          maxCameraRatio: 5,
+          zoomingRatio: 1.22,
+          zoomDuration: motion() ? 100 : 0,
+          stagePadding: 48,
+          minEdgeThickness: 0.45,
+          allowInvalidContainer: false,
+        })
+        instance = next
+        renderer.current = next
+        next.on('clickNode', ({ node }) => select.current(node))
+        next.getCamera().on('updated', () => {
+          if (frame !== 0) return
+          frame = requestAnimationFrame(() => {
+            frame = 0
+            if (instance === next) setZoom(Math.round(100 / next.getCamera().ratio))
+          })
+        })
+        const lost = (event: Event) => { event.preventDefault(); setFailed(true) }
+        const restored = () => {
+          if (expected !== currentGeneration) return
+          next.getCamera().removeAllListeners('updated')
+          next.kill()
+          mount.replaceChildren()
+          create()
+          if (expected === currentGeneration) setGeneration(value => value + 1)
+        }
+        for (const canvas of Object.values(next.getCanvases())) {
+          canvas.addEventListener('webglcontextlost', lost)
+          canvas.addEventListener('webglcontextrestored', restored, { once: true })
+        }
+        observer = new ResizeObserver(() => next.resize())
+        observer.observe(mount)
+        next.resize()
+        setFailed(false)
+        setGeneration(value => value + 1)
+      } catch (error) {
+        console.error('memory-wiki: graph renderer initialization failed', error)
+        cleanup()
+        setFailed(true)
       }
     }
-    return visible
-  }, [graph, positions, zoom, activePageId, matches, neighborhood, degree])
-  const nodes = useMemo<PageNode[]>(() => graph.pages.map((page) => ({
-    id: page.pageId, type: 'page', position: positions.get(page.pageId)!,
-    data: { title: page.title, active: page.pageId === activePageId, dim: activePageId !== null && !neighborhood.has(page.pageId), degree: degree.get(page.pageId) ?? 0, match: matches.has(page.pageId), label: labels.has(page.pageId), scale: 1 / Math.max(0.08, zoom) },
-  })), [graph, positions, activePageId, neighborhood, degree, matches, labels, zoom])
-  const edges = useMemo<Edge[]>(() => graph.edges.map((edge, i) => {
-    const highlighted = activePageId !== null && (edge.from === activePageId || edge.to === activePageId)
-    return { id: String(i), source: edge.from, target: edge.to, sourceHandle: 'out', targetHandle: 'in', type: 'default',
-      style: { stroke: highlighted ? 'var(--mw-blue)' : 'var(--mw-edge)', strokeWidth: highlighted ? 1.5 : 1, opacity: activePageId === null ? 0.3 : highlighted ? 0.95 : 0.12, strokeDasharray: edge.source === 'related' ? '4 5' : undefined },
-    }
-  }), [graph, activePageId])
-  const fit = useCallback(() => { void flow.fitView({ padding: 0.2, maxZoom: 1, duration: 200 }) }, [flow])
-  useEffect(() => { fit() }, [positions, reset, fit])
+    create()
+    return cleanup
+  }, [layout])
+
   useEffect(() => {
-    if (activePageId === null) return
-    const point = positions.get(activePageId), element = root.current
-    if (point === undefined || element === null || element.clientWidth < 700) return
-    const zoom = Math.max(0.85, Math.min(1.2, flow.getZoom()))
-    const available = element.clientWidth - (drawer ? Math.min(420, element.clientWidth * 0.4) + 32 : 0)
-    void flow.setViewport({ x: available / 2 - (point.x + 80) * zoom, y: element.clientHeight / 2 - (point.y + 18) * zoom, zoom }, { duration: 200 })
-  }, [activePageId, drawer, flow, positions])
+    if (renderer.current !== null) applyGraphEmphasis(renderer.current, layout, structure, activePageId, matches)
+  }, [activePageId, matches, layout, structure, generation])
+
+  useEffect(() => {
+    const instance = renderer.current
+    if (!instance || activePageId === null || !host.current) return
+    if (!layout.graph.hasNode(activePageId) || host.current.clientWidth < 700) return
+    const camera = instance.getCamera()
+    const ratio = Math.min(camera.ratio, 0.85)
+    const width = host.current.clientWidth - (drawer ? Math.min(420, host.current.clientWidth * 0.4) + 32 : 0)
+    const height = host.current.clientHeight
+    const attributes = layout.graph.getNodeAttributes(activePageId)
+    const point = instance.graphToViewport({ x: attributes.x, y: attributes.y })
+    const zoomed = instance.getViewportZoomedState(point, ratio)
+    const centre = instance.viewportToFramedGraph({ x: host.current.clientWidth / 2, y: height / 2 }, { cameraState: zoomed })
+    const target = instance.viewportToFramedGraph({ x: width / 2, y: height / 2 }, { cameraState: zoomed })
+    void camera.animate({ x: zoomed.x + target.x - centre.x, y: zoomed.y + target.y - centre.y, ratio: zoomed.ratio }, { duration: motion() ? 220 : 0 })
+  }, [activePageId, drawer, layout, generation])
+
+  const fit = () => {
+    const instance = renderer.current
+    if (!instance) return
+    instance.getCamera().disable()
+    instance.resize(true)
+    instance.getCamera().setState({ x: 0.5, y: 0.5, angle: 0, ratio: 1 })
+    instance.getCamera().enable()
+    instance.refresh()
+  }
+  useEffect(() => { if (reset > 0) fit() }, [reset])
+  const zoomCamera = (direction: number) => {
+    const camera = renderer.current?.getCamera()
+    if (!camera) return
+    void camera.animate({ ratio: camera.getBoundedRatio(camera.ratio * (direction > 0 ? 1 / 1.35 : 1.35)) }, { duration: motion() ? 140 : 0 })
+  }
+
   return (
-    <div ref={root} className="memory-wiki-panel__graph" data-testid="mw-graph">
-      <ReactFlow<PageNode> nodes={nodes} edges={edges} nodeTypes={NODE_TYPES}
-        onNodeClick={(_event, node) => onSelect(node.id)} fitView fitViewOptions={{ padding: 0.2, maxZoom: 1 }}
-        minZoom={0.08} maxZoom={1.8} nodesDraggable={false} nodesConnectable={false} nodesFocusable={false} edgesFocusable={false}
-        elementsSelectable panOnDrag zoomOnScroll zoomOnDoubleClick={false} />
+    <div className="memory-wiki-panel__graph" data-testid="mw-graph">
+      <div ref={host} className="memory-wiki-panel__sigma" aria-hidden="true" />
+      {failed && <div className="memory-wiki-panel__graph-fallback" role="alert"><h3>当前环境无法绘制图谱</h3><p>WebGL 暂不可用。你仍可使用顶部搜索，或从下面的页面索引打开知识。</p></div>}
+      <details className="memory-wiki-panel__page-index">
+        <summary>页面索引<span>{graph.pages.length}</span></summary>
+        <div>{graph.pages.map(page => <button type="button" key={page.pageId} data-testid="mw-node" data-page-id={page.pageId} className={page.pageId === activePageId ? 'is-active' : ''} onClick={() => onSelect(page.pageId)} aria-pressed={page.pageId === activePageId}>{page.title}</button>)}</div>
+      </details>
       <div className="memory-wiki-panel__canvas-tools" aria-label="图谱视图">
         <span data-testid="mw-graph-facts">{graph.pages.length} 页 · {graph.edges.length} 条连接</span>
-        <button type="button" aria-label="缩小" onClick={() => void flow.zoomOut({ duration: 150 })}><Icon name="minus" /></button>
-        <button type="button" aria-label="放大" onClick={() => void flow.zoomIn({ duration: 150 })}><Icon name="plus" /></button>
+        <button type="button" aria-label="缩小" onClick={() => zoomCamera(-1)}><Icon name="minus" /></button>
+        <span className="memory-wiki-panel__zoom" data-testid="mw-zoom">{zoom}%</span>
+        <button type="button" aria-label="放大" onClick={() => zoomCamera(1)}><Icon name="plus" /></button>
         <button type="button" aria-label="显示完整图谱" onClick={fit}><Icon name="fit" /></button>
       </div>
-      <div className="memory-wiki-panel__graph-legend" data-testid="mw-legend"><span>实线 · 正文链接</span><span>虚线 · related</span></div>
+      <div className="memory-wiki-panel__graph-legend" data-testid="mw-legend"><span><i className="is-hub" />枢纽页</span><span><i />普通页</span><span>正文与 related 链接</span></div>
     </div>
   )
 }
 
 export function EvidenceGraph(props: Props) {
-  return <ReactFlowProvider><Canvas {...props} /></ReactFlowProvider>
+  return <Canvas {...props} />
 }

@@ -68,8 +68,8 @@ function resolveService(ctx: Ctx, name: string): unknown {
 
 function styles(): string {
   // Injected by tsdown `define` (see tsdown.config.ts): the host only loads
-  // lib/client.js, so both sheets travel inside the bundle.
-  return __MW_XYFLOW_CSS__ + '\n' + __MW_PANEL_CSS__
+  // lib/client.js, so the sheet travels inside the bundle.
+  return __MW_PANEL_CSS__
 }
 
 function installStyles(): () => void {

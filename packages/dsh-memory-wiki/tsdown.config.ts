@@ -111,11 +111,15 @@ export default defineConfig([
     // Client half. react / react-dom / jsx-runtime stay external: the host seeds
     // them in PLATFORM_MODULES and hands them to the factory as require('react'),
     // so the panel runs on the host React instance instead of a bundled copy.
-    // Everything else (@xyflow/react, zustand, ...) is inlined on purpose —
-    // graph libraries are NOT part of the host base table.
+    // Everything else (Sigma, Graphology and layout algorithms) is inlined on
+    // purpose — graph libraries are NOT part of the host base table.
     entry: { client: 'src/client/index.tsx' },
     outDir: 'lib',
     format: 'cjs',
+    // CJS output makes tsdown select Node resolution. Sigma/Graphology import
+    // `events`, so resolve their browser-compatible npm dependency explicitly
+    // instead of leaving a Node builtin require in the host's module table.
+    alias: { events: 'events/' },
     dts: false,
     clean: false,
     sourcemap: true,
@@ -125,7 +129,6 @@ export default defineConfig([
       // reference process.env.NODE_ENV, which the host page does not define.
       'process.env.NODE_ENV': '"production"',
       __MW_PANEL_CSS__: css(resolve(here, 'src/client/memory-panel.css')),
-      __MW_XYFLOW_CSS__: css(resolve(here, 'node_modules/@xyflow/react/dist/style.css')),
     },
     // zod stays external for the same reason as react: the host base table already
     // provides it (4.4.3, pinned via pnpm-workspace overrides). Inlining would put a

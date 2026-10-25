@@ -20,4 +20,4 @@
 - `packages/dsh-memory-wiki/tests/capture-ingest.test.mjs` — Exercises staging, publication, path restrictions and external-edit protection.
 - `packages/dsh-memory-wiki/tests/capture-pipeline.test.mjs` — Exercises turn identity, recovery, failure visibility and recursion prevention.
 - `packages/dsh-memory-wiki/tests/capture-writer.test.mjs` — Verifies the independent writer's empty tool set and strict completion contract.
-- `packages/dsh-memory-wiki/tests/capture-packaging.test.mjs` — Checks the shared type declaration required by published clients.
+- `packages/dsh-memory-wiki/tests/capture-packaging.test.mjs` — Checks published client declarations and the browser loader's external-module contract.
