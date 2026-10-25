@@ -10,6 +10,7 @@ import z from '@deepseek-ai/schemastery'
 import { Remote, TypertRemoteService } from '@deepseek-ai/dsh-typert-protocol'
 
 import type {
+  CaptureStatusInput, CaptureStatusResult, CaptureHistoryInput, CaptureHistoryResult, CaptureRecordInput, CaptureRecordResult, CaptureJudgmentInput, CaptureJudgmentResult,
   ClearOverrideInput,
   ClearResult,
   DraftResult,
@@ -27,10 +28,11 @@ import type {
   SessionView,
 } from '../shared/contracts.js'
 import { MemoryWikiAdapter } from './dsh-adapter.js'
-import { createHostCapture } from './capture/host.js'
+import { createHostCapture, captureDataRoot } from './capture/host.js'
 import { COMMANDCODE_BASE_URL, DEFAULT_JEV_MODEL } from './capture/jev.js'
 import type { ExperienceCapture } from './capture/experience.js'
-import type { CaptureView } from '../shared/contracts.js'
+import { CaptureJournal } from './capture/journal.js'
+import { CaptureHistory } from './capture/history.js'
 
 /**
  * Host message-source vocabulary: declares this plugin's producer kind so
@@ -85,7 +87,9 @@ export default class MemoryWikiService extends TypertRemoteService {
 
   readonly adapter: MemoryWikiAdapter
   private capture?: ExperienceCapture
-  private captureFailure?: CaptureView
+  private captureState: Pick<CaptureStatusResult, 'collector' | 'reason'> = { collector: 'disabled', reason: '自动采集未启用' }
+  readonly captureHistoryReader: CaptureHistory
+  private readonly journal: CaptureJournal
 
   resolved: { enabled: boolean, wikiRoot: string, budgetChars: 4000 | 8000 }
 
@@ -98,6 +102,15 @@ export default class MemoryWikiService extends TypertRemoteService {
       budgetChars: raw?.budgetChars === 8000 ? 8000 : 4000,
     }
     this.adapter = new MemoryWikiAdapter(ctx, this.resolved)
+    let dataRoot: string | undefined
+    let unavailable = false
+    try { if (this.resolved.wikiRoot) dataRoot = captureDataRoot(this.resolved.wikiRoot) } catch { unavailable = true }
+    this.journal = new CaptureJournal(dataRoot)
+    this.captureHistoryReader = new CaptureHistory(this.journal, id => this.adapter.sessionError(id), () => {
+      if (this.captureState.collector !== 'disabled' && (this.journal.scan().history !== 'readable' || this.capture?.blocked)) return { collector: 'blocked', reason: '采集记录异常，新的采集已停止；可读历史仍可查看' }
+      return this.captureState
+    }, unavailable)
+    if (raw?.capture?.enabled === true) this.captureState = { collector: 'blocked', reason: '插件或 Wiki 路径未就绪' }
 
     // Registered on this plugin's own context: unloading the entry removes both
     // the section and the listeners, so a disabled plugin leaves nothing behind.
@@ -105,18 +118,20 @@ export default class MemoryWikiService extends TypertRemoteService {
     ctx.on('agent/pre-step', (payload: any, next: () => Promise<any>) => this.adapter.preStep(payload, next))
     ctx.on('session/event', (session: any, event: any) => this.adapter.observe(session, event))
     if (raw?.capture?.enabled === true && this.resolved.enabled && this.resolved.wikiRoot) {
+      this.captureState = { collector: 'starting', reason: '等待宿主模型与会话读取服务' }
       ctx.inject(['llm', 'sessionQuery'], (captureContext: any) => {
         try {
           this.capture = createHostCapture(captureContext, this.resolved.wikiRoot, {
             enabled: true, judgeModel: raw.capture.judgeModel ?? DEFAULT_JEV_MODEL, judgeBaseURL: raw.capture.judgeBaseURL ?? COMMANDCODE_BASE_URL, skillPath: raw.capture.skillPath ?? '',
           }, { publishing: active => this.adapter.setPublishing(active), published: () => this.adapter.refreshCorpus() })
+          this.captureState = { collector: 'ready', reason: '本地采集配置已就绪；远端模型可用性以实际调用结果为准' }
           const capture = this.capture
           captureContext.on('session/event', (session: any, event: any) => capture.observe(session, event))
-          captureContext.effect(() => async () => { await capture.dispose(); if (this.capture === capture) this.capture = undefined })
+          captureContext.effect(() => async () => { await capture.dispose(); if (this.capture === capture) { this.capture = undefined; this.captureState = { collector: 'starting', reason: '等待宿主采集服务恢复' } } })
           void capture.recover().catch((error: Error) => captureContext.logger?.warn?.(error.message))
         }
         catch (error) {
-          this.captureFailure = { jobId: 'configuration', phase: 'failed', reason: error instanceof Error ? error.message : '经验采集初始化失败', pages: [], updatedAt: new Date().toISOString() }
+          this.captureState = { collector: 'blocked', reason: '采集初始化失败，请检查模型凭据、skillPath 与存储配置' }
         }
       })
     }
@@ -131,9 +146,25 @@ export default class MemoryWikiService extends TypertRemoteService {
   async getView(input: GetViewInput): Promise<SessionView> {
     const view = await this.adapter.getView(input)
     if (view.error) return view
-    const capture = this.capture?.getCapture(input.sessionId) ?? this.captureFailure
+    const capture = this.journal.latest(input.sessionId)
     return capture ? { ...view, capture } : view
   }
+
+  @Remote('captureStatus')
+  async captureStatus(input: CaptureStatusInput): Promise<CaptureStatusResult> {
+    const result = this.captureHistoryReader.status(input)
+    if (!result.error && input.sessionId) result.lastIssue = this.capture?.getIssue(input.sessionId) ?? result.lastIssue
+    return result
+  }
+
+  @Remote('captureHistory')
+  async captureHistory(input: CaptureHistoryInput): Promise<CaptureHistoryResult> { return this.captureHistoryReader.list(input) }
+
+  @Remote('captureRecord')
+  async captureRecord(input: CaptureRecordInput): Promise<CaptureRecordResult> { return this.captureHistoryReader.record(input) }
+
+  @Remote('captureJudgment')
+  async captureJudgment(input: CaptureJudgmentInput): Promise<CaptureJudgmentResult> { return this.captureHistoryReader.judgment(input) }
 
   /** Read all library page metadata and resolved links without a session. */
   @Remote('graph')

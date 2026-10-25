@@ -1,3 +1,5 @@
+export { CaptureHistory } from './capture/history.js'
+export { CaptureJournal } from './capture/journal.js'
 export { JevJudge } from './capture/jev.js'
 export { WikiIngest } from './capture/ingest.js'
 export { ExperienceCapture } from './capture/experience.js'

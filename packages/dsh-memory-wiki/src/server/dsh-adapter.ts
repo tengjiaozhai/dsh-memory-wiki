@@ -573,16 +573,14 @@ export class MemoryWikiAdapter {
    * and it must name a session the host actually owns right now. A stale id from
    * another machine or an earlier process fails closed.
    */
+  /** Session existence check without creating draft/revision state. Local Desktop trust scope only. */
+  sessionError(sessionId: string): RemoteError | undefined {
+    return typeof sessionId !== 'string' || sessionId === '' || this.ctx?.sessions?.get(sessionId) === undefined ? { code: 'unknown-session', sessionId } : undefined
+  }
+
   private resolve(sessionId: string): Resolution {
-    if (sessionId === '') return { error: { code: 'unknown-session', sessionId } }
-    const sessions = this.ctx?.sessions
-    if (sessions === undefined) {
-      // No store in this composition (bare Cordis harness): fail closed rather
-      // than serve state for an unverifiable id.
-      return { error: { code: 'unknown-session', sessionId } }
-    }
-    const live = sessions.get(sessionId)
-    if (live === undefined) return { error: { code: 'unknown-session', sessionId } }
+    const error = this.sessionError(sessionId)
+    if (error) return { error }
     return { state: this.stateFor(sessionId) }
   }
 

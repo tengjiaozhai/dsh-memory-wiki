@@ -4,10 +4,14 @@ import type {
   TypertRemoteInfo,
   TypertRemoteMethod,
 } from '@deepseek-ai/dsh-typert-protocol'
-import type { ClearOverrideInput, ClearResult, DraftResult, GetViewInput, GraphInput, GraphResult, OverrideResult, PrepareOverrideInput, ReadPageInput, ReadPageResult, ReviseDraftInput, SearchInput, SearchResult, SessionView } from 'dsh-memory-wiki/contracts'
+import type { CaptureHistoryInput, CaptureHistoryResult, CaptureJudgmentInput, CaptureJudgmentResult, CaptureRecordInput, CaptureRecordResult, CaptureStatusInput, CaptureStatusResult, ClearOverrideInput, ClearResult, DraftResult, GetViewInput, GraphInput, GraphResult, OverrideResult, PrepareOverrideInput, ReadPageInput, ReadPageResult, ReviseDraftInput, SearchInput, SearchResult, SessionView } from 'dsh-memory-wiki/contracts'
 
 declare module '@deepseek-ai/dsh-typert-protocol' {
   interface TypertRemoteNamespace$6d656d6f727957696b69 {
+    captureHistory: (input: CaptureHistoryInput) => Promise<RemoteResult<CaptureHistoryResult>>
+    captureJudgment: (input: CaptureJudgmentInput) => Promise<RemoteResult<CaptureJudgmentResult>>
+    captureRecord: (input: CaptureRecordInput) => Promise<RemoteResult<CaptureRecordResult>>
+    captureStatus: (input: CaptureStatusInput) => Promise<RemoteResult<CaptureStatusResult>>
     clearOverride: (input: ClearOverrideInput) => Promise<RemoteResult<ClearResult>>
     graph: (input: GraphInput) => Promise<RemoteResult<GraphResult>>
     prepareOverride: (input: PrepareOverrideInput) => Promise<RemoteResult<OverrideResult>>
@@ -17,6 +21,10 @@ declare module '@deepseek-ai/dsh-typert-protocol' {
     view: (input: GetViewInput) => Promise<RemoteResult<SessionView>>
   }
   interface TypertRemoteMap {
+    'memoryWiki/captureHistory': (input: CaptureHistoryInput) => Promise<RemoteResult<CaptureHistoryResult>>
+    'memoryWiki/captureJudgment': (input: CaptureJudgmentInput) => Promise<RemoteResult<CaptureJudgmentResult>>
+    'memoryWiki/captureRecord': (input: CaptureRecordInput) => Promise<RemoteResult<CaptureRecordResult>>
+    'memoryWiki/captureStatus': (input: CaptureStatusInput) => Promise<RemoteResult<CaptureStatusResult>>
     'memoryWiki/clearOverride': (input: ClearOverrideInput) => Promise<RemoteResult<ClearResult>>
     'memoryWiki/graph': (input: GraphInput) => Promise<RemoteResult<GraphResult>>
     'memoryWiki/prepareOverride': (input: PrepareOverrideInput) => Promise<RemoteResult<OverrideResult>>
@@ -31,6 +39,10 @@ declare module '@deepseek-ai/dsh-typert-protocol' {
 }
 
 export declare const TYPERT_REMOTE: TypertRemoteInfo<{
+  readonly 'memoryWiki/captureHistory': TypertRemoteMethod<{ readonly 'input': CaptureHistoryInput }, CaptureHistoryResult>
+  readonly 'memoryWiki/captureJudgment': TypertRemoteMethod<{ readonly 'input': CaptureJudgmentInput }, CaptureJudgmentResult>
+  readonly 'memoryWiki/captureRecord': TypertRemoteMethod<{ readonly 'input': CaptureRecordInput }, CaptureRecordResult>
+  readonly 'memoryWiki/captureStatus': TypertRemoteMethod<{ readonly 'input': CaptureStatusInput }, CaptureStatusResult>
   readonly 'memoryWiki/clearOverride': TypertRemoteMethod<{ readonly 'input': ClearOverrideInput }, ClearResult>
   readonly 'memoryWiki/graph': TypertRemoteMethod<{ readonly 'input': GraphInput }, GraphResult>
   readonly 'memoryWiki/prepareOverride': TypertRemoteMethod<{ readonly 'input': PrepareOverrideInput }, OverrideResult>

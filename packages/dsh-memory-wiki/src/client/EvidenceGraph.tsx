@@ -7,7 +7,7 @@ import { graphStructure, layoutGraph } from './graph-layout.js'
 import { applyGraphEmphasis, applyParallelCurvatures } from './graph-style.js'
 import { Icon } from './icons.js'
 
-type Props = { graph: GraphResult; activePageId: string | null; onSelect(pageId: string): void; matches: ReadonlySet<string>; drawer: boolean; reset: number }
+type Props = { visible?: boolean; graph: GraphResult; activePageId: string | null; onSelect(pageId: string): void; matches: ReadonlySet<string>; drawer: boolean; reset: number }
 type Renderer = Sigma<Record<string, any>, Record<string, any>, Record<string, any>>
 type LabelData = Parameters<typeof drawDiscNodeLabel>[1]
 const motion = () => !window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -26,10 +26,13 @@ function drawLabel(context: CanvasRenderingContext2D, data: LabelData) {
   context.fillText(data.label, data.x + data.size + 6, data.y + size / 3)
 }
 
-function Canvas({ graph, activePageId, onSelect, matches, drawer, reset }: Props) {
+function Canvas({ visible = true, graph, activePageId, onSelect, matches, drawer, reset }: Props) {
   const host = useRef<HTMLDivElement>(null)
   const renderer = useRef<Renderer | null>(null)
   const select = useRef(onSelect)
+  const visibleRef = useRef(visible)
+  visibleRef.current = visible
+  const focused = useRef<{ layout: unknown; page: string; drawer: boolean } | null>(null)
   const [generation, setGeneration] = useState(0)
   const [failed, setFailed] = useState(false)
   const [zoom, setZoom] = useState(100)
@@ -112,7 +115,7 @@ function Canvas({ graph, activePageId, onSelect, matches, drawer, reset }: Props
           canvas.addEventListener('webglcontextlost', lost)
           canvas.addEventListener('webglcontextrestored', restored, { once: true })
         }
-        observer = new ResizeObserver(() => next.resize())
+        observer = new ResizeObserver(() => { if (instance === next && mount.clientWidth > 0 && mount.clientHeight > 0) next.resize() })
         observer.observe(mount)
         next.resize()
         setFailed(false)
@@ -128,14 +131,19 @@ function Canvas({ graph, activePageId, onSelect, matches, drawer, reset }: Props
   }, [layout])
 
   useEffect(() => {
-    if (renderer.current !== null) applyGraphEmphasis(renderer.current, layout, structure, activePageId, matches)
-  }, [activePageId, matches, layout, structure, generation])
+    if (visible && renderer.current !== null) applyGraphEmphasis(renderer.current, layout, structure, activePageId, matches)
+  }, [activePageId, matches, layout, structure, generation, visible])
 
   useEffect(() => {
     const instance = renderer.current
-    if (!instance || activePageId === null || !host.current) return
+    if (!visible || !instance || !host.current) return
+    instance.resize()
+    instance.refresh()
+    if (activePageId === null) { focused.current = null; return }
+    if (focused.current?.layout === layout && focused.current.page === activePageId && focused.current.drawer === drawer) return
     if (!layout.graph.hasNode(activePageId) || host.current.clientWidth < 700) return
     const camera = instance.getCamera()
+    focused.current = { layout, page: activePageId, drawer }
     const ratio = Math.min(camera.ratio, 0.85)
     const width = host.current.clientWidth - (drawer ? Math.min(420, host.current.clientWidth * 0.4) + 32 : 0)
     const height = host.current.clientHeight
@@ -145,7 +153,7 @@ function Canvas({ graph, activePageId, onSelect, matches, drawer, reset }: Props
     const centre = instance.viewportToFramedGraph({ x: host.current.clientWidth / 2, y: height / 2 }, { cameraState: zoomed })
     const target = instance.viewportToFramedGraph({ x: width / 2, y: height / 2 }, { cameraState: zoomed })
     void camera.animate({ x: zoomed.x + target.x - centre.x, y: zoomed.y + target.y - centre.y, ratio: zoomed.ratio }, { duration: motion() ? 220 : 0 })
-  }, [activePageId, drawer, layout, generation])
+  }, [activePageId, drawer, layout, generation, visible])
 
   const fit = () => {
     const instance = renderer.current
@@ -156,7 +164,7 @@ function Canvas({ graph, activePageId, onSelect, matches, drawer, reset }: Props
     instance.getCamera().enable()
     instance.refresh()
   }
-  useEffect(() => { if (reset > 0) fit() }, [reset])
+  useEffect(() => { if (reset > 0 && visibleRef.current) fit() }, [reset])
   const zoomCamera = (direction: number) => {
     const camera = renderer.current?.getCamera()
     if (!camera) return

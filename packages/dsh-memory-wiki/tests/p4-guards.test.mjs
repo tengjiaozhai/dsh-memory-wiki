@@ -65,6 +65,8 @@ test('GUARD 1 产物新鲜度：生成产物不得早于其来源文件（失败
 const { TYPERT } = await import(pathToFileURL(path.join(LIB, 'typert.host.js')).href)
 const { MemoryWikiAdapter } = await import(pathToFileURL(path.join(LIB, 'server', 'index.js')).href)
 
+const { CaptureHistory, CaptureJournal } = await import(pathToFileURL(path.join(LIB, 'server', 'capture.js')).href)
+
 const SESSION = 'session-test-1'
 const ctx = { sessions: { get: id => (id === SESSION ? { id } : undefined) } }
 
@@ -92,6 +94,12 @@ async function runtimeOutputs() {
       sources: [], text: 'probe text', payloadHash: 'hash-probe', chars: 10,
     }),
   })
+  const history = new CaptureHistory(new CaptureJournal(), id => id === SESSION ? undefined : { code: 'unknown-session', sessionId: id }, () => ({ collector: 'disabled', reason: 'test' }))
+  for (const [method, call, input] of [['captureStatus', 'status', {}], ['captureHistory', 'list', { sessionId: SESSION }], ['captureRecord', 'record', { sessionId: SESSION, jobId: 'a'.repeat(64) }], ['captureJudgment', 'judgment', { sessionId: SESSION, jobId: 'a'.repeat(64), judgmentId: 'attempt' }]]) {
+    record(method, 'read', history[call](input))
+    record(method, 'unknown-session', history[call]({ ...input, sessionId: 'missing' }))
+  }
+
   const agent = { id: SESSION, session: { id: SESSION, deriveMessages: () => [] } }
   record('graph', 'ok', await a.graph({}))
   record('graph', 'not-configured', await new MemoryWikiAdapter({}, { enabled: true, wikiRoot: '', budgetChars: 4000 }).graph({}))
@@ -133,7 +141,7 @@ async function runtimeOutputs() {
 test('GUARD 2 schema 覆盖：运行时不得返回未声明的键（否则类型比运行时窄）', async () => {
   const outputs = await runtimeOutputs()
   const declared = Object.fromEntries(TYPERT.invocations.map(i => [i.method, declaredResultKeys(i.method)]))
-  assert.deepEqual(Object.keys(declared).sort(), ['clearOverride', 'graph', 'prepareOverride', 'readPage', 'reviseDraft', 'search', 'view'])
+  assert.deepEqual(Object.keys(declared).sort(), ['captureHistory', 'captureJudgment', 'captureRecord', 'captureStatus', 'clearOverride', 'graph', 'prepareOverride', 'readPage', 'reviseDraft', 'search', 'view'])
 
   const violations = []
   for (const [method, cases] of outputs) {

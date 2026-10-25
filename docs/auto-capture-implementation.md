@@ -2,6 +2,8 @@
 
 2026-10-24。**实现已完成；Jev 已替换为 CommandCode，真实判定调用通过，生产场景验收待完成。** 配置方式见插件 README 的“自动沉淀编码经验”。功能默认关闭，本次没有改当前 Desktop profile 或重启应用。
 
+2026-10-25 功能扩展：[自动沉淀判定历史与可观测性](./feat-capture-history.md)。该 feat 已实现，历史记录与新的验证边界见其末尾核验记录；当前 Desktop 自动采集仍关闭。
+
 ## 实现取舍
 
 - 使用 rc.3 的 `sessionQuery.readSession()` 读取原始日志，按真人 `turn/end` 登记任务；不新增对已弃用 `snapshotEvents()` 的调用。

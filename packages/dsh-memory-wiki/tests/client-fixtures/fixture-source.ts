@@ -22,6 +22,10 @@ const DEFAULT_BUDGET = 4000 as const
 export function createFixtureSource(): MemoryWikiSource {
   return {
     mode: 'fixture',
+    async captureStatus() { return { collector: 'disabled', history: 'readable', reasonCode: 'fixture-disabled', reason: '测试数据源不采集经验' } },
+    async captureHistory() { return { items: [], readCompleteness: 'complete' } },
+    async captureRecord() { return { events: [], judgments: [], evidence: [], evidenceTruncated: false, limitations: [], changes: [], error: { code: 'capture-record-unavailable' } } },
+    async captureJudgment() { return { error: { code: 'capture-record-unavailable' } } },
 
     async getGraph() {
       const view = buildFixtureView({ preset: DEFAULT_PRESET, budget: DEFAULT_BUDGET })

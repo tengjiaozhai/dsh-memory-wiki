@@ -3,7 +3,19 @@ import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
-import { ExperienceCapture } from '../lib/server/capture.js'
+import { ExperienceCapture as CaptureWorker, CaptureJournal } from '../lib/server/capture.js'
+
+// Controlled judges use the same recorded-call seam as the production transport.
+class ExperienceCapture extends CaptureWorker {
+  constructor(options) {
+    const judge = Object.fromEntries(Object.entries(options.judge).map(([method, call]) => [method, async (...args) => {
+      args.at(-1)({ model: 'fixture-judge', requestHash: 'fixture-request', questions: [] })
+      const result = await call(...args)
+      return { ...result, audit: { kind: 'decision', answers: [], gateResults: [], disposition: result.disposition, reasonCode: 'fixture', reason: result.reason } }
+    }]))
+    super({ ...options, judge })
+  }
+}
 
 test('a completed human turn is frozen once, survives restart, and does not capture injected turns', async t => {
   const dataRoot = await fs.mkdtemp(path.join(os.tmpdir(), 'capture-jobs-'))
@@ -25,6 +37,11 @@ test('a completed human turn is frozen once, survives restart, and does not capt
   await capture.whenIdle()
   assert.equal(capture.getCapture(session.id).phase, 'skipped')
   assert.equal(assessed, 1)
+  const journal = new CaptureJournal(options.dataRoot)
+  const item = journal.list({ sessionId: session.id }).items[0]
+  const record = journal.record({ sessionId: session.id, jobId: item.jobId })
+  assert.equal(record.judgments[0].state, 'completed')
+  assert.equal(journal.judgment({ sessionId: session.id, jobId: item.jobId, judgmentId: record.judgments[0].id }).judgment.result.disposition, 'skipped')
   await capture.dispose()
   const resumed = new ExperienceCapture(options)
   await resumed.recover()
@@ -113,7 +130,7 @@ test('a partially published approved job resumes after restart without re-genera
   let publications = 0
   const options = { wikiRoot: root, dataRoot: path.join(root, 'jobs'), readEvents: async () => events,
     judge: { assess: async () => ({ disposition: 'prepare', reason: 'supported', model: 'typesafe/jev-1.14.0' }), verify: async () => ({ disposition: 'publish', reason: 'supported', model: 'typesafe/jev-1.14.0' }) },
-    ingest: { prepare: async () => { generations++; return { patchHash: 'approved-exact-text', files: [] } }, publish: async manifest => {
+    ingest: { prepare: async () => { generations++; return { patchHash: 'approved-exact-text', rulesHash: 'fixture-rules', files: [] } }, publish: async manifest => {
       assert.equal(manifest.patchHash, 'approved-exact-text')
       if (++publications === 1) throw Object.assign(new Error('Temporary filesystem I/O error'), { code: 'EIO' })
       return ['wiki/synthesis/retry']
@@ -123,12 +140,67 @@ test('a partially published approved job resumes after restart without re-genera
   first.observe({ id: 'human', header: {} }, events[3])
   await first.whenIdle()
   assert.equal(first.getCapture('human').phase, 'failed')
+  const pending = new CaptureJournal(options.dataRoot).list({ sessionId: 'human' }).items[0]
+  assert.equal(pending.publicationUncertain, true)
+  assert.equal(pending.retryable, true)
   await first.dispose()
   const resumed = new ExperienceCapture(options)
   await resumed.recover()
   await resumed.whenIdle()
   assert.equal(resumed.getCapture('human').phase, 'ingested')
+  assert.equal(new CaptureJournal(options.dataRoot).list({ sessionId: 'human' }).items[0].publicationUncertain, undefined)
   assert.equal(generations, 1)
   assert.equal(publications, 2)
   await resumed.dispose()
+})
+
+test('journal failure before a request prevents the model call and remains visible without rewriting the job',async t=>{
+  const sync=await import('node:fs')
+  const root=await fs.mkdtemp(path.join(os.tmpdir(),'capture-write-failure-'))
+  t.after(()=>fs.rm(root,{recursive:true,force:true}))
+  const events=[{seq:0,type:'turn/start',data:{turn:1}},{seq:1,type:'user/message',data:{source:{kind:'user'},content:[{type:'text',text:'Fix build'}]}},{seq:2,type:'turn/end',data:{turn:1,reason:{kind:'completed'}}}]
+  let calls=0
+  const capture=new CaptureWorker({wikiRoot:root,dataRoot:path.join(root,'jobs'),readEvents:async()=>events,judge:{assess:async(evidence,signal,started)=>{started({model:'fixture',requestHash:'request',questions:[]});calls++;throw Error('must not reach')},verify:async()=>assert.fail()},ingest:{}})
+  const rename=sync.default.renameSync
+  const fault=t.mock.method(sync.default,'renameSync',(source,target)=>{
+    if(String(target).endsWith('.json') && !String(target).includes('/watched/') && sync.default.readFileSync(source,'utf8').includes('judgment_started'))throw Object.assign(Error('EIO'),{code:'EIO'})
+    return rename(source,target)
+  })
+  capture.observe({id:'human',header:{}},events[2])
+  await capture.whenIdle()
+  fault.mock.restore()
+  assert.equal(calls,0)
+  assert.equal(capture.blocked,true)
+  assert.equal(capture.getIssue('human').stage,'journal_write')
+  const journal=new CaptureJournal(path.join(root,'jobs'))
+  const item=journal.list({sessionId:'human'}).items[0]
+  assert.equal(item.phase,'judging')
+  assert.equal(item.judgments.length,0)
+  await capture.dispose()
+})
+
+test('a mismatched watched-session identity blocks recovery without reading any session',async t=>{
+ const root=await fs.mkdtemp(path.join(os.tmpdir(),'capture-watched-invalid-'))
+ t.after(()=>fs.rm(root,{recursive:true,force:true}))
+ await fs.mkdir(path.join(root,'jobs/watched'),{recursive:true})
+ await fs.writeFile(path.join(root,'jobs/watched','a'.repeat(64)+'.json'),JSON.stringify({sessionId:'foreign-session',workspace:'/fixture',cursor:0}))
+ let reads=0
+ const capture=new CaptureWorker({wikiRoot:root,dataRoot:path.join(root,'jobs'),judge:{},ingest:{},readEvents:async()=>{reads++;return[]}})
+ await capture.recover()
+ assert.equal(reads,0)
+ assert.equal(capture.blocked,true)
+ await capture.dispose()
+})
+
+test('common provider environment credential names are redacted before persistence and history projection',async t=>{
+ const root=await fs.mkdtemp(path.join(os.tmpdir(),'capture-env-redaction-'))
+ t.after(()=>fs.rm(root,{recursive:true,force:true}))
+ const events=[{seq:0,type:'turn/start',data:{turn:1}},{seq:1,type:'user/message',data:{source:{kind:'user'},content:[{type:'text',text:'OPENAI_API_KEY=example-secret-key GITHUB_TOKEN=private-github-value'}],OPENAI_API_KEY:'structured-secret',GITHUB_TOKEN:'structured-token'}},{seq:2,type:'turn/end',data:{turn:1,reason:{kind:'completed'}}}]
+ const capture=new ExperienceCapture({wikiRoot:root,dataRoot:path.join(root,'jobs'),readEvents:async()=>events,ingest:{},judge:{assess:async evidence=>{
+  for(const secret of ['example-secret-key','private-github-value','structured-secret','structured-token'])assert.equal(JSON.stringify(evidence).includes(secret),false)
+  return{disposition:'skipped',reason:'routine',model:'fixture'}
+ }}})
+ capture.observe({id:'human',header:{}},events[2]);await capture.whenIdle()
+ for(const file of (await fs.readdir(path.join(root,'jobs'))).filter(file=>file.endsWith('.json'))){const content=await fs.readFile(path.join(root,'jobs',file),'utf8');assert.equal(content.includes('private-github-value'),false)}
+ await capture.dispose()
 })

@@ -1,4 +1,4 @@
-import type { CaptureView } from '../../shared/contracts.js'
+import type { CaptureView, CaptureEvent, CaptureJudgmentRecord, CaptureQuestion, CaptureDecision } from '../../shared/contracts.js'
 export type { CaptureView } from '../../shared/contracts.js'
 export type CapturePhase = CaptureView['phase']
 export type WriterRoute = { provider: string; model: string; reasoningEffort?: string }
@@ -16,6 +16,11 @@ export type EvidenceBundle = {
   contentHash: string
 }
 export type CaptureJob = Omit<CaptureView, 'evidence' | 'changes' | 'limitations'> & {
+  schemaVersion: 2
+  registeredAt?: string
+  historyCoverage: 'complete' | 'legacy_snapshot'
+  events: CaptureEvent[]
+  judgments: CaptureJudgmentRecord[]
   evidence: EvidenceBundle
   route?: WriterRoute
   model?: string
@@ -38,6 +43,8 @@ export type PreparedIngest = {
   claims: Claim[]
   patchHash: string
 }
-export type Assessment = { disposition: 'prepare' | 'skipped' | 'deferred'; reason: string; model: string }
-export type Verification = { disposition: 'publish' | 'skipped' | 'deferred'; reason: string; model: string }
+export type JudgmentRequest = { model: string; requestHash: string; questions: CaptureQuestion[] }
+export type JudgmentAudit = Extract<CaptureDecision, { kind: 'decision' }>
+export type Assessment = { durationMs?: number; audit?: JudgmentAudit; disposition: 'prepare' | 'skipped' | 'deferred'; reason: string; model: string }
+export type Verification = { durationMs?: number; audit?: JudgmentAudit; disposition: 'publish' | 'skipped' | 'deferred'; reason: string; model: string }
 export const RUBRIC_VERSION = 'coding-experience-v1'

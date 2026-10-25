@@ -8,8 +8,14 @@
 
 ## Automatic experience capture
 
+- `docs/feat-capture-history.md` — Defines the implementation scope, record contracts and acceptance criteria for capture judgment history.
 - `packages/dsh-memory-wiki/src/server/capture.ts` — Exposes the capture interfaces for integration verification.
 - `packages/dsh-memory-wiki/src/server/capture/types.ts` — Defines persisted evidence, jobs and approved publication manifests.
+- `packages/dsh-memory-wiki/src/server/capture/journal.ts` — Owns persistent capture history, legacy normalization and read projections.
+- `packages/dsh-memory-wiki/src/server/capture/history.ts` — Applies session-scoped read access to capture status, pages of tasks and judgment details.
+- `packages/dsh-memory-wiki/src/client/CaptureHistory.tsx` — Displays capture availability, task history and on-demand judgment details.
+- `packages/dsh-memory-wiki/tests/capture-journal.test.mjs` — Verifies history persistence, legacy import, pagination and safe projections.
+- `packages/dsh-memory-wiki/tests/capture-history-integration.test.mjs` — Exercises controlled Jev decisions, Wiki publication and disabled-service history reads.
 - `packages/dsh-memory-wiki/src/server/capture/experience.ts` — Collects human turn evidence and runs durable background capture jobs.
 - `packages/dsh-memory-wiki/src/server/capture/jev.ts` — Applies the pinned CommandCode Jev assessment and claim-verification rubric.
 - `packages/dsh-memory-wiki/src/server/capture/ingest.ts` — Prepares a Wiki ingest in isolation and publishes checked changes with recovery support.

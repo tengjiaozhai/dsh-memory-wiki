@@ -32,7 +32,7 @@ let react = require("react");
 react = __toESM(react, 1);
 let react_jsx_runtime = require("react/jsx-runtime");
 let zod = require("zod");
-//#region ../../node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/inherits-d1a1e29b.esm.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/inherits-d1a1e29b.esm.js
 function _toPrimitive$1(t, r) {
 	if ("object" != typeof t || !t) return t;
 	var e = t[Symbol.toPrimitive];
@@ -98,7 +98,7 @@ function _inherits$1(t, e) {
 	} }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf$1(t, e);
 }
 //#endregion
-//#region ../../node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/colors-beb06eb2.esm.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/colors-beb06eb2.esm.js
 function _arrayWithHoles(r) {
 	if (Array.isArray(r)) return r;
 }
@@ -378,7 +378,7 @@ function getPixelColor(gl, frameBuffer, x, y, pixelRatio, downSizingRatio) {
 	];
 }
 //#endregion
-//#region ../../node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/index-fad77a13.esm.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/index-fad77a13.esm.js
 function _defineProperty$1(e, r, t) {
 	return (r = _toPropertyKey$1(r)) in e ? Object.defineProperty(e, r, {
 		value: t,
@@ -1440,7 +1440,7 @@ var EdgeRectangleProgram = /*#__PURE__*/ function(_EdgeProgram) {
 	]);
 }(EdgeProgram);
 //#endregion
-//#region ../../node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/types/dist/sigma-types.esm.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/types/dist/sigma-types.esm.js
 var import_events = (/* @__PURE__ */ __commonJSMin(((exports, module) => {
 	var R = typeof Reflect === "object" ? Reflect : null;
 	var ReflectApply = R && typeof R.apply === "function" ? R.apply : function ReflectApply(target, receiver, args) {
@@ -1760,7 +1760,7 @@ var TypedEventEmitter = /*#__PURE__*/ function(_ref) {
 	return _createClass$1(TypedEventEmitter);
 }(import_events.EventEmitter);
 //#endregion
-//#region ../../node_modules/.pnpm/graphology-utils@2.5.2_graphology-types@0.24.8/node_modules/graphology-utils/is-graph.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology-utils@2.5.2_graphology-types@0.24.8/node_modules/graphology-utils/is-graph.js
 var require_is_graph = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	/**
 	* Graphology isGraph
@@ -1780,7 +1780,7 @@ var require_is_graph = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	};
 }));
 //#endregion
-//#region ../../node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/normalization-be445518.esm.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/normalization-be445518.esm.js
 var import_is_graph = /* @__PURE__ */ __toESM(require_is_graph());
 var easings = {
 	linear: function linear(k) {
@@ -2018,7 +2018,7 @@ function createNormalizationFunction(extent) {
 	return fn;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/data-11df7124.esm.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/data-11df7124.esm.js
 function _typeof(o) {
 	"@babel/helpers - typeof";
 	return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
@@ -2054,7 +2054,7 @@ function assign$1(target) {
 	return target;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/settings/dist/sigma-settings.esm.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/settings/dist/sigma-settings.esm.js
 /**
 * Sigma.js Settings
 * =================================
@@ -2138,7 +2138,7 @@ function resolveSettings(settings) {
 	return resolvedSettings;
 }
 //#endregion
-//#region ../../node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/sigma.esm.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/sigma.esm.js
 /**
 * Defaults.
 */
@@ -4619,7 +4619,7 @@ var Sigma = /* @__PURE__ */ function(_TypedEventEmitter) {
 	]);
 }(TypedEventEmitter);
 //#endregion
-//#region ../../node_modules/.pnpm/@sigma+edge-curve@3.1.0_sigma@3.0.3_graphology-types@0.24.8_/node_modules/@sigma/edge-curve/dist/sigma-edge-curve.esm.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/@sigma+edge-curve@3.1.0_sigma@3.0.3_graphology-types@0.24.8_/node_modules/@sigma/edge-curve/dist/sigma-edge-curve.esm.js
 function _toPrimitive(t, r) {
 	if ("object" != typeof t || !t) return t;
 	var e = t[Symbol.toPrimitive];
@@ -5066,7 +5066,7 @@ createEdgeCurveProgram();
 createEdgeCurveProgram({ arrowHead: DEFAULT_EDGE_ARROW_HEAD_PROGRAM_OPTIONS });
 createEdgeCurveProgram({ arrowHead: _objectSpread2(_objectSpread2({}, DEFAULT_EDGE_ARROW_HEAD_PROGRAM_OPTIONS), {}, { extremity: "both" }) });
 //#endregion
-//#region ../../node_modules/.pnpm/graphology@0.26.0_graphology-types@0.24.8/node_modules/graphology/dist/graphology.mjs
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology@0.26.0_graphology-types@0.24.8/node_modules/graphology/dist/graphology.mjs
 /**
 * Graphology Utilities
 * =====================
@@ -9326,7 +9326,7 @@ Graph.InvalidArgumentsGraphError = InvalidArgumentsGraphError;
 Graph.NotFoundGraphError = NotFoundGraphError;
 Graph.UsageGraphError = UsageGraphError;
 //#endregion
-//#region ../../node_modules/.pnpm/graphology-utils@2.5.2_graphology-types@0.24.8/node_modules/graphology-utils/getters.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology-utils@2.5.2_graphology-types@0.24.8/node_modules/graphology-utils/getters.js
 var require_getters = /* @__PURE__ */ __commonJSMin(((exports) => {
 	/**
 	* Graphology Weight Getter
@@ -9431,7 +9431,7 @@ var require_getters = /* @__PURE__ */ __commonJSMin(((exports) => {
 	};
 }));
 //#endregion
-//#region ../../node_modules/.pnpm/graphology-layout-forceatlas2@0.9.2_graphology-types@0.24.8/node_modules/graphology-layout-forceatlas2/iterate.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology-layout-forceatlas2@0.9.2_graphology-types@0.24.8/node_modules/graphology-layout-forceatlas2/iterate.js
 var require_iterate$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	/**
 	* Graphology ForceAtlas2 Iteration
@@ -9786,7 +9786,7 @@ var require_iterate$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	};
 }));
 //#endregion
-//#region ../../node_modules/.pnpm/graphology-layout-forceatlas2@0.9.2_graphology-types@0.24.8/node_modules/graphology-layout-forceatlas2/helpers.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology-layout-forceatlas2@0.9.2_graphology-types@0.24.8/node_modules/graphology-layout-forceatlas2/helpers.js
 var require_helpers$1 = /* @__PURE__ */ __commonJSMin(((exports) => {
 	/**
 	* Graphology ForceAtlas2 Helpers
@@ -9953,7 +9953,7 @@ var require_helpers$1 = /* @__PURE__ */ __commonJSMin(((exports) => {
 	};
 }));
 //#endregion
-//#region ../../node_modules/.pnpm/graphology-layout-forceatlas2@0.9.2_graphology-types@0.24.8/node_modules/graphology-layout-forceatlas2/defaults.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology-layout-forceatlas2@0.9.2_graphology-types@0.24.8/node_modules/graphology-layout-forceatlas2/defaults.js
 var require_defaults$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	/**
 	* Graphology ForceAtlas2 Layout Default Settings
@@ -9973,7 +9973,7 @@ var require_defaults$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	};
 }));
 //#endregion
-//#region ../../node_modules/.pnpm/graphology-layout-forceatlas2@0.9.2_graphology-types@0.24.8/node_modules/graphology-layout-forceatlas2/index.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology-layout-forceatlas2@0.9.2_graphology-types@0.24.8/node_modules/graphology-layout-forceatlas2/index.js
 var require_graphology_layout_forceatlas2 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	/**
 	* Graphology ForceAtlas2 Layout
@@ -10043,7 +10043,7 @@ var require_graphology_layout_forceatlas2 = /* @__PURE__ */ __commonJSMin(((expo
 	module.exports = synchronousLayout;
 }));
 //#endregion
-//#region ../../node_modules/.pnpm/graphology-layout-noverlap@0.4.2_graphology-types@0.24.8/node_modules/graphology-layout-noverlap/iterate.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology-layout-noverlap@0.4.2_graphology-types@0.24.8/node_modules/graphology-layout-noverlap/iterate.js
 var require_iterate = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	/**
 	* Graphology Noverlap Iteration
@@ -10174,7 +10174,7 @@ var require_iterate = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	};
 }));
 //#endregion
-//#region ../../node_modules/.pnpm/graphology-layout-noverlap@0.4.2_graphology-types@0.24.8/node_modules/graphology-layout-noverlap/helpers.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology-layout-noverlap@0.4.2_graphology-types@0.24.8/node_modules/graphology-layout-noverlap/helpers.js
 var require_helpers = /* @__PURE__ */ __commonJSMin(((exports) => {
 	/**
 	* Graphology Noverlap Helpers
@@ -10277,7 +10277,7 @@ var require_helpers = /* @__PURE__ */ __commonJSMin(((exports) => {
 	};
 }));
 //#endregion
-//#region ../../node_modules/.pnpm/graphology-layout-noverlap@0.4.2_graphology-types@0.24.8/node_modules/graphology-layout-noverlap/defaults.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology-layout-noverlap@0.4.2_graphology-types@0.24.8/node_modules/graphology-layout-noverlap/defaults.js
 var require_defaults = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	/**
 	* Graphology Noverlap Layout Default Settings
@@ -10292,7 +10292,7 @@ var require_defaults = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	};
 }));
 //#endregion
-//#region ../../node_modules/.pnpm/graphology-layout-noverlap@0.4.2_graphology-types@0.24.8/node_modules/graphology-layout-noverlap/index.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology-layout-noverlap@0.4.2_graphology-types@0.24.8/node_modules/graphology-layout-noverlap/index.js
 var require_graphology_layout_noverlap = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	/**
 	* Graphology Noverlap Layout
@@ -10550,10 +10550,13 @@ function drawLabel(context, data) {
 	context.strokeText(data.label, data.x + data.size + 6, data.y + size / 3);
 	context.fillText(data.label, data.x + data.size + 6, data.y + size / 3);
 }
-function Canvas({ graph, activePageId, onSelect, matches, drawer, reset }) {
+function Canvas({ visible = true, graph, activePageId, onSelect, matches, drawer, reset }) {
 	const host = (0, react.useRef)(null);
 	const renderer = (0, react.useRef)(null);
 	const select = (0, react.useRef)(onSelect);
+	const visibleRef = (0, react.useRef)(visible);
+	visibleRef.current = visible;
+	const focused = (0, react.useRef)(null);
 	const [generation, setGeneration] = (0, react.useState)(0);
 	const [failed, setFailed] = (0, react.useState)(false);
 	const [zoom, setZoom] = (0, react.useState)(100);
@@ -10641,7 +10644,9 @@ function Canvas({ graph, activePageId, onSelect, matches, drawer, reset }) {
 					canvas.addEventListener("webglcontextlost", lost);
 					canvas.addEventListener("webglcontextrestored", restored, { once: true });
 				}
-				observer = new ResizeObserver(() => next.resize());
+				observer = new ResizeObserver(() => {
+					if (instance === next && mount.clientWidth > 0 && mount.clientHeight > 0) next.resize();
+				});
 				observer.observe(mount);
 				next.resize();
 				setFailed(false);
@@ -10656,19 +10661,32 @@ function Canvas({ graph, activePageId, onSelect, matches, drawer, reset }) {
 		return cleanup;
 	}, [layout]);
 	(0, react.useEffect)(() => {
-		if (renderer.current !== null) applyGraphEmphasis(renderer.current, layout, structure, activePageId, matches);
+		if (visible && renderer.current !== null) applyGraphEmphasis(renderer.current, layout, structure, activePageId, matches);
 	}, [
 		activePageId,
 		matches,
 		layout,
 		structure,
-		generation
+		generation,
+		visible
 	]);
 	(0, react.useEffect)(() => {
 		const instance = renderer.current;
-		if (!instance || activePageId === null || !host.current) return;
+		if (!visible || !instance || !host.current) return;
+		instance.resize();
+		instance.refresh();
+		if (activePageId === null) {
+			focused.current = null;
+			return;
+		}
+		if (focused.current?.layout === layout && focused.current.page === activePageId && focused.current.drawer === drawer) return;
 		if (!layout.graph.hasNode(activePageId) || host.current.clientWidth < 700) return;
 		const camera = instance.getCamera();
+		focused.current = {
+			layout,
+			page: activePageId,
+			drawer
+		};
 		const ratio = Math.min(camera.ratio, .85);
 		const width = host.current.clientWidth - (drawer ? Math.min(420, host.current.clientWidth * .4) + 32 : 0);
 		const height = host.current.clientHeight;
@@ -10695,7 +10713,8 @@ function Canvas({ graph, activePageId, onSelect, matches, drawer, reset }) {
 		activePageId,
 		drawer,
 		layout,
-		generation
+		generation,
+		visible
 	]);
 	const fit = () => {
 		const instance = renderer.current;
@@ -10712,7 +10731,7 @@ function Canvas({ graph, activePageId, onSelect, matches, drawer, reset }) {
 		instance.refresh();
 	};
 	(0, react.useEffect)(() => {
-		if (reset > 0) fit();
+		if (reset > 0 && visibleRef.current) fit();
 	}, [reset]);
 	const zoomCamera = (direction) => {
 		const camera = renderer.current?.getCamera();
@@ -11325,6 +11344,9 @@ function unwrap(result) {
 */
 function errorDetail(error) {
 	switch (error.code) {
+		case "capture-unavailable": return "暂时无法读取沉淀记录，请检查本地存储后重试。";
+		case "capture-record-unavailable": return "记录不存在或不属于当前会话。";
+		case "capture-invalid-query": return "记录查询参数无效：" + error.field;
 		case "wiki-unavailable": return error.reason === "not-configured" ? "尚未设置 Wiki 路径，请在插件设置中配置 wikiRoot。" : "暂时无法读取 Wiki，请检查配置的目录是否可访问后重试。";
 		case "stale-revision": return "面板带着 revision " + error.expected + " 发起写操作，服务端已是 " + error.actual;
 		case "unknown-page": return "页面不在当前知识库：" + error.pageId;
@@ -11361,6 +11383,26 @@ function createRemoteSource(client, reason) {
 	};
 	return {
 		mode: "remote",
+		async captureStatus(input) {
+			const result = unwrap(await requireClient().captureStatus(input));
+			if (result.error) throw new RemoteCallError(result.error.code, errorDetail(result.error));
+			return result;
+		},
+		async captureHistory(input) {
+			const result = unwrap(await requireClient().captureHistory(input));
+			if (result.error) throw new RemoteCallError(result.error.code, errorDetail(result.error));
+			return result;
+		},
+		async captureRecord(input) {
+			const result = unwrap(await requireClient().captureRecord(input));
+			if (result.error) throw new RemoteCallError(result.error.code, errorDetail(result.error));
+			return result;
+		},
+		async captureJudgment(input) {
+			const result = unwrap(await requireClient().captureJudgment(input));
+			if (result.error) throw new RemoteCallError(result.error.code, errorDetail(result.error));
+			return result;
+		},
 		async getGraph() {
 			const result = unwrap(await requireClient().graph({}));
 			if (result.error !== void 0) throw new RemoteCallError(result.error.code, errorDetail(result.error));
@@ -12312,27 +12354,622 @@ function RemotePanel(props) {
 	});
 }
 //#endregion
-//#region src/client/CaptureStatus.tsx
-const LABEL = {
+//#region src/client/CaptureHistory.tsx
+const CAPTURE_LABEL = {
 	queued: "等待判断",
-	judging: "正在判断",
+	judging: "正在初判",
 	preparing: "正在整理",
 	verifying: "正在核验",
-	publishing: "正在摄入",
+	publishing: "正在发布",
 	ingested: "已沉淀",
 	skipped: "无需沉淀",
 	deferred: "待补证据",
-	failed: "暂未完成",
-	needs_attention: "需要处理"
+	failed: "执行失败",
+	needs_attention: "发布需处理"
 };
-function CaptureStatus({ capture, onOpen }) {
+const COLLECTOR = {
+	disabled: "未启用",
+	starting: "等待宿主服务",
+	ready: "本地配置已就绪",
+	blocked: "暂不可用"
+};
+const FILTERS = [
+	["", "全部"],
+	["processing", "处理中"],
+	["ingested", "已沉淀"],
+	["skipped", "无需沉淀"],
+	["deferred", "待补证据"],
+	["error", "异常"]
+];
+const EVENT = {
+	registered: "登记原始证据",
+	phase_changed: "阶段更新",
+	judgment_started: "开始判定",
+	judgment_finished: "判定返回",
+	judgment_failed: "调用失败",
+	judgment_interrupted: "调用结果未知",
+	recovery_started: "恢复处理",
+	publication_finished: "发布完成",
+	publication_interrupted: "发布结果待核对",
+	operation_failed: "执行异常",
+	legacy_snapshot: "旧状态快照"
+};
+const time = (value) => value ? new Intl.DateTimeFormat(void 0, {
+	dateStyle: "medium",
+	timeStyle: "medium"
+}).format(new Date(value)) + " · " + Intl.DateTimeFormat().resolvedOptions().timeZone : "时间未记录";
+const message = (cause) => cause instanceof Error ? cause.message : String(cause);
+const ongoing = (phase) => [
+	"queued",
+	"judging",
+	"preparing",
+	"verifying",
+	"publishing"
+].includes(phase);
+function usePolling(refresh, active) {
+	const callback = (0, react.useRef)(refresh);
+	callback.current = refresh;
+	(0, react.useEffect)(() => {
+		if (!active) return;
+		const poll = () => {
+			if (document.visibilityState !== "hidden") callback.current();
+		};
+		const timer = window.setInterval(poll, 3e3);
+		document.addEventListener("visibilitychange", poll);
+		return () => {
+			window.clearInterval(timer);
+			document.removeEventListener("visibilitychange", poll);
+		};
+	}, [active]);
+}
+function HashValue({ label, value }) {
+	const [copied, setCopied] = (0, react.useState)(false);
+	const [error, setError] = (0, react.useState)("");
+	if (!value) return null;
+	return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+		className: "memory-wiki-panel__history-hash",
+		children: [
+			/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: label }),
+			/* @__PURE__ */ (0, react_jsx_runtime.jsx)("code", {
+				title: value,
+				children: value.slice(0, 16)
+			}),
+			/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+				type: "button",
+				onClick: () => {
+					navigator.clipboard.writeText(value).then(() => {
+						setCopied(true);
+						setError("");
+					}, () => setError("复制失败，可展开完整值复制"));
+				},
+				children: copied ? "已复制" : "复制"
+			}),
+			error && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+				role: "status",
+				children: error
+			}),
+			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("details", { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("summary", { children: "完整值" }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("code", { children: value })] })
+		]
+	});
+}
+function Judgment({ source, sessionId, jobId, lifecycle }) {
+	const [open, setOpen] = (0, react.useState)(false);
+	const [result, setResult] = (0, react.useState)(null);
+	const [error, setError] = (0, react.useState)(null);
+	const [nonce, setNonce] = (0, react.useState)(0);
+	(0, react.useEffect)(() => {
+		if (!open) return;
+		let cancelled = false;
+		setError(null);
+		source.captureJudgment({
+			sessionId,
+			jobId,
+			judgmentId: lifecycle.id
+		}).then((value) => {
+			if (!cancelled) setResult(value);
+		}, (cause) => {
+			if (!cancelled) setError(message(cause));
+		});
+		return () => {
+			cancelled = true;
+		};
+	}, [
+		source,
+		sessionId,
+		jobId,
+		lifecycle.id,
+		lifecycle.state,
+		open,
+		nonce
+	]);
+	const record = result?.judgment;
+	const decision = record?.result?.kind === "decision" ? record.result : void 0;
+	const failed = record?.result?.kind === "error" ? record.result.error : void 0;
+	return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("details", {
+		className: "memory-wiki-panel__judgment",
+		onToggle: (event) => setOpen(event.currentTarget.open),
+		children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("summary", { children: [
+			lifecycle.stage === "assessment" ? "Jev 初判" : "Jev 核验",
+			" · 第 ",
+			lifecycle.attempt,
+			" 次 · ",
+			lifecycle.state === "started" ? "进行中" : lifecycle.state === "interrupted" ? "结果未知" : lifecycle.state === "failed" ? "调用失败" : lifecycle.disposition === "prepare" || lifecycle.disposition === "publish" ? "通过" : lifecycle.disposition === "skipped" ? "无需沉淀" : "待补证据"
+		] }), open && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", { children: [
+			/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: lifecycle.model }),
+			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: ["开始：", time(lifecycle.startedAt)] }),
+			lifecycle.finishedAt && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: ["结束：", time(lifecycle.finishedAt)] }),
+			lifecycle.durationMs !== void 0 && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: [
+				"本地调用总耗时：",
+				Math.round(lifecycle.durationMs),
+				" ms（含 SDK 重试）"
+			] }),
+			error ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", {
+				role: "alert",
+				children: [
+					error,
+					" ",
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+						type: "button",
+						onClick: () => setNonce((value) => value + 1),
+						children: "重试读取"
+					})
+				]
+			}) : !record ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+				role: "status",
+				children: "正在读取判定…"
+			}) : /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [
+				lifecycle.state === "interrupted" && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "进程中断，此次调用结果未知；不能据此判断请求是否发出或是否产生用量。" }),
+				failed && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", {
+					role: "alert",
+					children: [
+						failed.category,
+						failed.httpStatus ? " · HTTP " + failed.httpStatus : "",
+						"：",
+						failed.message
+					]
+				}),
+				decision && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [
+					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: [
+						decision.reason,
+						" ",
+						/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("small", { children: [
+							"（",
+							decision.reasonCode,
+							"）"
+						] })
+					] }),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: [
+						"Token：输入 ",
+						decision.usage?.inputTokens ?? "未提供",
+						" · 输出 ",
+						decision.usage?.outputTokens ?? "未提供"
+					] }),
+					decision.requestId && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: ["请求 ID：", /* @__PURE__ */ (0, react_jsx_runtime.jsx)("code", { children: decision.requestId })] })
+				] }),
+				record.questions.map((question) => {
+					const answer = decision?.answers.find((value) => value.id === question.id);
+					return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("section", {
+						className: "memory-wiki-panel__question",
+						children: [
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h5", { children: question.id }),
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: question.text }),
+							question.options && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("details", { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("summary", { children: "候选选项" }), question.options.map((option) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: [
+								/* @__PURE__ */ (0, react_jsx_runtime.jsx)("code", { children: option.value }),
+								"：",
+								option.description
+							] }, option.value))] }),
+							answer?.type === "choice" ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: [
+								"所选：",
+								/* @__PURE__ */ (0, react_jsx_runtime.jsx)("strong", { children: answer.choice }),
+								" · confidence ",
+								answer.confidence.toFixed(3)
+							] }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: answer.probabilities.map((value) => `${value.option} ${value.probability.toFixed(3)}`).join(" · ") })] }) : answer?.type === "noul" ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: ["Noul：", answer.value.toFixed(3)] }) : /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "尚无有效答案" })
+						]
+					}, question.id);
+				}),
+				decision && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("section", { children: [
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h4", { children: "程序门槛" }),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "概率是模型返回值，不代表结论正确率。" }),
+					decision.gateResults.map((gate) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", {
+						className: gate.passed ? "is-pass" : "is-deferred",
+						children: [
+							gate.passed ? "满足" : "未满足",
+							" · ",
+							gate.description,
+							"：",
+							String(gate.actual),
+							" ",
+							gate.operator === "gte" ? "≥" : "=",
+							" ",
+							String(gate.expected)
+						]
+					}, gate.id))
+				] }),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsx)(HashValue, {
+					label: "请求",
+					value: record.requestHash
+				})
+			] })
+		] })]
+	});
+}
+function RecordDetail({ source, sessionId, jobId, onBack, onOpen }) {
+	const [record, setRecord] = (0, react.useState)(null);
+	const [error, setError] = (0, react.useState)(null);
+	const [busy, setBusy] = (0, react.useState)(false);
+	const [nonce, setNonce] = (0, react.useState)(0);
+	const live = (0, react.useRef)(true);
+	const requestId = (0, react.useRef)(0);
+	(0, react.useEffect)(() => () => {
+		live.current = false;
+	}, []);
+	const read = (afterEventSeq) => {
+		const request = ++requestId.current;
+		setBusy(true);
+		source.captureRecord({
+			sessionId,
+			jobId,
+			...afterEventSeq === void 0 ? {} : { afterEventSeq }
+		}).then((next) => {
+			if (!live.current || request !== requestId.current) return;
+			setRecord((current) => afterEventSeq === void 0 || !current ? next : {
+				...next,
+				events: [...current.events, ...next.events],
+				judgments: [...new Map([...current.judgments, ...next.judgments].map((value) => [value.id, value])).values()]
+			});
+			setError(null);
+		}, (cause) => {
+			if (live.current && request === requestId.current) setError(message(cause));
+		}).finally(() => {
+			if (live.current && request === requestId.current) setBusy(false);
+		});
+	};
+	(0, react.useEffect)(() => {
+		read();
+	}, [
+		source,
+		sessionId,
+		jobId,
+		nonce
+	]);
+	usePolling(() => {
+		if (!busy && record?.summary && ongoing(record.summary.phase)) read(record.events.at(-1)?.seq ?? 0);
+	}, true);
+	const summary = record?.summary;
+	return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("article", {
+		className: "memory-wiki-panel__history-detail",
+		"aria-label": "沉淀记录详情",
+		children: [
+			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+				className: "memory-wiki-panel__history-detail-head",
+				children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+					type: "button",
+					onClick: onBack,
+					children: "返回记录列表"
+				}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+					type: "button",
+					disabled: busy,
+					onClick: () => setNonce((value) => value + 1),
+					children: "刷新详情"
+				})]
+			}),
+			error && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+				role: "alert",
+				children: error
+			}),
+			!summary ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+				role: "status",
+				children: error ? "暂时无法读取这条记录。" : "正在读取记录…"
+			}) : /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("h3", { children: [summary.task, summary.taskTruncated ? "…" : ""] }),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+					className: "memory-wiki-panel__history-state is-" + summary.phase,
+					children: CAPTURE_LABEL[summary.phase]
+				}),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: summary.reason }),
+				summary.publicationUncertain && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", {
+					role: "alert",
+					children: ["发布结果待核对：可能已有部分文件写入。", summary.retryable ? "重启采集服务后将依据已核验清单恢复。" : "请先处理发布冲突，保留现场文件。"]
+				}),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: ["登记：", time(summary.registeredAt)] }),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: [
+					"原始会话轮次 ",
+					summary.origin.turn,
+					" · 证据事件 seq ",
+					summary.origin.turnStartSeq,
+					"–",
+					summary.origin.turnEndSeq
+				] }),
+				summary.historyCoverage === "legacy_snapshot" && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+					className: "memory-wiki-panel__history-note",
+					children: "旧记录：仅保留当时最新状态，阶段时间和判定答案未记录，不能还原完整历史。"
+				}),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("section", { children: [
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h4", { children: "阶段时间线" }),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("ol", {
+						className: "memory-wiki-panel__timeline",
+						children: record.events.map((event) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("li", { children: [
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("time", {
+								dateTime: event.at,
+								children: time(event.at)
+							}),
+							/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("strong", { children: [EVENT[event.kind], event.phase ? " · " + CAPTURE_LABEL[event.phase] : ""] }),
+							event.reason && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: event.reason }),
+							event.error && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: [
+								"错误类别：",
+								event.error.category,
+								event.stage ? " · 阶段：" + CAPTURE_LABEL[event.stage] : ""
+							] }),
+							event.kind === "judgment_interrupted" && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "此次调用结果未知" }),
+							event.judgmentId && record.judgments.find((value) => value.id === event.judgmentId) && event.kind === "judgment_started" && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Judgment, {
+								source,
+								sessionId,
+								jobId,
+								lifecycle: record.judgments.find((value) => value.id === event.judgmentId)
+							})
+						] }, event.seq))
+					}),
+					record.nextEventSeq !== void 0 && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+						type: "button",
+						disabled: busy,
+						onClick: () => read(record.nextEventSeq),
+						children: "加载后续事件"
+					})
+				] }),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("section", { children: [
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h4", { children: "证据与改动" }),
+					record.limitations.map((limit, index) => /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: limit }, index)),
+					record.evidence.map((event) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("details", { children: [
+						/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("summary", { children: [
+							"原始证据 seq ",
+							event.seq,
+							" · ",
+							event.kind
+						] }),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("pre", { children: event.text }),
+						event.truncated && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "仅展示前 1,000 字符，完整证据保存在本地任务记录。" })
+					] }, event.seq)),
+					record.evidenceTruncated && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "仅展示前 12 条原始事件。" }),
+					record.changes.map((change) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: [
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("code", { children: change.path }),
+						" · ",
+						change.beforeHash ? "更新" : "新增"
+					] }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(HashValue, {
+						label: "发布候选版本",
+						value: change.afterHash
+					})] }, change.path)),
+					summary.phase === "ingested" && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+						className: "memory-wiki-panel__history-pages",
+						children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "打开的是知识库当前内容，详情会标注与发布版本的差异。" }), summary.pages.filter((page) => !page.startsWith("wiki/sources/")).map((page) => /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+							type: "button",
+							onClick: () => onOpen(page, record.changes.find((change) => change.path === page || change.path === page + ".md")?.afterHash),
+							children: page
+						}, page))]
+					})
+				] }),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("details", { children: [
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)("summary", { children: "记录标识与版本" }),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: ["任务 ID：", /* @__PURE__ */ (0, react_jsx_runtime.jsx)("code", { children: summary.jobId })] }),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: ["规则版本：", summary.rubricVersion] }),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(HashValue, {
+						label: "原始证据",
+						value: summary.evidenceHash
+					}),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(HashValue, {
+						label: "Wiki 规则",
+						value: summary.rulesHash
+					}),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsx)(HashValue, {
+						label: "核验改动",
+						value: summary.patchHash
+					})
+				] })
+			] })
+		]
+	});
+}
+function CaptureHistory({ source, sessionId, initialJobId, onBack, onOpen }) {
+	const [status, setStatus] = (0, react.useState)(null);
+	const [list, setList] = (0, react.useState)(null);
+	const [selected, setSelected] = (0, react.useState)(initialJobId ?? null);
+	const [filter, setFilter] = (0, react.useState)("");
+	const [error, setError] = (0, react.useState)(null);
+	const [busy, setBusy] = (0, react.useState)(false);
+	const [updates, setUpdates] = (0, react.useState)(false);
+	const [nonce, setNonce] = (0, react.useState)(0);
+	const live = (0, react.useRef)(true);
+	const requestId = (0, react.useRef)(0);
+	(0, react.useEffect)(() => () => {
+		live.current = false;
+	}, []);
+	const read = (cursor, poll = false) => {
+		const request = ++requestId.current;
+		if (!poll) setBusy(true);
+		Promise.all([source.captureStatus(sessionId ? { sessionId } : {}), sessionId ? source.captureHistory({
+			sessionId,
+			...filter ? { status: filter } : {},
+			...cursor ? { cursor } : {}
+		}) : Promise.resolve(null)]).then(([state, next]) => {
+			if (!live.current || request !== requestId.current) return;
+			setStatus(state);
+			setError(null);
+			if (poll && list) {
+				if (JSON.stringify(next?.items) !== JSON.stringify(list.items.slice(0, 20))) setUpdates(true);
+			} else {
+				setList((current) => cursor && current && next ? {
+					...next,
+					items: [...current.items, ...next.items]
+				} : next);
+				setUpdates(false);
+			}
+		}, (cause) => {
+			if (live.current && request === requestId.current) setError(message(cause));
+		}).finally(() => {
+			if (live.current && request === requestId.current) setBusy(false);
+		});
+	};
+	(0, react.useEffect)(() => {
+		setList(null);
+		setUpdates(false);
+	}, [
+		source,
+		sessionId,
+		filter
+	]);
+	(0, react.useEffect)(() => {
+		read();
+	}, [
+		source,
+		sessionId,
+		filter,
+		nonce
+	]);
+	usePolling(() => {
+		if (!busy) read(void 0, true);
+	}, true);
+	return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+		className: "memory-wiki-panel__history",
+		"data-testid": "mw-capture-history",
+		children: [
+			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("header", {
+				className: "memory-wiki-panel__history-head",
+				children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h2", { children: "沉淀记录" }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "原始证据 → Jev 初判 → 核验 → 发布" })] }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+					type: "button",
+					onClick: onBack,
+					children: "返回图谱"
+				})]
+			}),
+			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+				className: "memory-wiki-panel__history-availability",
+				"aria-live": "polite",
+				children: [
+					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: ["自动采集：", /* @__PURE__ */ (0, react_jsx_runtime.jsx)("strong", { children: status ? COLLECTOR[status.collector] : "正在读取状态" })] }),
+					status && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: status.reason }),
+					status?.history !== void 0 && status.history !== "readable" && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+						role: "alert",
+						children: status.history === "degraded" ? "部分历史记录无法读取，以下内容可能不完整。" : "历史存储暂不可读取。"
+					}),
+					status?.lastIssue && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", {
+						role: "alert",
+						children: [
+							time(status.lastIssue.at),
+							" · ",
+							status.lastIssue.stage === "collecting" ? "取证失败，未进入 Jev" : "采集运行异常",
+							"：",
+							status.lastIssue.message,
+							!status.lastIssue.persisted && "（尚未持久化）"
+						]
+					})
+				]
+			}),
+			!sessionId ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+				className: "memory-wiki-panel__history-note",
+				children: "在宿主打开一个会话后，可查看该会话的沉淀历史。"
+			}) : /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+					className: "memory-wiki-panel__history-toolbar",
+					children: [
+						/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("label", { children: ["状态 ", /* @__PURE__ */ (0, react_jsx_runtime.jsx)("select", {
+							value: filter,
+							onChange: (event) => {
+								setFilter(event.target.value);
+								setSelected(null);
+							},
+							children: FILTERS.map(([value, label]) => /* @__PURE__ */ (0, react_jsx_runtime.jsx)("option", {
+								value,
+								children: label
+							}, value))
+						})] }),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", { children: ["当前会话 ", /* @__PURE__ */ (0, react_jsx_runtime.jsx)("code", { children: sessionId })] }),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+							type: "button",
+							disabled: busy,
+							onClick: () => setNonce((value) => value + 1),
+							children: "刷新记录"
+						})
+					]
+				}),
+				error && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+					role: "alert",
+					children: error
+				}),
+				updates && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", {
+					role: "status",
+					children: ["有更新，", /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+						type: "button",
+						onClick: () => setNonce((value) => value + 1),
+						children: "刷新记录"
+					})]
+				}),
+				list?.readCompleteness === "partial" && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+					role: "alert",
+					children: "本次历史查询不完整，部分记录未能读取。"
+				}),
+				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+					className: "memory-wiki-panel__history-layout" + (selected ? " has-selection" : ""),
+					children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+						className: "memory-wiki-panel__history-list",
+						"aria-label": "沉淀记录列表",
+						children: [list === null ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+							role: "status",
+							children: error ? "历史暂不可读取。" : "正在读取历史…"
+						}) : list.items.length === 0 ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: ["尚无本会话采集记录。", status?.collector === "disabled" ? "自动采集当前未启用。" : ""] }) : list.items.map((item) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("button", {
+							type: "button",
+							"aria-pressed": selected === item.jobId,
+							onClick: () => setSelected(item.jobId),
+							children: [
+								/* @__PURE__ */ (0, react_jsx_runtime.jsx)("time", {
+									dateTime: item.registeredAt,
+									children: time(item.registeredAt)
+								}),
+								/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("strong", { children: [item.task, item.taskTruncated ? "…" : ""] }),
+								/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
+									className: "is-" + item.phase,
+									children: [
+										CAPTURE_LABEL[item.phase],
+										" · 第 ",
+										item.origin.turn,
+										" 轮"
+									]
+								}),
+								/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("small", { children: [item.publicationUncertain ? "发布结果待核对 · " : "", item.reason] })
+							]
+						}, item.jobId)), list?.nextCursor && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+							type: "button",
+							disabled: busy,
+							onClick: () => read(list.nextCursor),
+							children: "加载更多"
+						})]
+					}), selected ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)(RecordDetail, {
+						source,
+						sessionId,
+						jobId: selected,
+						onBack: () => setSelected(null),
+						onOpen
+					}, selected) : /* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+						className: "memory-wiki-panel__history-placeholder",
+						children: "选择一条记录，查看阶段时间线、判定条件和原始证据。"
+					})]
+				})
+			] })
+		]
+	});
+}
+//#endregion
+//#region src/client/CaptureStatus.tsx
+function CaptureStatus({ capture, onOpen, onHistory }) {
 	return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("section", {
 		className: "memory-wiki-panel__context-note",
 		"aria-live": "polite",
 		"data-testid": "mw-capture-status",
 		children: [
-			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("h4", { children: ["经验沉淀 · ", LABEL[capture.phase]] }),
+			/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("h4", { children: ["经验沉淀 · ", CAPTURE_LABEL[capture.phase]] }),
 			/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: capture.reason }),
+			onHistory && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+				type: "button",
+				onClick: onHistory,
+				children: "查看完整沉淀记录"
+			}),
 			capture.phase === "ingested" && capture.pages.filter((page) => !page.startsWith("wiki/sources/")).map((page) => /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
 				type: "button",
 				onClick: () => onOpen(page),
@@ -12389,6 +13026,9 @@ function MemoryPanel({ source, uiSession }) {
 	const sessionKey = useSessionKey(uiSession);
 	const sessionRef = (0, react.useRef)(sessionKey);
 	sessionRef.current = sessionKey;
+	const [historyOpen, setHistoryOpen] = (0, react.useState)(false);
+	const [historyJob, setHistoryJob] = (0, react.useState)();
+	const [publishedPage, setPublishedPage] = (0, react.useState)(null);
 	const [graph, setGraph] = (0, react.useState)(null);
 	const [graphError, setGraphError] = (0, react.useState)(null);
 	const [graphBusy, setGraphBusy] = (0, react.useState)(true);
@@ -12538,6 +13178,7 @@ function MemoryPanel({ source, uiSession }) {
 		"data-testid": "mw-panel",
 		"data-source": source.mode,
 		onKeyDown: (event) => {
+			if (historyOpen) return;
 			if (event.key === "Escape") {
 				setSearchOpen(false);
 				close();
@@ -12568,6 +13209,7 @@ function MemoryPanel({ source, uiSession }) {
 							placeholder: "搜索页面标题或路径",
 							"aria-label": "搜索知识",
 							"data-testid": "mw-browse-query",
+							disabled: historyOpen,
 							"aria-expanded": searchOpen && term !== "",
 							"aria-controls": "mw-browse-results",
 							autoComplete: "off",
@@ -12582,6 +13224,7 @@ function MemoryPanel({ source, uiSession }) {
 						}),
 						query !== "" ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
 							type: "button",
+							disabled: historyOpen,
 							onClick: clearSearch,
 							"aria-label": "清空搜索",
 							children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "close" })
@@ -12611,230 +13254,274 @@ function MemoryPanel({ source, uiSession }) {
 				}),
 				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 					className: "memory-wiki-panel__head-actions",
-					children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
-						type: "button",
-						className: "memory-wiki-panel__icon",
-						onClick: refreshGraph,
-						"aria-label": "刷新知识图谱",
-						disabled: graphBusy,
-						children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "refresh" })
-					}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("button", {
-						type: "button",
-						"data-testid": "mw-context-toggle",
-						"aria-expanded": drawer === "context",
-						"aria-controls": "mw-context",
-						onClick: () => {
-							setSearchOpen(false);
-							setDrawer((current) => current === "context" ? null : "context");
-						},
-						children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "graph" }), "上下文"]
-					})]
+					children: [
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+							type: "button",
+							"aria-pressed": historyOpen,
+							onClick: () => {
+								setHistoryJob(void 0);
+								setHistoryOpen((value) => !value);
+							},
+							children: "沉淀记录"
+						}),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+							type: "button",
+							className: "memory-wiki-panel__icon",
+							onClick: refreshGraph,
+							"aria-label": "刷新知识图谱",
+							disabled: graphBusy || historyOpen,
+							children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "refresh" })
+						}),
+						/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("button", {
+							type: "button",
+							disabled: historyOpen,
+							"data-testid": "mw-context-toggle",
+							"aria-expanded": drawer === "context",
+							"aria-controls": "mw-context",
+							onClick: () => {
+								setSearchOpen(false);
+								setDrawer((current) => current === "context" ? null : "context");
+							},
+							children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "graph" }), "上下文"]
+						})
+					]
 				})
 			]
 		}), /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-			className: "memory-wiki-panel__workspace",
-			children: [
-				graph !== null && graph.pages.length > 0 && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(EvidenceGraph, {
-					graph,
-					activePageId,
-					onSelect: openPage,
-					matches,
-					drawer: drawer !== null,
-					reset
-				}),
-				graphError !== null ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-					className: "memory-wiki-panel__empty",
-					role: "alert",
-					"data-testid": "mw-graph-error",
-					children: [
-						/* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "graph" }),
-						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", { children: "暂时无法读取知识图谱" }),
-						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: graphError }),
-						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
-							type: "button",
-							onClick: refreshGraph,
-							children: "重新读取"
-						})
-					]
-				}) : graph === null ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-					className: "memory-wiki-panel__empty",
-					role: "status",
-					"data-testid": "mw-loading",
-					children: [
-						/* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "graph" }),
-						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", { children: "正在展开知识图谱" }),
-						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "读取 Wiki 页面与链接…" })
-					]
-				}) : graph.pages.length === 0 ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-					className: "memory-wiki-panel__empty",
-					"data-testid": "mw-graph-empty",
-					children: [
-						/* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "graph" }),
-						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", { children: "Wiki 里还没有可展示的页面" }),
-						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "添加有效的 Markdown 知识页面后，刷新即可看到关系图。" })
-					]
-				}) : null,
-				graphBusy && graph !== null && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-					className: "memory-wiki-panel__updating",
-					role: "status",
-					children: "正在更新图谱…"
-				}),
-				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
-					className: "memory-wiki-panel__canvas-status",
-					"data-testid": "mw-browse-status",
-					children: [source.mode === "fixture" ? "设计预览 · 示例内容" : !boundSession(sessionKey) ? "浏览模式 · 未绑定会话" : view === null ? "上下文未就绪" : view.prepared !== void 0 ? "已准备下一轮手选依据" : "自动模式", graph !== null && graph.brokenLinks > 0 ? " · " + graph.brokenLinks + " 个未解析链接" : ""]
-				}),
-				drawer === "detail" && active !== void 0 && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("aside", {
-					className: "memory-wiki-panel__drawer",
-					"aria-label": "知识详情",
-					"data-testid": "mw-knowledge-detail",
-					children: [
-						/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-							className: "memory-wiki-panel__drawer-head",
-							children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", { children: active.title }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+			className: "memory-wiki-panel__surfaces",
+			children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+				className: "memory-wiki-panel__workspace",
+				"aria-hidden": historyOpen || void 0,
+				style: historyOpen ? {
+					visibility: "hidden",
+					pointerEvents: "none"
+				} : void 0,
+				children: [
+					graph !== null && graph.pages.length > 0 && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(EvidenceGraph, {
+						visible: !historyOpen,
+						graph,
+						activePageId,
+						onSelect: openPage,
+						matches,
+						drawer: drawer !== null,
+						reset
+					}),
+					graphError !== null ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+						className: "memory-wiki-panel__empty",
+						role: "alert",
+						"data-testid": "mw-graph-error",
+						children: [
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "graph" }),
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", { children: "暂时无法读取知识图谱" }),
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: graphError }),
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
 								type: "button",
-								className: "memory-wiki-panel__icon",
-								onClick: close,
-								"aria-label": "关闭知识详情",
-								children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "close" })
-							})]
-						}),
-						/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-							className: "memory-wiki-panel__reader",
-							children: [
-								/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", {
-									className: "memory-wiki-panel__page-meta",
-									children: [KIND[active.kind] ?? active.kind, active.asOf === void 0 ? "" : " · " + active.asOf]
-								}),
-								readFailure !== null ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-									role: "alert",
-									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: readFailure }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
-										type: "button",
-										onClick: () => setGraphNonce((n) => n + 1),
-										children: "刷新图谱后重读"
-									})]
-								}) : page === null ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
-									role: "status",
-									children: "正在读取页面…"
-								}) : /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(MarkdownView, {
-									source: page.body,
-									title: active.title,
-									testId: "mw-knowledge-body"
-								}), page.truncated && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", {
-									className: "memory-wiki-panel__excerpt-note",
-									children: [
-										"正文较长，当前展示前 ",
-										page.limitChars?.toLocaleString(),
-										" 字符。"
-									]
-								})] }),
-								relations.map(([title, ids]) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("section", {
-									className: "memory-wiki-panel__relations",
-									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h4", { children: title }), ids.length === 0 ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: ["暂无", title === "关联知识" ? "出链" : "反链"] }) : ids.map((id) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("button", {
-										type: "button",
-										onClick: () => openPage(id),
-										children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: pageIndex.get(id)?.title ?? id }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "arrow" })]
-									}, id))]
-								}, String(title))),
-								/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("details", {
-									className: "memory-wiki-panel__page-info",
-									children: [
-										/* @__PURE__ */ (0, react_jsx_runtime.jsx)("summary", { children: "页面信息" }),
-										/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: active.pageId }),
-										/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: ["版本 ", active.contentHash.slice(0, 12)] })
-									]
-								})
-							]
-						}, active.pageId),
-						/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("footer", {
-							className: "memory-wiki-panel__reader-footer",
-							children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("button", {
-								type: "button",
-								"data-testid": "mw-add-evidence",
-								disabled: !boundSession(sessionKey) || view === null || writeRevision === void 0 || source.reviseDraft === void 0,
-								onClick: () => {
-									setPendingPage({ ...active });
-									setDrawer("context");
-								},
-								children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "plus" }), "选为下一轮依据"]
-							}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: boundSession(sessionKey) ? "先选入，再在上下文中预览和准备。" : "浏览无需会话；选为依据需先打开一个会话。" })]
-						})
-					]
-				}),
-				/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("aside", {
-					id: "mw-context",
-					className: "memory-wiki-panel__drawer memory-wiki-panel__drawer--context",
-					"aria-label": "会话上下文",
-					hidden: drawer !== "context",
-					children: [
-						view?.capture && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(CaptureStatus, {
-							capture: view.capture,
-							onOpen: (pageId) => {
-								setGraphNonce((n) => n + 1);
-								openPage(pageId);
-							}
-						}),
-						/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-							className: "memory-wiki-panel__drawer-head",
-							children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", { children: "会话上下文" }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "自动检索，或为下一轮指定依据。" })] }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
-								type: "button",
-								className: "memory-wiki-panel__icon",
-								onClick: close,
-								"aria-label": "关闭上下文",
-								children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "close" })
-							})]
-						}),
-						!boundSession(sessionKey) ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-							className: "memory-wiki-panel__context-note",
-							"data-testid": "mw-unbound",
-							children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h4", { children: "打开一个会话后即可选择依据" }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "你可以继续浏览整库图谱和知识正文。" })]
-						}) : view === null ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-							className: "memory-wiki-panel__context-note",
-							role: viewError === null ? "status" : "alert",
-							children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: viewError ?? "正在读取会话状态…" }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
-								type: "button",
-								onClick: () => setViewNonce((n) => n + 1),
+								onClick: refreshGraph,
 								children: "重新读取"
-							})]
-						}) : /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [
+							})
+						]
+					}) : graph === null ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+						className: "memory-wiki-panel__empty",
+						role: "status",
+						"data-testid": "mw-loading",
+						children: [
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "graph" }),
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", { children: "正在展开知识图谱" }),
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "读取 Wiki 页面与链接…" })
+						]
+					}) : graph.pages.length === 0 ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+						className: "memory-wiki-panel__empty",
+						"data-testid": "mw-graph-empty",
+						children: [
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "graph" }),
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", { children: "Wiki 里还没有可展示的页面" }),
+							/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "添加有效的 Markdown 知识页面后，刷新即可看到关系图。" })
+						]
+					}) : null,
+					graphBusy && graph !== null && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+						className: "memory-wiki-panel__updating",
+						role: "status",
+						children: "正在更新图谱…"
+					}),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
+						className: "memory-wiki-panel__canvas-status",
+						"data-testid": "mw-browse-status",
+						children: [source.mode === "fixture" ? "设计预览 · 示例内容" : !boundSession(sessionKey) ? "浏览模式 · 未绑定会话" : view === null ? "上下文未就绪" : view.prepared !== void 0 ? "已准备下一轮手选依据" : "自动模式", graph !== null && graph.brokenLinks > 0 ? " · " + graph.brokenLinks + " 个未解析链接" : ""]
+					}),
+					drawer === "detail" && active !== void 0 && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("aside", {
+						className: "memory-wiki-panel__drawer",
+						"aria-label": "知识详情",
+						"data-testid": "mw-knowledge-detail",
+						children: [
 							/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
-								className: "memory-wiki-panel__context-meta",
+								className: "memory-wiki-panel__drawer-head",
+								children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", { children: active.title }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+									type: "button",
+									className: "memory-wiki-panel__icon",
+									onClick: close,
+									"aria-label": "关闭知识详情",
+									children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "close" })
+								})]
+							}),
+							/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+								className: "memory-wiki-panel__reader",
 								children: [
-									/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
-										"data-testid": "mw-mode",
-										children: source.mode
+									publishedPage?.id === active.pageId && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+										className: "memory-wiki-panel__excerpt-note",
+										children: page === null ? "正在读取知识库当前页面…" : publishedPage.hash && publishedPage.hash === page.contentHash ? "当前内容与当时发布版本一致。" : "正在查看知识库当前内容；可能与当时发布版本不同。"
 									}),
-									/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
-										"data-testid": "mw-session",
-										children: ["会话 ", sessionKey]
+									/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", {
+										className: "memory-wiki-panel__page-meta",
+										children: [KIND[active.kind] ?? active.kind, active.asOf === void 0 ? "" : " · " + active.asOf]
 									}),
-									/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
-										"data-testid": "mw-rev",
-										children: ["视图 rev ", view.revision]
-									}),
-									/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
-										"data-testid": "mw-last-read",
-										children: ["上次读取 ", lastReadAt === null ? "尚未读取" : new Date(lastReadAt).toLocaleTimeString("zh-CN", { hour12: false })]
+									readFailure !== null ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+										role: "alert",
+										children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: readFailure }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+											type: "button",
+											onClick: () => setGraphNonce((n) => n + 1),
+											children: "刷新图谱后重读"
+										})]
+									}) : page === null ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+										role: "status",
+										children: "正在读取页面…"
+									}) : /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(MarkdownView, {
+										source: page.body,
+										title: active.title,
+										testId: "mw-knowledge-body"
+									}), page.truncated && /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", {
+										className: "memory-wiki-panel__excerpt-note",
+										children: [
+											"正文较长，当前展示前 ",
+											page.limitChars?.toLocaleString(),
+											" 字符。"
+										]
+									})] }),
+									relations.map(([title, ids]) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("section", {
+										className: "memory-wiki-panel__relations",
+										children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h4", { children: title }), ids.length === 0 ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: ["暂无", title === "关联知识" ? "出链" : "反链"] }) : ids.map((id) => /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("button", {
+											type: "button",
+											onClick: () => openPage(id),
+											children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", { children: pageIndex.get(id)?.title ?? id }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "arrow" })]
+										}, id))]
+									}, String(title))),
+									/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("details", {
+										className: "memory-wiki-panel__page-info",
+										children: [
+											/* @__PURE__ */ (0, react_jsx_runtime.jsx)("summary", { children: "页面信息" }),
+											/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: active.pageId }),
+											/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("p", { children: ["版本 ", active.contentHash.slice(0, 12)] })
+										]
 									})
 								]
+							}, active.pageId),
+							/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("footer", {
+								className: "memory-wiki-panel__reader-footer",
+								children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("button", {
+									type: "button",
+									"data-testid": "mw-add-evidence",
+									disabled: !boundSession(sessionKey) || view === null || writeRevision === void 0 || source.reviseDraft === void 0,
+									onClick: () => {
+										setPendingPage({ ...active });
+										setDrawer("context");
+									},
+									children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "plus" }), "选为下一轮依据"]
+								}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: boundSession(sessionKey) ? "先选入，再在上下文中预览和准备。" : "浏览无需会话；选为依据需先打开一个会话。" })]
+							})
+						]
+					}),
+					/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("aside", {
+						id: "mw-context",
+						className: "memory-wiki-panel__drawer memory-wiki-panel__drawer--context",
+						"aria-label": "会话上下文",
+						hidden: drawer !== "context",
+						children: [
+							view?.capture && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(CaptureStatus, {
+								onHistory: () => {
+									setHistoryJob(view.capture?.jobId);
+									setHistoryOpen(true);
+								},
+								capture: view.capture,
+								onOpen: (pageId) => {
+									setGraphNonce((n) => n + 1);
+									openPage(pageId);
+								}
 							}),
-							viewError !== null && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
-								role: "alert",
-								"data-testid": "mw-error",
-								children: viewError
+							/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+								className: "memory-wiki-panel__drawer-head",
+								children: [/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", { children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", { children: "会话上下文" }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "自动检索，或为下一轮指定依据。" })] }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+									type: "button",
+									className: "memory-wiki-panel__icon",
+									onClick: close,
+									"aria-label": "关闭上下文",
+									children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "close" })
+								})]
 							}),
-							/* @__PURE__ */ (0, react_jsx_runtime.jsx)(RemotePanel, {
-								source,
-								sessionId: sessionKey,
-								view,
-								writeRevision,
-								onView: applyView,
-								pendingPage
-							}, sessionKey)
-						] })
-					]
-				})
-			]
+							!boundSession(sessionKey) ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+								className: "memory-wiki-panel__context-note",
+								"data-testid": "mw-unbound",
+								children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h4", { children: "打开一个会话后即可选择依据" }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: "你可以继续浏览整库图谱和知识正文。" })]
+							}) : view === null ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+								className: "memory-wiki-panel__context-note",
+								role: viewError === null ? "status" : "alert",
+								children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", { children: viewError ?? "正在读取会话状态…" }), /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+									type: "button",
+									onClick: () => setViewNonce((n) => n + 1),
+									children: "重新读取"
+								})]
+							}) : /* @__PURE__ */ (0, react_jsx_runtime.jsxs)(react_jsx_runtime.Fragment, { children: [
+								/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+									className: "memory-wiki-panel__context-meta",
+									children: [
+										/* @__PURE__ */ (0, react_jsx_runtime.jsx)("span", {
+											"data-testid": "mw-mode",
+											children: source.mode
+										}),
+										/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
+											"data-testid": "mw-session",
+											children: ["会话 ", sessionKey]
+										}),
+										/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
+											"data-testid": "mw-rev",
+											children: ["视图 rev ", view.revision]
+										}),
+										/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
+											"data-testid": "mw-last-read",
+											children: ["上次读取 ", lastReadAt === null ? "尚未读取" : new Date(lastReadAt).toLocaleTimeString("zh-CN", { hour12: false })]
+										})
+									]
+								}),
+								viewError !== null && /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+									role: "alert",
+									"data-testid": "mw-error",
+									children: viewError
+								}),
+								/* @__PURE__ */ (0, react_jsx_runtime.jsx)(RemotePanel, {
+									source,
+									sessionId: sessionKey,
+									view,
+									writeRevision,
+									onView: applyView,
+									pendingPage
+								}, sessionKey)
+							] })
+						]
+					})
+				]
+			}), historyOpen && /* @__PURE__ */ (0, react_jsx_runtime.jsx)(CaptureHistory, {
+				source,
+				sessionId: sessionKey,
+				initialJobId: historyJob,
+				onBack: () => setHistoryOpen(false),
+				onOpen: (id, hash) => {
+					setPublishedPage({
+						id,
+						hash
+					});
+					setGraphNonce((value) => value + 1);
+					setHistoryOpen(false);
+					openPage(id);
+				}
+			}, sessionKey ?? "unbound")]
 		})]
 	});
 }
@@ -12868,6 +13555,18 @@ function unregisteredFixtureSource(reason) {
 	};
 	return {
 		mode: "fixture",
+		async captureStatus() {
+			return fail();
+		},
+		async captureHistory() {
+			return fail();
+		},
+		async captureRecord() {
+			return fail();
+		},
+		async captureJudgment() {
+			return fail();
+		},
 		async getGraph() {
 			return fail();
 		},
@@ -12887,7 +13586,7 @@ function createSource(mode = SOURCE_MODE, remote) {
 	return unregisteredFixtureSource("no fixture source registered; production bundles none");
 }
 //#endregion
-//#region ../../node_modules/.pnpm/@deepseek-ai+dsh-typert-protocol@0.2.1-rc.3_@deepseek-ai+cordis@4.0.5/node_modules/@deepseek-ai/dsh-typert-protocol/lib/types/remote-info.js
+//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/@deepseek-ai+dsh-typert-protocol@0.2.1-rc.3_@deepseek-ai+cordis@4.0.5/node_modules/@deepseek-ai/dsh-typert-protocol/lib/types/remote-info.js
 /** Lazy assembly of generated Remote definitions using caller-supplied Zod; no runtime imports. */
 /**
 * Retain one generated definition per endpoint without constructing parsers or projections.
@@ -13044,6 +13743,608 @@ var ResultValue = class {
 };
 //#endregion
 //#region lib/typert.remote-client.js
+let dsh_memory_wiki_memoryWiki_captureHistory_parameter_0$schema$value;
+const dsh_memory_wiki_memoryWiki_captureHistory_parameter_0$schema = () => dsh_memory_wiki_memoryWiki_captureHistory_parameter_0$schema$value ??= zod.z.object({
+	"sessionId": zod.z.string(),
+	"cursor": zod.z.union([zod.z.undefined(), zod.z.string()]).optional(),
+	"limit": zod.z.union([zod.z.undefined(), zod.z.number()]).optional(),
+	"status": zod.z.union([
+		zod.z.undefined(),
+		zod.z.literal("ingested"),
+		zod.z.literal("skipped"),
+		zod.z.literal("deferred"),
+		zod.z.literal("processing"),
+		zod.z.literal("error")
+	]).optional()
+});
+let dsh_memory_wiki_memoryWiki_captureHistory_result$schema$value;
+const dsh_memory_wiki_memoryWiki_captureHistory_result$schema = () => dsh_memory_wiki_memoryWiki_captureHistory_result$schema$value ??= zod.z.object({
+	"items": zod.z.array(zod.z.object({
+		"jobId": zod.z.string(),
+		"phase": zod.z.union([
+			zod.z.literal("queued"),
+			zod.z.literal("judging"),
+			zod.z.literal("preparing"),
+			zod.z.literal("verifying"),
+			zod.z.literal("publishing"),
+			zod.z.literal("ingested"),
+			zod.z.literal("skipped"),
+			zod.z.literal("deferred"),
+			zod.z.literal("failed"),
+			zod.z.literal("needs_attention")
+		]),
+		"reason": zod.z.string(),
+		"pages": zod.z.array(zod.z.string()),
+		"updatedAt": zod.z.string(),
+		"registeredAt": zod.z.union([zod.z.undefined(), zod.z.string()]).optional(),
+		"historyCoverage": zod.z.union([zod.z.literal("complete"), zod.z.literal("legacy_snapshot")]),
+		"origin": zod.z.object({
+			"sessionId": zod.z.string(),
+			"turn": zod.z.number(),
+			"turnStartSeq": zod.z.number(),
+			"turnEndSeq": zod.z.number()
+		}),
+		"task": zod.z.string(),
+		"taskTruncated": zod.z.boolean(),
+		"evidenceHash": zod.z.string(),
+		"rubricVersion": zod.z.string(),
+		"rulesHash": zod.z.union([zod.z.undefined(), zod.z.string()]).optional(),
+		"patchHash": zod.z.union([zod.z.undefined(), zod.z.string()]).optional(),
+		"lastEventSeq": zod.z.number(),
+		"publicationUncertain": zod.z.union([
+			zod.z.undefined(),
+			zod.z.literal(false),
+			zod.z.literal(true)
+		]).optional(),
+		"retryable": zod.z.union([
+			zod.z.undefined(),
+			zod.z.literal(false),
+			zod.z.literal(true)
+		]).optional(),
+		"judgments": zod.z.array(zod.z.object({
+			"id": zod.z.string(),
+			"stage": zod.z.union([zod.z.literal("assessment"), zod.z.literal("verification")]),
+			"attempt": zod.z.number(),
+			"model": zod.z.string(),
+			"state": zod.z.union([
+				zod.z.literal("failed"),
+				zod.z.literal("started"),
+				zod.z.literal("completed"),
+				zod.z.literal("interrupted")
+			]),
+			"startedAt": zod.z.string(),
+			"finishedAt": zod.z.union([zod.z.undefined(), zod.z.string()]).optional(),
+			"durationMs": zod.z.union([zod.z.undefined(), zod.z.number()]).optional(),
+			"disposition": zod.z.union([
+				zod.z.undefined(),
+				zod.z.literal("skipped"),
+				zod.z.literal("deferred"),
+				zod.z.literal("prepare"),
+				zod.z.literal("publish")
+			]).optional(),
+			"reason": zod.z.union([zod.z.undefined(), zod.z.string()]).optional()
+		}))
+	})),
+	"nextCursor": zod.z.union([zod.z.undefined(), zod.z.string()]).optional(),
+	"readCompleteness": zod.z.union([zod.z.literal("complete"), zod.z.literal("partial")]),
+	"error": zod.z.union([
+		zod.z.undefined(),
+		zod.z.object({
+			"code": zod.z.literal("unknown-session"),
+			"sessionId": zod.z.string()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("stale-revision"),
+			"expected": zod.z.number(),
+			"actual": zod.z.number()
+		}),
+		zod.z.object({ "code": zod.z.literal("nothing-selected") }),
+		zod.z.object({
+			"code": zod.z.literal("unknown-page"),
+			"pageId": zod.z.string()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("library-changed"),
+			"expected": zod.z.string(),
+			"actual": zod.z.string()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("page-version-mismatch"),
+			"pageId": zod.z.string(),
+			"expected": zod.z.string(),
+			"actual": zod.z.string()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("manual-over-budget"),
+			"overBy": zod.z.number(),
+			"budgetChars": zod.z.number(),
+			"selectedChars": zod.z.number()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("no-usable-block"),
+			"pageIds": zod.z.array(zod.z.string())
+		}),
+		zod.z.object({
+			"code": zod.z.literal("wiki-unavailable"),
+			"reason": zod.z.union([zod.z.literal("not-configured"), zod.z.literal("read-failed")])
+		}),
+		zod.z.object({ "code": zod.z.literal("capture-unavailable") }),
+		zod.z.object({ "code": zod.z.literal("capture-record-unavailable") }),
+		zod.z.object({
+			"code": zod.z.literal("capture-invalid-query"),
+			"field": zod.z.union([
+				zod.z.literal("limit"),
+				zod.z.literal("cursor"),
+				zod.z.literal("status"),
+				zod.z.literal("event-seq")
+			])
+		})
+	]).optional()
+});
+let dsh_memory_wiki_memoryWiki_captureJudgment_parameter_0$schema$value;
+const dsh_memory_wiki_memoryWiki_captureJudgment_parameter_0$schema = () => dsh_memory_wiki_memoryWiki_captureJudgment_parameter_0$schema$value ??= zod.z.object({
+	"sessionId": zod.z.string(),
+	"jobId": zod.z.string(),
+	"judgmentId": zod.z.string()
+});
+let dsh_memory_wiki_memoryWiki_captureJudgment_result$schema$value;
+const dsh_memory_wiki_memoryWiki_captureJudgment_result$schema = () => dsh_memory_wiki_memoryWiki_captureJudgment_result$schema$value ??= zod.z.object({
+	"judgment": zod.z.union([zod.z.undefined(), zod.z.object({
+		"id": zod.z.string(),
+		"stage": zod.z.union([zod.z.literal("assessment"), zod.z.literal("verification")]),
+		"attempt": zod.z.number(),
+		"model": zod.z.string(),
+		"rubricVersion": zod.z.string(),
+		"requestHash": zod.z.string(),
+		"evidenceHash": zod.z.string(),
+		"patchHash": zod.z.union([zod.z.undefined(), zod.z.string()]).optional(),
+		"questions": zod.z.array(zod.z.object({
+			"id": zod.z.string(),
+			"type": zod.z.union([zod.z.literal("choice"), zod.z.literal("noul")]),
+			"text": zod.z.string(),
+			"options": zod.z.union([zod.z.undefined(), zod.z.array(zod.z.object({
+				"value": zod.z.string(),
+				"description": zod.z.string()
+			}))]).optional()
+		})),
+		"result": zod.z.union([
+			zod.z.undefined(),
+			zod.z.object({
+				"kind": zod.z.literal("decision"),
+				"answers": zod.z.array(zod.z.union([zod.z.object({
+					"id": zod.z.string(),
+					"type": zod.z.literal("choice"),
+					"choice": zod.z.string(),
+					"confidence": zod.z.number(),
+					"probabilities": zod.z.array(zod.z.object({
+						"option": zod.z.string(),
+						"probability": zod.z.number()
+					}))
+				}), zod.z.object({
+					"id": zod.z.string(),
+					"type": zod.z.literal("noul"),
+					"value": zod.z.number()
+				})])),
+				"gateResults": zod.z.array(zod.z.object({
+					"id": zod.z.string(),
+					"questionId": zod.z.union([zod.z.undefined(), zod.z.string()]).optional(),
+					"description": zod.z.string(),
+					"operator": zod.z.union([zod.z.literal("gte"), zod.z.literal("eq")]),
+					"actual": zod.z.union([
+						zod.z.string(),
+						zod.z.number(),
+						zod.z.literal(false),
+						zod.z.literal(true)
+					]),
+					"expected": zod.z.union([
+						zod.z.string(),
+						zod.z.number(),
+						zod.z.literal(false),
+						zod.z.literal(true)
+					]),
+					"passed": zod.z.boolean()
+				})),
+				"disposition": zod.z.union([
+					zod.z.literal("skipped"),
+					zod.z.literal("deferred"),
+					zod.z.literal("prepare"),
+					zod.z.literal("publish")
+				]),
+				"reasonCode": zod.z.string(),
+				"reason": zod.z.string(),
+				"usage": zod.z.union([zod.z.undefined(), zod.z.object({
+					"inputTokens": zod.z.union([zod.z.literal(null), zod.z.number()]),
+					"outputTokens": zod.z.union([zod.z.literal(null), zod.z.number()])
+				})]).optional(),
+				"requestId": zod.z.union([zod.z.undefined(), zod.z.string()]).optional()
+			}),
+			zod.z.object({
+				"kind": zod.z.literal("error"),
+				"error": zod.z.object({
+					"category": zod.z.string(),
+					"message": zod.z.string(),
+					"httpStatus": zod.z.union([zod.z.undefined(), zod.z.number()]).optional()
+				})
+			})
+		]).optional()
+	})]).optional(),
+	"lifecycle": zod.z.union([zod.z.undefined(), zod.z.object({
+		"id": zod.z.string(),
+		"stage": zod.z.union([zod.z.literal("assessment"), zod.z.literal("verification")]),
+		"attempt": zod.z.number(),
+		"model": zod.z.string(),
+		"state": zod.z.union([
+			zod.z.literal("failed"),
+			zod.z.literal("started"),
+			zod.z.literal("completed"),
+			zod.z.literal("interrupted")
+		]),
+		"startedAt": zod.z.string(),
+		"finishedAt": zod.z.union([zod.z.undefined(), zod.z.string()]).optional(),
+		"durationMs": zod.z.union([zod.z.undefined(), zod.z.number()]).optional(),
+		"disposition": zod.z.union([
+			zod.z.undefined(),
+			zod.z.literal("skipped"),
+			zod.z.literal("deferred"),
+			zod.z.literal("prepare"),
+			zod.z.literal("publish")
+		]).optional(),
+		"reason": zod.z.union([zod.z.undefined(), zod.z.string()]).optional()
+	})]).optional(),
+	"error": zod.z.union([
+		zod.z.undefined(),
+		zod.z.object({
+			"code": zod.z.literal("unknown-session"),
+			"sessionId": zod.z.string()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("stale-revision"),
+			"expected": zod.z.number(),
+			"actual": zod.z.number()
+		}),
+		zod.z.object({ "code": zod.z.literal("nothing-selected") }),
+		zod.z.object({
+			"code": zod.z.literal("unknown-page"),
+			"pageId": zod.z.string()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("library-changed"),
+			"expected": zod.z.string(),
+			"actual": zod.z.string()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("page-version-mismatch"),
+			"pageId": zod.z.string(),
+			"expected": zod.z.string(),
+			"actual": zod.z.string()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("manual-over-budget"),
+			"overBy": zod.z.number(),
+			"budgetChars": zod.z.number(),
+			"selectedChars": zod.z.number()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("no-usable-block"),
+			"pageIds": zod.z.array(zod.z.string())
+		}),
+		zod.z.object({
+			"code": zod.z.literal("wiki-unavailable"),
+			"reason": zod.z.union([zod.z.literal("not-configured"), zod.z.literal("read-failed")])
+		}),
+		zod.z.object({ "code": zod.z.literal("capture-unavailable") }),
+		zod.z.object({ "code": zod.z.literal("capture-record-unavailable") }),
+		zod.z.object({
+			"code": zod.z.literal("capture-invalid-query"),
+			"field": zod.z.union([
+				zod.z.literal("limit"),
+				zod.z.literal("cursor"),
+				zod.z.literal("status"),
+				zod.z.literal("event-seq")
+			])
+		})
+	]).optional()
+});
+let dsh_memory_wiki_memoryWiki_captureRecord_parameter_0$schema$value;
+const dsh_memory_wiki_memoryWiki_captureRecord_parameter_0$schema = () => dsh_memory_wiki_memoryWiki_captureRecord_parameter_0$schema$value ??= zod.z.object({
+	"sessionId": zod.z.string(),
+	"jobId": zod.z.string(),
+	"afterEventSeq": zod.z.union([zod.z.undefined(), zod.z.number()]).optional(),
+	"limit": zod.z.union([zod.z.undefined(), zod.z.number()]).optional()
+});
+let dsh_memory_wiki_memoryWiki_captureRecord_result$schema$value;
+const dsh_memory_wiki_memoryWiki_captureRecord_result$schema = () => dsh_memory_wiki_memoryWiki_captureRecord_result$schema$value ??= zod.z.object({
+	"summary": zod.z.union([zod.z.undefined(), zod.z.object({
+		"jobId": zod.z.string(),
+		"phase": zod.z.union([
+			zod.z.literal("queued"),
+			zod.z.literal("judging"),
+			zod.z.literal("preparing"),
+			zod.z.literal("verifying"),
+			zod.z.literal("publishing"),
+			zod.z.literal("ingested"),
+			zod.z.literal("skipped"),
+			zod.z.literal("deferred"),
+			zod.z.literal("failed"),
+			zod.z.literal("needs_attention")
+		]),
+		"reason": zod.z.string(),
+		"pages": zod.z.array(zod.z.string()),
+		"updatedAt": zod.z.string(),
+		"registeredAt": zod.z.union([zod.z.undefined(), zod.z.string()]).optional(),
+		"historyCoverage": zod.z.union([zod.z.literal("complete"), zod.z.literal("legacy_snapshot")]),
+		"origin": zod.z.object({
+			"sessionId": zod.z.string(),
+			"turn": zod.z.number(),
+			"turnStartSeq": zod.z.number(),
+			"turnEndSeq": zod.z.number()
+		}),
+		"task": zod.z.string(),
+		"taskTruncated": zod.z.boolean(),
+		"evidenceHash": zod.z.string(),
+		"rubricVersion": zod.z.string(),
+		"rulesHash": zod.z.union([zod.z.undefined(), zod.z.string()]).optional(),
+		"patchHash": zod.z.union([zod.z.undefined(), zod.z.string()]).optional(),
+		"lastEventSeq": zod.z.number(),
+		"publicationUncertain": zod.z.union([
+			zod.z.undefined(),
+			zod.z.literal(false),
+			zod.z.literal(true)
+		]).optional(),
+		"retryable": zod.z.union([
+			zod.z.undefined(),
+			zod.z.literal(false),
+			zod.z.literal(true)
+		]).optional(),
+		"judgments": zod.z.array(zod.z.object({
+			"id": zod.z.string(),
+			"stage": zod.z.union([zod.z.literal("assessment"), zod.z.literal("verification")]),
+			"attempt": zod.z.number(),
+			"model": zod.z.string(),
+			"state": zod.z.union([
+				zod.z.literal("failed"),
+				zod.z.literal("started"),
+				zod.z.literal("completed"),
+				zod.z.literal("interrupted")
+			]),
+			"startedAt": zod.z.string(),
+			"finishedAt": zod.z.union([zod.z.undefined(), zod.z.string()]).optional(),
+			"durationMs": zod.z.union([zod.z.undefined(), zod.z.number()]).optional(),
+			"disposition": zod.z.union([
+				zod.z.undefined(),
+				zod.z.literal("skipped"),
+				zod.z.literal("deferred"),
+				zod.z.literal("prepare"),
+				zod.z.literal("publish")
+			]).optional(),
+			"reason": zod.z.union([zod.z.undefined(), zod.z.string()]).optional()
+		}))
+	})]).optional(),
+	"events": zod.z.array(zod.z.object({
+		"seq": zod.z.number(),
+		"at": zod.z.string(),
+		"kind": zod.z.union([
+			zod.z.literal("legacy_snapshot"),
+			zod.z.literal("registered"),
+			zod.z.literal("phase_changed"),
+			zod.z.literal("judgment_started"),
+			zod.z.literal("judgment_finished"),
+			zod.z.literal("judgment_failed"),
+			zod.z.literal("judgment_interrupted"),
+			zod.z.literal("recovery_started"),
+			zod.z.literal("publication_finished"),
+			zod.z.literal("publication_interrupted"),
+			zod.z.literal("operation_failed")
+		]),
+		"phase": zod.z.union([
+			zod.z.undefined(),
+			zod.z.literal("queued"),
+			zod.z.literal("judging"),
+			zod.z.literal("preparing"),
+			zod.z.literal("verifying"),
+			zod.z.literal("publishing"),
+			zod.z.literal("ingested"),
+			zod.z.literal("skipped"),
+			zod.z.literal("deferred"),
+			zod.z.literal("failed"),
+			zod.z.literal("needs_attention")
+		]).optional(),
+		"reason": zod.z.union([zod.z.undefined(), zod.z.string()]).optional(),
+		"judgmentId": zod.z.union([zod.z.undefined(), zod.z.string()]).optional(),
+		"stage": zod.z.union([
+			zod.z.undefined(),
+			zod.z.literal("queued"),
+			zod.z.literal("judging"),
+			zod.z.literal("preparing"),
+			zod.z.literal("verifying"),
+			zod.z.literal("publishing"),
+			zod.z.literal("ingested"),
+			zod.z.literal("skipped"),
+			zod.z.literal("deferred"),
+			zod.z.literal("failed"),
+			zod.z.literal("needs_attention")
+		]).optional(),
+		"error": zod.z.union([zod.z.undefined(), zod.z.object({
+			"category": zod.z.string(),
+			"message": zod.z.string()
+		})]).optional(),
+		"durationMs": zod.z.union([zod.z.undefined(), zod.z.number()]).optional()
+	})),
+	"judgments": zod.z.array(zod.z.object({
+		"id": zod.z.string(),
+		"stage": zod.z.union([zod.z.literal("assessment"), zod.z.literal("verification")]),
+		"attempt": zod.z.number(),
+		"model": zod.z.string(),
+		"state": zod.z.union([
+			zod.z.literal("failed"),
+			zod.z.literal("started"),
+			zod.z.literal("completed"),
+			zod.z.literal("interrupted")
+		]),
+		"startedAt": zod.z.string(),
+		"finishedAt": zod.z.union([zod.z.undefined(), zod.z.string()]).optional(),
+		"durationMs": zod.z.union([zod.z.undefined(), zod.z.number()]).optional(),
+		"disposition": zod.z.union([
+			zod.z.undefined(),
+			zod.z.literal("skipped"),
+			zod.z.literal("deferred"),
+			zod.z.literal("prepare"),
+			zod.z.literal("publish")
+		]).optional(),
+		"reason": zod.z.union([zod.z.undefined(), zod.z.string()]).optional()
+	})),
+	"nextEventSeq": zod.z.union([zod.z.undefined(), zod.z.number()]).optional(),
+	"evidence": zod.z.array(zod.z.object({
+		"seq": zod.z.number(),
+		"kind": zod.z.string(),
+		"text": zod.z.string(),
+		"truncated": zod.z.boolean()
+	})),
+	"evidenceTruncated": zod.z.boolean(),
+	"limitations": zod.z.array(zod.z.string()),
+	"changes": zod.z.array(zod.z.object({
+		"path": zod.z.string(),
+		"beforeHash": zod.z.union([zod.z.undefined(), zod.z.string()]).optional(),
+		"afterHash": zod.z.string()
+	})),
+	"error": zod.z.union([
+		zod.z.undefined(),
+		zod.z.object({
+			"code": zod.z.literal("unknown-session"),
+			"sessionId": zod.z.string()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("stale-revision"),
+			"expected": zod.z.number(),
+			"actual": zod.z.number()
+		}),
+		zod.z.object({ "code": zod.z.literal("nothing-selected") }),
+		zod.z.object({
+			"code": zod.z.literal("unknown-page"),
+			"pageId": zod.z.string()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("library-changed"),
+			"expected": zod.z.string(),
+			"actual": zod.z.string()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("page-version-mismatch"),
+			"pageId": zod.z.string(),
+			"expected": zod.z.string(),
+			"actual": zod.z.string()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("manual-over-budget"),
+			"overBy": zod.z.number(),
+			"budgetChars": zod.z.number(),
+			"selectedChars": zod.z.number()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("no-usable-block"),
+			"pageIds": zod.z.array(zod.z.string())
+		}),
+		zod.z.object({
+			"code": zod.z.literal("wiki-unavailable"),
+			"reason": zod.z.union([zod.z.literal("not-configured"), zod.z.literal("read-failed")])
+		}),
+		zod.z.object({ "code": zod.z.literal("capture-unavailable") }),
+		zod.z.object({ "code": zod.z.literal("capture-record-unavailable") }),
+		zod.z.object({
+			"code": zod.z.literal("capture-invalid-query"),
+			"field": zod.z.union([
+				zod.z.literal("limit"),
+				zod.z.literal("cursor"),
+				zod.z.literal("status"),
+				zod.z.literal("event-seq")
+			])
+		})
+	]).optional()
+});
+let dsh_memory_wiki_memoryWiki_captureStatus_parameter_0$schema$value;
+const dsh_memory_wiki_memoryWiki_captureStatus_parameter_0$schema = () => dsh_memory_wiki_memoryWiki_captureStatus_parameter_0$schema$value ??= zod.z.object({ "sessionId": zod.z.union([zod.z.undefined(), zod.z.string()]).optional() });
+let dsh_memory_wiki_memoryWiki_captureStatus_result$schema$value;
+const dsh_memory_wiki_memoryWiki_captureStatus_result$schema = () => dsh_memory_wiki_memoryWiki_captureStatus_result$schema$value ??= zod.z.object({
+	"collector": zod.z.union([
+		zod.z.literal("disabled"),
+		zod.z.literal("starting"),
+		zod.z.literal("ready"),
+		zod.z.literal("blocked")
+	]),
+	"history": zod.z.union([
+		zod.z.literal("readable"),
+		zod.z.literal("degraded"),
+		zod.z.literal("unavailable")
+	]),
+	"reasonCode": zod.z.string(),
+	"reason": zod.z.string(),
+	"lastIssue": zod.z.union([zod.z.undefined(), zod.z.object({
+		"at": zod.z.string(),
+		"stage": zod.z.union([
+			zod.z.literal("collecting"),
+			zod.z.literal("worker_lock"),
+			zod.z.literal("journal_write")
+		]),
+		"code": zod.z.string(),
+		"message": zod.z.string(),
+		"persisted": zod.z.boolean(),
+		"turnEndSeq": zod.z.union([zod.z.undefined(), zod.z.number()]).optional(),
+		"jobId": zod.z.union([zod.z.undefined(), zod.z.string()]).optional()
+	})]).optional(),
+	"error": zod.z.union([
+		zod.z.undefined(),
+		zod.z.object({
+			"code": zod.z.literal("unknown-session"),
+			"sessionId": zod.z.string()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("stale-revision"),
+			"expected": zod.z.number(),
+			"actual": zod.z.number()
+		}),
+		zod.z.object({ "code": zod.z.literal("nothing-selected") }),
+		zod.z.object({
+			"code": zod.z.literal("unknown-page"),
+			"pageId": zod.z.string()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("library-changed"),
+			"expected": zod.z.string(),
+			"actual": zod.z.string()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("page-version-mismatch"),
+			"pageId": zod.z.string(),
+			"expected": zod.z.string(),
+			"actual": zod.z.string()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("manual-over-budget"),
+			"overBy": zod.z.number(),
+			"budgetChars": zod.z.number(),
+			"selectedChars": zod.z.number()
+		}),
+		zod.z.object({
+			"code": zod.z.literal("no-usable-block"),
+			"pageIds": zod.z.array(zod.z.string())
+		}),
+		zod.z.object({
+			"code": zod.z.literal("wiki-unavailable"),
+			"reason": zod.z.union([zod.z.literal("not-configured"), zod.z.literal("read-failed")])
+		}),
+		zod.z.object({ "code": zod.z.literal("capture-unavailable") }),
+		zod.z.object({ "code": zod.z.literal("capture-record-unavailable") }),
+		zod.z.object({
+			"code": zod.z.literal("capture-invalid-query"),
+			"field": zod.z.union([
+				zod.z.literal("limit"),
+				zod.z.literal("cursor"),
+				zod.z.literal("status"),
+				zod.z.literal("event-seq")
+			])
+		})
+	]).optional()
+});
 let dsh_memory_wiki_memoryWiki_clearOverride_parameter_0$schema$value;
 const dsh_memory_wiki_memoryWiki_clearOverride_parameter_0$schema = () => dsh_memory_wiki_memoryWiki_clearOverride_parameter_0$schema$value ??= zod.z.object({
 	"sessionId": zod.z.string(),
@@ -13097,6 +14398,17 @@ const dsh_memory_wiki_memoryWiki_clearOverride_result$schema = () => dsh_memory_
 		zod.z.object({
 			"code": zod.z.literal("wiki-unavailable"),
 			"reason": zod.z.union([zod.z.literal("not-configured"), zod.z.literal("read-failed")])
+		}),
+		zod.z.object({ "code": zod.z.literal("capture-unavailable") }),
+		zod.z.object({ "code": zod.z.literal("capture-record-unavailable") }),
+		zod.z.object({
+			"code": zod.z.literal("capture-invalid-query"),
+			"field": zod.z.union([
+				zod.z.literal("limit"),
+				zod.z.literal("cursor"),
+				zod.z.literal("status"),
+				zod.z.literal("event-seq")
+			])
 		})
 	]).optional()
 });
@@ -13165,6 +14477,17 @@ const dsh_memory_wiki_memoryWiki_graph_result$schema = () => dsh_memory_wiki_mem
 		zod.z.object({
 			"code": zod.z.literal("wiki-unavailable"),
 			"reason": zod.z.union([zod.z.literal("not-configured"), zod.z.literal("read-failed")])
+		}),
+		zod.z.object({ "code": zod.z.literal("capture-unavailable") }),
+		zod.z.object({ "code": zod.z.literal("capture-record-unavailable") }),
+		zod.z.object({
+			"code": zod.z.literal("capture-invalid-query"),
+			"field": zod.z.union([
+				zod.z.literal("limit"),
+				zod.z.literal("cursor"),
+				zod.z.literal("status"),
+				zod.z.literal("event-seq")
+			])
 		})
 	]).optional()
 });
@@ -13272,6 +14595,17 @@ const dsh_memory_wiki_memoryWiki_prepareOverride_result$schema = () => dsh_memor
 		zod.z.object({
 			"code": zod.z.literal("wiki-unavailable"),
 			"reason": zod.z.union([zod.z.literal("not-configured"), zod.z.literal("read-failed")])
+		}),
+		zod.z.object({ "code": zod.z.literal("capture-unavailable") }),
+		zod.z.object({ "code": zod.z.literal("capture-record-unavailable") }),
+		zod.z.object({
+			"code": zod.z.literal("capture-invalid-query"),
+			"field": zod.z.union([
+				zod.z.literal("limit"),
+				zod.z.literal("cursor"),
+				zod.z.literal("status"),
+				zod.z.literal("event-seq")
+			])
 		})
 	]).optional()
 });
@@ -13343,6 +14677,17 @@ const dsh_memory_wiki_memoryWiki_readPage_result$schema = () => dsh_memory_wiki_
 		zod.z.object({
 			"code": zod.z.literal("wiki-unavailable"),
 			"reason": zod.z.union([zod.z.literal("not-configured"), zod.z.literal("read-failed")])
+		}),
+		zod.z.object({ "code": zod.z.literal("capture-unavailable") }),
+		zod.z.object({ "code": zod.z.literal("capture-record-unavailable") }),
+		zod.z.object({
+			"code": zod.z.literal("capture-invalid-query"),
+			"field": zod.z.union([
+				zod.z.literal("limit"),
+				zod.z.literal("cursor"),
+				zod.z.literal("status"),
+				zod.z.literal("event-seq")
+			])
 		})
 	]).optional()
 });
@@ -13433,6 +14778,17 @@ const dsh_memory_wiki_memoryWiki_reviseDraft_result$schema = () => dsh_memory_wi
 		zod.z.object({
 			"code": zod.z.literal("wiki-unavailable"),
 			"reason": zod.z.union([zod.z.literal("not-configured"), zod.z.literal("read-failed")])
+		}),
+		zod.z.object({ "code": zod.z.literal("capture-unavailable") }),
+		zod.z.object({ "code": zod.z.literal("capture-record-unavailable") }),
+		zod.z.object({
+			"code": zod.z.literal("capture-invalid-query"),
+			"field": zod.z.union([
+				zod.z.literal("limit"),
+				zod.z.literal("cursor"),
+				zod.z.literal("status"),
+				zod.z.literal("event-seq")
+			])
 		})
 	]).optional()
 });
@@ -13515,6 +14871,17 @@ const dsh_memory_wiki_memoryWiki_search_result$schema = () => dsh_memory_wiki_me
 		zod.z.object({
 			"code": zod.z.literal("wiki-unavailable"),
 			"reason": zod.z.union([zod.z.literal("not-configured"), zod.z.literal("read-failed")])
+		}),
+		zod.z.object({ "code": zod.z.literal("capture-unavailable") }),
+		zod.z.object({ "code": zod.z.literal("capture-record-unavailable") }),
+		zod.z.object({
+			"code": zod.z.literal("capture-invalid-query"),
+			"field": zod.z.union([
+				zod.z.literal("limit"),
+				zod.z.literal("cursor"),
+				zod.z.literal("status"),
+				zod.z.literal("event-seq")
+			])
 		})
 	]).optional()
 });
@@ -13695,9 +15062,49 @@ const dsh_memory_wiki_memoryWiki_view_result$schema = () => dsh_memory_wiki_memo
 		zod.z.object({
 			"code": zod.z.literal("wiki-unavailable"),
 			"reason": zod.z.union([zod.z.literal("not-configured"), zod.z.literal("read-failed")])
+		}),
+		zod.z.object({ "code": zod.z.literal("capture-unavailable") }),
+		zod.z.object({ "code": zod.z.literal("capture-record-unavailable") }),
+		zod.z.object({
+			"code": zod.z.literal("capture-invalid-query"),
+			"field": zod.z.union([
+				zod.z.literal("limit"),
+				zod.z.literal("cursor"),
+				zod.z.literal("status"),
+				zod.z.literal("event-seq")
+			])
 		})
 	]).optional()
 });
+let dsh_memory_wiki_memoryWiki_captureHistory_parameter_0_strict$schema$value;
+const dsh_memory_wiki_memoryWiki_captureHistory_parameter_0_strict$schema = () => dsh_memory_wiki_memoryWiki_captureHistory_parameter_0_strict$schema$value ??= zod.z.strictObject({
+	"sessionId": zod.z.string(),
+	"cursor": zod.z.union([zod.z.undefined(), zod.z.string()]).optional(),
+	"limit": zod.z.union([zod.z.undefined(), zod.z.number()]).optional(),
+	"status": zod.z.union([
+		zod.z.undefined(),
+		zod.z.literal("ingested"),
+		zod.z.literal("skipped"),
+		zod.z.literal("deferred"),
+		zod.z.literal("processing"),
+		zod.z.literal("error")
+	]).optional()
+});
+let dsh_memory_wiki_memoryWiki_captureJudgment_parameter_0_strict$schema$value;
+const dsh_memory_wiki_memoryWiki_captureJudgment_parameter_0_strict$schema = () => dsh_memory_wiki_memoryWiki_captureJudgment_parameter_0_strict$schema$value ??= zod.z.strictObject({
+	"sessionId": zod.z.string(),
+	"jobId": zod.z.string(),
+	"judgmentId": zod.z.string()
+});
+let dsh_memory_wiki_memoryWiki_captureRecord_parameter_0_strict$schema$value;
+const dsh_memory_wiki_memoryWiki_captureRecord_parameter_0_strict$schema = () => dsh_memory_wiki_memoryWiki_captureRecord_parameter_0_strict$schema$value ??= zod.z.strictObject({
+	"sessionId": zod.z.string(),
+	"jobId": zod.z.string(),
+	"afterEventSeq": zod.z.union([zod.z.undefined(), zod.z.number()]).optional(),
+	"limit": zod.z.union([zod.z.undefined(), zod.z.number()]).optional()
+});
+let dsh_memory_wiki_memoryWiki_captureStatus_parameter_0_strict$schema$value;
+const dsh_memory_wiki_memoryWiki_captureStatus_parameter_0_strict$schema = () => dsh_memory_wiki_memoryWiki_captureStatus_parameter_0_strict$schema$value ??= zod.z.strictObject({ "sessionId": zod.z.union([zod.z.undefined(), zod.z.string()]).optional() });
 let dsh_memory_wiki_memoryWiki_clearOverride_parameter_0_strict$schema$value;
 const dsh_memory_wiki_memoryWiki_clearOverride_parameter_0_strict$schema = () => dsh_memory_wiki_memoryWiki_clearOverride_parameter_0_strict$schema$value ??= zod.z.strictObject({
 	"sessionId": zod.z.string(),
@@ -13741,6 +15148,1681 @@ const dsh_memory_wiki_memoryWiki_view_parameter_0_strict$schema = () => dsh_memo
 const TYPERT_REMOTE = createTypertRemoteInfo({
 	package: "dsh-memory-wiki",
 	methods: {
+		"memoryWiki/captureHistory": {
+			service: "memoryWiki",
+			invocation: { kind: "direct" },
+			parameters: [{
+				name: "input",
+				source: "json",
+				codec: {
+					mode: "strict",
+					typeSymbol: "dsh-memory-wiki/contracts#CaptureHistoryInput",
+					create: dsh_memory_wiki_memoryWiki_captureHistory_parameter_0$schema,
+					jsonSchema: {
+						"type": "object",
+						"properties": {
+							"sessionId": { "type": "string" },
+							"cursor": { "type": "string" },
+							"limit": { "type": "number" },
+							"status": {
+								"type": "string",
+								"enum": [
+									"ingested",
+									"skipped",
+									"deferred",
+									"processing",
+									"error"
+								]
+							}
+						},
+						"required": ["sessionId"],
+						"additionalProperties": true
+					}
+				},
+				strictCodec: {
+					mode: "strict",
+					typeSymbol: "dsh-memory-wiki/contracts#CaptureHistoryInput",
+					create: dsh_memory_wiki_memoryWiki_captureHistory_parameter_0_strict$schema,
+					jsonSchema: {
+						"type": "object",
+						"properties": {
+							"sessionId": { "type": "string" },
+							"cursor": { "type": "string" },
+							"limit": { "type": "number" },
+							"status": {
+								"type": "string",
+								"enum": [
+									"ingested",
+									"skipped",
+									"deferred",
+									"processing",
+									"error"
+								]
+							}
+						},
+						"required": ["sessionId"],
+						"additionalProperties": false
+					}
+				}
+			}],
+			result: {
+				mode: "strict",
+				typeSymbol: "dsh-memory-wiki/contracts#CaptureHistoryResult",
+				create: dsh_memory_wiki_memoryWiki_captureHistory_result$schema,
+				jsonSchema: {
+					"type": "object",
+					"properties": {
+						"items": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"jobId": { "type": "string" },
+									"phase": {
+										"type": "string",
+										"enum": [
+											"queued",
+											"judging",
+											"preparing",
+											"verifying",
+											"publishing",
+											"ingested",
+											"skipped",
+											"deferred",
+											"failed",
+											"needs_attention"
+										]
+									},
+									"reason": { "type": "string" },
+									"pages": {
+										"type": "array",
+										"items": { "type": "string" }
+									},
+									"updatedAt": { "type": "string" },
+									"registeredAt": { "type": "string" },
+									"historyCoverage": {
+										"type": "string",
+										"enum": ["complete", "legacy_snapshot"]
+									},
+									"origin": {
+										"type": "object",
+										"properties": {
+											"sessionId": { "type": "string" },
+											"turn": { "type": "number" },
+											"turnStartSeq": { "type": "number" },
+											"turnEndSeq": { "type": "number" }
+										},
+										"required": [
+											"sessionId",
+											"turn",
+											"turnStartSeq",
+											"turnEndSeq"
+										],
+										"additionalProperties": true
+									},
+									"task": { "type": "string" },
+									"taskTruncated": { "type": "boolean" },
+									"evidenceHash": { "type": "string" },
+									"rubricVersion": { "type": "string" },
+									"rulesHash": { "type": "string" },
+									"patchHash": { "type": "string" },
+									"lastEventSeq": { "type": "number" },
+									"publicationUncertain": {
+										"type": "boolean",
+										"enum": [false, true]
+									},
+									"retryable": {
+										"type": "boolean",
+										"enum": [false, true]
+									},
+									"judgments": {
+										"type": "array",
+										"items": {
+											"type": "object",
+											"properties": {
+												"id": { "type": "string" },
+												"stage": {
+													"type": "string",
+													"enum": ["assessment", "verification"]
+												},
+												"attempt": { "type": "number" },
+												"model": { "type": "string" },
+												"state": {
+													"type": "string",
+													"enum": [
+														"failed",
+														"started",
+														"completed",
+														"interrupted"
+													]
+												},
+												"startedAt": { "type": "string" },
+												"finishedAt": { "type": "string" },
+												"durationMs": { "type": "number" },
+												"disposition": {
+													"type": "string",
+													"enum": [
+														"skipped",
+														"deferred",
+														"prepare",
+														"publish"
+													]
+												},
+												"reason": { "type": "string" }
+											},
+											"required": [
+												"id",
+												"stage",
+												"attempt",
+												"model",
+												"state",
+												"startedAt"
+											],
+											"additionalProperties": true
+										}
+									}
+								},
+								"required": [
+									"jobId",
+									"phase",
+									"reason",
+									"pages",
+									"updatedAt",
+									"historyCoverage",
+									"origin",
+									"task",
+									"taskTruncated",
+									"evidenceHash",
+									"rubricVersion",
+									"lastEventSeq",
+									"judgments"
+								],
+								"additionalProperties": true
+							}
+						},
+						"nextCursor": { "type": "string" },
+						"readCompleteness": {
+							"type": "string",
+							"enum": ["complete", "partial"]
+						},
+						"error": { "oneOf": [
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "unknown-session"
+									},
+									"sessionId": { "type": "string" }
+								},
+								"required": ["code", "sessionId"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "stale-revision"
+									},
+									"expected": { "type": "number" },
+									"actual": { "type": "number" }
+								},
+								"required": [
+									"code",
+									"expected",
+									"actual"
+								],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "nothing-selected"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "unknown-page"
+									},
+									"pageId": { "type": "string" }
+								},
+								"required": ["code", "pageId"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "library-changed"
+									},
+									"expected": { "type": "string" },
+									"actual": { "type": "string" }
+								},
+								"required": [
+									"code",
+									"expected",
+									"actual"
+								],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "page-version-mismatch"
+									},
+									"pageId": { "type": "string" },
+									"expected": { "type": "string" },
+									"actual": { "type": "string" }
+								},
+								"required": [
+									"code",
+									"pageId",
+									"expected",
+									"actual"
+								],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "manual-over-budget"
+									},
+									"overBy": { "type": "number" },
+									"budgetChars": { "type": "number" },
+									"selectedChars": { "type": "number" }
+								},
+								"required": [
+									"code",
+									"overBy",
+									"budgetChars",
+									"selectedChars"
+								],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "no-usable-block"
+									},
+									"pageIds": {
+										"type": "array",
+										"items": { "type": "string" }
+									}
+								},
+								"required": ["code", "pageIds"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "wiki-unavailable"
+									},
+									"reason": {
+										"type": "string",
+										"enum": ["not-configured", "read-failed"]
+									}
+								},
+								"required": ["code", "reason"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-record-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "capture-invalid-query"
+									},
+									"field": {
+										"type": "string",
+										"enum": [
+											"limit",
+											"cursor",
+											"status",
+											"event-seq"
+										]
+									}
+								},
+								"required": ["code", "field"],
+								"additionalProperties": true
+							}
+						] }
+					},
+					"required": ["items", "readCompleteness"],
+					"additionalProperties": true
+				}
+			},
+			sourceLocation: {
+				"file": "packages/dsh-memory-wiki/src/server/index.ts",
+				"line": 161,
+				"column": 9
+			}
+		},
+		"memoryWiki/captureJudgment": {
+			service: "memoryWiki",
+			invocation: { kind: "direct" },
+			parameters: [{
+				name: "input",
+				source: "json",
+				codec: {
+					mode: "strict",
+					typeSymbol: "dsh-memory-wiki/contracts#CaptureJudgmentInput",
+					create: dsh_memory_wiki_memoryWiki_captureJudgment_parameter_0$schema,
+					jsonSchema: {
+						"type": "object",
+						"properties": {
+							"sessionId": { "type": "string" },
+							"jobId": { "type": "string" },
+							"judgmentId": { "type": "string" }
+						},
+						"required": [
+							"sessionId",
+							"jobId",
+							"judgmentId"
+						],
+						"additionalProperties": true
+					}
+				},
+				strictCodec: {
+					mode: "strict",
+					typeSymbol: "dsh-memory-wiki/contracts#CaptureJudgmentInput",
+					create: dsh_memory_wiki_memoryWiki_captureJudgment_parameter_0_strict$schema,
+					jsonSchema: {
+						"type": "object",
+						"properties": {
+							"sessionId": { "type": "string" },
+							"jobId": { "type": "string" },
+							"judgmentId": { "type": "string" }
+						},
+						"required": [
+							"sessionId",
+							"jobId",
+							"judgmentId"
+						],
+						"additionalProperties": false
+					}
+				}
+			}],
+			result: {
+				mode: "strict",
+				typeSymbol: "dsh-memory-wiki/contracts#CaptureJudgmentResult",
+				create: dsh_memory_wiki_memoryWiki_captureJudgment_result$schema,
+				jsonSchema: {
+					"type": "object",
+					"properties": {
+						"judgment": {
+							"type": "object",
+							"properties": {
+								"id": { "type": "string" },
+								"stage": {
+									"type": "string",
+									"enum": ["assessment", "verification"]
+								},
+								"attempt": { "type": "number" },
+								"model": { "type": "string" },
+								"rubricVersion": { "type": "string" },
+								"requestHash": { "type": "string" },
+								"evidenceHash": { "type": "string" },
+								"patchHash": { "type": "string" },
+								"questions": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": { "type": "string" },
+											"type": {
+												"type": "string",
+												"enum": ["choice", "noul"]
+											},
+											"text": { "type": "string" },
+											"options": {
+												"type": "array",
+												"items": {
+													"type": "object",
+													"properties": {
+														"value": { "type": "string" },
+														"description": { "type": "string" }
+													},
+													"required": ["value", "description"],
+													"additionalProperties": true
+												}
+											}
+										},
+										"required": [
+											"id",
+											"type",
+											"text"
+										],
+										"additionalProperties": true
+									}
+								},
+								"result": { "oneOf": [{
+									"type": "object",
+									"properties": {
+										"kind": {
+											"type": "string",
+											"const": "decision"
+										},
+										"answers": {
+											"type": "array",
+											"items": { "oneOf": [{
+												"type": "object",
+												"properties": {
+													"id": { "type": "string" },
+													"type": {
+														"type": "string",
+														"const": "choice"
+													},
+													"choice": { "type": "string" },
+													"confidence": { "type": "number" },
+													"probabilities": {
+														"type": "array",
+														"items": {
+															"type": "object",
+															"properties": {
+																"option": { "type": "string" },
+																"probability": { "type": "number" }
+															},
+															"required": ["option", "probability"],
+															"additionalProperties": true
+														}
+													}
+												},
+												"required": [
+													"id",
+													"type",
+													"choice",
+													"confidence",
+													"probabilities"
+												],
+												"additionalProperties": true
+											}, {
+												"type": "object",
+												"properties": {
+													"id": { "type": "string" },
+													"type": {
+														"type": "string",
+														"const": "noul"
+													},
+													"value": { "type": "number" }
+												},
+												"required": [
+													"id",
+													"type",
+													"value"
+												],
+												"additionalProperties": true
+											}] }
+										},
+										"gateResults": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"properties": {
+													"id": { "type": "string" },
+													"questionId": { "type": "string" },
+													"description": { "type": "string" },
+													"operator": {
+														"type": "string",
+														"enum": ["gte", "eq"]
+													},
+													"actual": { "oneOf": [
+														{ "type": "string" },
+														{ "type": "number" },
+														{
+															"type": "boolean",
+															"enum": [false, true]
+														}
+													] },
+													"expected": { "oneOf": [
+														{ "type": "string" },
+														{ "type": "number" },
+														{
+															"type": "boolean",
+															"enum": [false, true]
+														}
+													] },
+													"passed": { "type": "boolean" }
+												},
+												"required": [
+													"id",
+													"description",
+													"operator",
+													"actual",
+													"expected",
+													"passed"
+												],
+												"additionalProperties": true
+											}
+										},
+										"disposition": {
+											"type": "string",
+											"enum": [
+												"skipped",
+												"deferred",
+												"prepare",
+												"publish"
+											]
+										},
+										"reasonCode": { "type": "string" },
+										"reason": { "type": "string" },
+										"usage": {
+											"type": "object",
+											"properties": {
+												"inputTokens": { "oneOf": [{
+													"type": "null",
+													"const": null
+												}, { "type": "number" }] },
+												"outputTokens": { "oneOf": [{
+													"type": "null",
+													"const": null
+												}, { "type": "number" }] }
+											},
+											"required": ["inputTokens", "outputTokens"],
+											"additionalProperties": true
+										},
+										"requestId": { "type": "string" }
+									},
+									"required": [
+										"kind",
+										"answers",
+										"gateResults",
+										"disposition",
+										"reasonCode",
+										"reason"
+									],
+									"additionalProperties": true
+								}, {
+									"type": "object",
+									"properties": {
+										"kind": {
+											"type": "string",
+											"const": "error"
+										},
+										"error": {
+											"type": "object",
+											"properties": {
+												"category": { "type": "string" },
+												"message": { "type": "string" },
+												"httpStatus": { "type": "number" }
+											},
+											"required": ["category", "message"],
+											"additionalProperties": true
+										}
+									},
+									"required": ["kind", "error"],
+									"additionalProperties": true
+								}] }
+							},
+							"required": [
+								"id",
+								"stage",
+								"attempt",
+								"model",
+								"rubricVersion",
+								"requestHash",
+								"evidenceHash",
+								"questions"
+							],
+							"additionalProperties": true
+						},
+						"lifecycle": {
+							"type": "object",
+							"properties": {
+								"id": { "type": "string" },
+								"stage": {
+									"type": "string",
+									"enum": ["assessment", "verification"]
+								},
+								"attempt": { "type": "number" },
+								"model": { "type": "string" },
+								"state": {
+									"type": "string",
+									"enum": [
+										"failed",
+										"started",
+										"completed",
+										"interrupted"
+									]
+								},
+								"startedAt": { "type": "string" },
+								"finishedAt": { "type": "string" },
+								"durationMs": { "type": "number" },
+								"disposition": {
+									"type": "string",
+									"enum": [
+										"skipped",
+										"deferred",
+										"prepare",
+										"publish"
+									]
+								},
+								"reason": { "type": "string" }
+							},
+							"required": [
+								"id",
+								"stage",
+								"attempt",
+								"model",
+								"state",
+								"startedAt"
+							],
+							"additionalProperties": true
+						},
+						"error": { "oneOf": [
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "unknown-session"
+									},
+									"sessionId": { "type": "string" }
+								},
+								"required": ["code", "sessionId"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "stale-revision"
+									},
+									"expected": { "type": "number" },
+									"actual": { "type": "number" }
+								},
+								"required": [
+									"code",
+									"expected",
+									"actual"
+								],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "nothing-selected"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "unknown-page"
+									},
+									"pageId": { "type": "string" }
+								},
+								"required": ["code", "pageId"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "library-changed"
+									},
+									"expected": { "type": "string" },
+									"actual": { "type": "string" }
+								},
+								"required": [
+									"code",
+									"expected",
+									"actual"
+								],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "page-version-mismatch"
+									},
+									"pageId": { "type": "string" },
+									"expected": { "type": "string" },
+									"actual": { "type": "string" }
+								},
+								"required": [
+									"code",
+									"pageId",
+									"expected",
+									"actual"
+								],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "manual-over-budget"
+									},
+									"overBy": { "type": "number" },
+									"budgetChars": { "type": "number" },
+									"selectedChars": { "type": "number" }
+								},
+								"required": [
+									"code",
+									"overBy",
+									"budgetChars",
+									"selectedChars"
+								],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "no-usable-block"
+									},
+									"pageIds": {
+										"type": "array",
+										"items": { "type": "string" }
+									}
+								},
+								"required": ["code", "pageIds"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "wiki-unavailable"
+									},
+									"reason": {
+										"type": "string",
+										"enum": ["not-configured", "read-failed"]
+									}
+								},
+								"required": ["code", "reason"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-record-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "capture-invalid-query"
+									},
+									"field": {
+										"type": "string",
+										"enum": [
+											"limit",
+											"cursor",
+											"status",
+											"event-seq"
+										]
+									}
+								},
+								"required": ["code", "field"],
+								"additionalProperties": true
+							}
+						] }
+					},
+					"required": [],
+					"additionalProperties": true
+				}
+			},
+			sourceLocation: {
+				"file": "packages/dsh-memory-wiki/src/server/index.ts",
+				"line": 167,
+				"column": 9
+			}
+		},
+		"memoryWiki/captureRecord": {
+			service: "memoryWiki",
+			invocation: { kind: "direct" },
+			parameters: [{
+				name: "input",
+				source: "json",
+				codec: {
+					mode: "strict",
+					typeSymbol: "dsh-memory-wiki/contracts#CaptureRecordInput",
+					create: dsh_memory_wiki_memoryWiki_captureRecord_parameter_0$schema,
+					jsonSchema: {
+						"type": "object",
+						"properties": {
+							"sessionId": { "type": "string" },
+							"jobId": { "type": "string" },
+							"afterEventSeq": { "type": "number" },
+							"limit": { "type": "number" }
+						},
+						"required": ["sessionId", "jobId"],
+						"additionalProperties": true
+					}
+				},
+				strictCodec: {
+					mode: "strict",
+					typeSymbol: "dsh-memory-wiki/contracts#CaptureRecordInput",
+					create: dsh_memory_wiki_memoryWiki_captureRecord_parameter_0_strict$schema,
+					jsonSchema: {
+						"type": "object",
+						"properties": {
+							"sessionId": { "type": "string" },
+							"jobId": { "type": "string" },
+							"afterEventSeq": { "type": "number" },
+							"limit": { "type": "number" }
+						},
+						"required": ["sessionId", "jobId"],
+						"additionalProperties": false
+					}
+				}
+			}],
+			result: {
+				mode: "strict",
+				typeSymbol: "dsh-memory-wiki/contracts#CaptureRecordResult",
+				create: dsh_memory_wiki_memoryWiki_captureRecord_result$schema,
+				jsonSchema: {
+					"type": "object",
+					"properties": {
+						"summary": {
+							"type": "object",
+							"properties": {
+								"jobId": { "type": "string" },
+								"phase": {
+									"type": "string",
+									"enum": [
+										"queued",
+										"judging",
+										"preparing",
+										"verifying",
+										"publishing",
+										"ingested",
+										"skipped",
+										"deferred",
+										"failed",
+										"needs_attention"
+									]
+								},
+								"reason": { "type": "string" },
+								"pages": {
+									"type": "array",
+									"items": { "type": "string" }
+								},
+								"updatedAt": { "type": "string" },
+								"registeredAt": { "type": "string" },
+								"historyCoverage": {
+									"type": "string",
+									"enum": ["complete", "legacy_snapshot"]
+								},
+								"origin": {
+									"type": "object",
+									"properties": {
+										"sessionId": { "type": "string" },
+										"turn": { "type": "number" },
+										"turnStartSeq": { "type": "number" },
+										"turnEndSeq": { "type": "number" }
+									},
+									"required": [
+										"sessionId",
+										"turn",
+										"turnStartSeq",
+										"turnEndSeq"
+									],
+									"additionalProperties": true
+								},
+								"task": { "type": "string" },
+								"taskTruncated": { "type": "boolean" },
+								"evidenceHash": { "type": "string" },
+								"rubricVersion": { "type": "string" },
+								"rulesHash": { "type": "string" },
+								"patchHash": { "type": "string" },
+								"lastEventSeq": { "type": "number" },
+								"publicationUncertain": {
+									"type": "boolean",
+									"enum": [false, true]
+								},
+								"retryable": {
+									"type": "boolean",
+									"enum": [false, true]
+								},
+								"judgments": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": { "type": "string" },
+											"stage": {
+												"type": "string",
+												"enum": ["assessment", "verification"]
+											},
+											"attempt": { "type": "number" },
+											"model": { "type": "string" },
+											"state": {
+												"type": "string",
+												"enum": [
+													"failed",
+													"started",
+													"completed",
+													"interrupted"
+												]
+											},
+											"startedAt": { "type": "string" },
+											"finishedAt": { "type": "string" },
+											"durationMs": { "type": "number" },
+											"disposition": {
+												"type": "string",
+												"enum": [
+													"skipped",
+													"deferred",
+													"prepare",
+													"publish"
+												]
+											},
+											"reason": { "type": "string" }
+										},
+										"required": [
+											"id",
+											"stage",
+											"attempt",
+											"model",
+											"state",
+											"startedAt"
+										],
+										"additionalProperties": true
+									}
+								}
+							},
+							"required": [
+								"jobId",
+								"phase",
+								"reason",
+								"pages",
+								"updatedAt",
+								"historyCoverage",
+								"origin",
+								"task",
+								"taskTruncated",
+								"evidenceHash",
+								"rubricVersion",
+								"lastEventSeq",
+								"judgments"
+							],
+							"additionalProperties": true
+						},
+						"events": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"seq": { "type": "number" },
+									"at": { "type": "string" },
+									"kind": {
+										"type": "string",
+										"enum": [
+											"legacy_snapshot",
+											"registered",
+											"phase_changed",
+											"judgment_started",
+											"judgment_finished",
+											"judgment_failed",
+											"judgment_interrupted",
+											"recovery_started",
+											"publication_finished",
+											"publication_interrupted",
+											"operation_failed"
+										]
+									},
+									"phase": {
+										"type": "string",
+										"enum": [
+											"queued",
+											"judging",
+											"preparing",
+											"verifying",
+											"publishing",
+											"ingested",
+											"skipped",
+											"deferred",
+											"failed",
+											"needs_attention"
+										]
+									},
+									"reason": { "type": "string" },
+									"judgmentId": { "type": "string" },
+									"stage": {
+										"type": "string",
+										"enum": [
+											"queued",
+											"judging",
+											"preparing",
+											"verifying",
+											"publishing",
+											"ingested",
+											"skipped",
+											"deferred",
+											"failed",
+											"needs_attention"
+										]
+									},
+									"error": {
+										"type": "object",
+										"properties": {
+											"category": { "type": "string" },
+											"message": { "type": "string" }
+										},
+										"required": ["category", "message"],
+										"additionalProperties": true
+									},
+									"durationMs": { "type": "number" }
+								},
+								"required": [
+									"seq",
+									"at",
+									"kind"
+								],
+								"additionalProperties": true
+							}
+						},
+						"judgments": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"id": { "type": "string" },
+									"stage": {
+										"type": "string",
+										"enum": ["assessment", "verification"]
+									},
+									"attempt": { "type": "number" },
+									"model": { "type": "string" },
+									"state": {
+										"type": "string",
+										"enum": [
+											"failed",
+											"started",
+											"completed",
+											"interrupted"
+										]
+									},
+									"startedAt": { "type": "string" },
+									"finishedAt": { "type": "string" },
+									"durationMs": { "type": "number" },
+									"disposition": {
+										"type": "string",
+										"enum": [
+											"skipped",
+											"deferred",
+											"prepare",
+											"publish"
+										]
+									},
+									"reason": { "type": "string" }
+								},
+								"required": [
+									"id",
+									"stage",
+									"attempt",
+									"model",
+									"state",
+									"startedAt"
+								],
+								"additionalProperties": true
+							}
+						},
+						"nextEventSeq": { "type": "number" },
+						"evidence": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"seq": { "type": "number" },
+									"kind": { "type": "string" },
+									"text": { "type": "string" },
+									"truncated": { "type": "boolean" }
+								},
+								"required": [
+									"seq",
+									"kind",
+									"text",
+									"truncated"
+								],
+								"additionalProperties": true
+							}
+						},
+						"evidenceTruncated": { "type": "boolean" },
+						"limitations": {
+							"type": "array",
+							"items": { "type": "string" }
+						},
+						"changes": {
+							"type": "array",
+							"items": {
+								"type": "object",
+								"properties": {
+									"path": { "type": "string" },
+									"beforeHash": { "type": "string" },
+									"afterHash": { "type": "string" }
+								},
+								"required": ["path", "afterHash"],
+								"additionalProperties": true
+							}
+						},
+						"error": { "oneOf": [
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "unknown-session"
+									},
+									"sessionId": { "type": "string" }
+								},
+								"required": ["code", "sessionId"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "stale-revision"
+									},
+									"expected": { "type": "number" },
+									"actual": { "type": "number" }
+								},
+								"required": [
+									"code",
+									"expected",
+									"actual"
+								],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "nothing-selected"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "unknown-page"
+									},
+									"pageId": { "type": "string" }
+								},
+								"required": ["code", "pageId"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "library-changed"
+									},
+									"expected": { "type": "string" },
+									"actual": { "type": "string" }
+								},
+								"required": [
+									"code",
+									"expected",
+									"actual"
+								],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "page-version-mismatch"
+									},
+									"pageId": { "type": "string" },
+									"expected": { "type": "string" },
+									"actual": { "type": "string" }
+								},
+								"required": [
+									"code",
+									"pageId",
+									"expected",
+									"actual"
+								],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "manual-over-budget"
+									},
+									"overBy": { "type": "number" },
+									"budgetChars": { "type": "number" },
+									"selectedChars": { "type": "number" }
+								},
+								"required": [
+									"code",
+									"overBy",
+									"budgetChars",
+									"selectedChars"
+								],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "no-usable-block"
+									},
+									"pageIds": {
+										"type": "array",
+										"items": { "type": "string" }
+									}
+								},
+								"required": ["code", "pageIds"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "wiki-unavailable"
+									},
+									"reason": {
+										"type": "string",
+										"enum": ["not-configured", "read-failed"]
+									}
+								},
+								"required": ["code", "reason"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-record-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "capture-invalid-query"
+									},
+									"field": {
+										"type": "string",
+										"enum": [
+											"limit",
+											"cursor",
+											"status",
+											"event-seq"
+										]
+									}
+								},
+								"required": ["code", "field"],
+								"additionalProperties": true
+							}
+						] }
+					},
+					"required": [
+						"events",
+						"judgments",
+						"evidence",
+						"evidenceTruncated",
+						"limitations",
+						"changes"
+					],
+					"additionalProperties": true
+				}
+			},
+			sourceLocation: {
+				"file": "packages/dsh-memory-wiki/src/server/index.ts",
+				"line": 164,
+				"column": 9
+			}
+		},
+		"memoryWiki/captureStatus": {
+			service: "memoryWiki",
+			invocation: { kind: "direct" },
+			parameters: [{
+				name: "input",
+				source: "json",
+				codec: {
+					mode: "strict",
+					typeSymbol: "dsh-memory-wiki/contracts#CaptureStatusInput",
+					create: dsh_memory_wiki_memoryWiki_captureStatus_parameter_0$schema,
+					jsonSchema: {
+						"type": "object",
+						"properties": { "sessionId": { "type": "string" } },
+						"required": [],
+						"additionalProperties": true
+					}
+				},
+				strictCodec: {
+					mode: "strict",
+					typeSymbol: "dsh-memory-wiki/contracts#CaptureStatusInput",
+					create: dsh_memory_wiki_memoryWiki_captureStatus_parameter_0_strict$schema,
+					jsonSchema: {
+						"type": "object",
+						"properties": { "sessionId": { "type": "string" } },
+						"required": [],
+						"additionalProperties": false
+					}
+				}
+			}],
+			result: {
+				mode: "strict",
+				typeSymbol: "dsh-memory-wiki/contracts#CaptureStatusResult",
+				create: dsh_memory_wiki_memoryWiki_captureStatus_result$schema,
+				jsonSchema: {
+					"type": "object",
+					"properties": {
+						"collector": {
+							"type": "string",
+							"enum": [
+								"disabled",
+								"starting",
+								"ready",
+								"blocked"
+							]
+						},
+						"history": {
+							"type": "string",
+							"enum": [
+								"readable",
+								"degraded",
+								"unavailable"
+							]
+						},
+						"reasonCode": { "type": "string" },
+						"reason": { "type": "string" },
+						"lastIssue": {
+							"type": "object",
+							"properties": {
+								"at": { "type": "string" },
+								"stage": {
+									"type": "string",
+									"enum": [
+										"collecting",
+										"worker_lock",
+										"journal_write"
+									]
+								},
+								"code": { "type": "string" },
+								"message": { "type": "string" },
+								"persisted": { "type": "boolean" },
+								"turnEndSeq": { "type": "number" },
+								"jobId": { "type": "string" }
+							},
+							"required": [
+								"at",
+								"stage",
+								"code",
+								"message",
+								"persisted"
+							],
+							"additionalProperties": true
+						},
+						"error": { "oneOf": [
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "unknown-session"
+									},
+									"sessionId": { "type": "string" }
+								},
+								"required": ["code", "sessionId"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "stale-revision"
+									},
+									"expected": { "type": "number" },
+									"actual": { "type": "number" }
+								},
+								"required": [
+									"code",
+									"expected",
+									"actual"
+								],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "nothing-selected"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "unknown-page"
+									},
+									"pageId": { "type": "string" }
+								},
+								"required": ["code", "pageId"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "library-changed"
+									},
+									"expected": { "type": "string" },
+									"actual": { "type": "string" }
+								},
+								"required": [
+									"code",
+									"expected",
+									"actual"
+								],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "page-version-mismatch"
+									},
+									"pageId": { "type": "string" },
+									"expected": { "type": "string" },
+									"actual": { "type": "string" }
+								},
+								"required": [
+									"code",
+									"pageId",
+									"expected",
+									"actual"
+								],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "manual-over-budget"
+									},
+									"overBy": { "type": "number" },
+									"budgetChars": { "type": "number" },
+									"selectedChars": { "type": "number" }
+								},
+								"required": [
+									"code",
+									"overBy",
+									"budgetChars",
+									"selectedChars"
+								],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "no-usable-block"
+									},
+									"pageIds": {
+										"type": "array",
+										"items": { "type": "string" }
+									}
+								},
+								"required": ["code", "pageIds"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "wiki-unavailable"
+									},
+									"reason": {
+										"type": "string",
+										"enum": ["not-configured", "read-failed"]
+									}
+								},
+								"required": ["code", "reason"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-record-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "capture-invalid-query"
+									},
+									"field": {
+										"type": "string",
+										"enum": [
+											"limit",
+											"cursor",
+											"status",
+											"event-seq"
+										]
+									}
+								},
+								"required": ["code", "field"],
+								"additionalProperties": true
+							}
+						] }
+					},
+					"required": [
+						"collector",
+						"history",
+						"reasonCode",
+						"reason"
+					],
+					"additionalProperties": true
+				}
+			},
+			sourceLocation: {
+				"file": "packages/dsh-memory-wiki/src/server/index.ts",
+				"line": 154,
+				"column": 9
+			}
+		},
 		"memoryWiki/clearOverride": {
 			service: "memoryWiki",
 			description: "Drop a still-unconsumed prepared override and return to automatic selection.",
@@ -13930,6 +17012,44 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 								},
 								"required": ["code", "reason"],
 								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-record-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "capture-invalid-query"
+									},
+									"field": {
+										"type": "string",
+										"enum": [
+											"limit",
+											"cursor",
+											"status",
+											"event-seq"
+										]
+									}
+								},
+								"required": ["code", "field"],
+								"additionalProperties": true
 							}
 						] }
 					},
@@ -13939,7 +17059,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 190,
+				"line": 221,
 				"column": 9
 			}
 		},
@@ -14170,6 +17290,44 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 								},
 								"required": ["code", "reason"],
 								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-record-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "capture-invalid-query"
+									},
+									"field": {
+										"type": "string",
+										"enum": [
+											"limit",
+											"cursor",
+											"status",
+											"event-seq"
+										]
+									}
+								},
+								"required": ["code", "field"],
+								"additionalProperties": true
 							}
 						] }
 					},
@@ -14184,7 +17342,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 140,
+				"line": 171,
 				"column": 9
 			}
 		},
@@ -14542,6 +17700,44 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 								},
 								"required": ["code", "reason"],
 								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-record-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "capture-invalid-query"
+									},
+									"field": {
+										"type": "string",
+										"enum": [
+											"limit",
+											"cursor",
+											"status",
+											"event-seq"
+										]
+									}
+								},
+								"required": ["code", "field"],
+								"additionalProperties": true
 							}
 						] }
 					},
@@ -14551,7 +17747,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 180,
+				"line": 211,
 				"column": 9
 			}
 		},
@@ -14804,6 +18000,44 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 								},
 								"required": ["code", "reason"],
 								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-record-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "capture-invalid-query"
+									},
+									"field": {
+										"type": "string",
+										"enum": [
+											"limit",
+											"cursor",
+											"status",
+											"event-seq"
+										]
+									}
+								},
+								"required": ["code", "field"],
+								"additionalProperties": true
 							}
 						] }
 					},
@@ -14813,7 +18047,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 160,
+				"line": 191,
 				"column": 9
 			}
 		},
@@ -15154,6 +18388,44 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 								},
 								"required": ["code", "reason"],
 								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-record-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "capture-invalid-query"
+									},
+									"field": {
+										"type": "string",
+										"enum": [
+											"limit",
+											"cursor",
+											"status",
+											"event-seq"
+										]
+									}
+								},
+								"required": ["code", "field"],
+								"additionalProperties": true
 							}
 						] }
 					},
@@ -15163,7 +18435,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 170,
+				"line": 201,
 				"column": 9
 			}
 		},
@@ -15456,6 +18728,44 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 								},
 								"required": ["code", "reason"],
 								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-record-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "capture-invalid-query"
+									},
+									"field": {
+										"type": "string",
+										"enum": [
+											"limit",
+											"cursor",
+											"status",
+											"event-seq"
+										]
+									}
+								},
+								"required": ["code", "field"],
+								"additionalProperties": true
 							}
 						] }
 					},
@@ -15472,7 +18782,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 150,
+				"line": 181,
 				"column": 9
 			}
 		},
@@ -16036,6 +19346,44 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 								},
 								"required": ["code", "reason"],
 								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": { "code": {
+									"type": "string",
+									"const": "capture-record-unavailable"
+								} },
+								"required": ["code"],
+								"additionalProperties": true
+							},
+							{
+								"type": "object",
+								"properties": {
+									"code": {
+										"type": "string",
+										"const": "capture-invalid-query"
+									},
+									"field": {
+										"type": "string",
+										"enum": [
+											"limit",
+											"cursor",
+											"status",
+											"event-seq"
+										]
+									}
+								},
+								"required": ["code", "field"],
+								"additionalProperties": true
 							}
 						] }
 					},
@@ -16050,7 +19398,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 131,
+				"line": 146,
 				"column": 9
 			}
 		}
@@ -16143,6 +19491,10 @@ function createLazyRemoteClient(ctx) {
 		return fn(input);
 	};
 	return {
+		captureStatus: call("captureStatus"),
+		captureHistory: call("captureHistory"),
+		captureRecord: call("captureRecord"),
+		captureJudgment: call("captureJudgment"),
 		graph: call("graph"),
 		getView: call("view"),
 		search: call("search"),
@@ -16200,7 +19552,7 @@ function resolveService(ctx, name) {
 	} catch {}
 }
 function styles() {
-	return "/* Scoped to the plugin. DSH owns the surrounding application navigation. */\n.memory-wiki-panel {\n  --mw-bg: #171f27;\n  --mw-panel: #212d39;\n  --mw-panel-2: #1c2733;\n  --mw-line: #344350;\n  --mw-text: #e8edf4;\n  --mw-muted: #a8b7c8;\n  --mw-blue: #8bc7f4;\n  --mw-edge: #6988a5;\n  --mw-gold: #efc366;\n  display: flex;\n  flex-direction: column;\n  height: 100%;\n  min-height: 0;\n  min-width: 0;\n  background: var(--mw-bg);\n  color: var(--mw-text);\n  font: 13px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;\n  text-align: left;\n  color-scheme: dark;\n}\n.memory-wiki-panel *, .memory-wiki-panel *::before, .memory-wiki-panel *::after { box-sizing: border-box; }\n.memory-wiki-panel [hidden] { display: none !important; }\n.memory-wiki-panel ::selection { background: #355875; color: var(--mw-text); }\n.memory-wiki-panel button, .memory-wiki-panel input { font: inherit; color: inherit; }\n.memory-wiki-panel button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 7px 12px; border: 1px solid var(--mw-line); border-radius: 7px; background: transparent; cursor: pointer; }\n.memory-wiki-panel button:hover:not(:disabled) { background: #2a3948; }\n.memory-wiki-panel button:disabled { opacity: 0.48; cursor: default; }\n.memory-wiki-panel :focus-visible { outline: 2px solid var(--mw-blue); outline-offset: 3px; }\n.memory-wiki-panel input { min-width: 0; border: 1px solid var(--mw-line); border-radius: 6px; padding: 8px 10px; background: var(--mw-bg); caret-color: var(--mw-blue); }\n.memory-wiki-panel input::placeholder { color: var(--mw-muted); opacity: 1; }\n.memory-wiki-panel svg { flex: 0 0 auto; }\n.memory-wiki-panel__head { display: flex; align-items: center; gap: 24px; min-height: 72px; padding: 14px 24px; border-bottom: 1px solid var(--mw-line); z-index: 5; }\n.memory-wiki-panel__brand { display: flex; align-items: center; gap: 10px; white-space: nowrap; }\n.memory-wiki-panel__brand > svg { color: var(--mw-blue); }\n.memory-wiki-panel__brand h2 { margin: 0; font-size: 17px; font-weight: 600; }\n.memory-wiki-panel__brand > span { margin-left: 6px; padding-left: 16px; border-left: 1px solid var(--mw-line); font-size: 12px; color: var(--mw-muted); }\n.memory-wiki-panel__searchbox { position: relative; display: flex; align-items: center; gap: 10px; width: min(420px, 42%); padding: 7px 12px; border: 1px solid var(--mw-line); border-radius: 8px; background: var(--mw-panel-2); color: var(--mw-muted); }\n.memory-wiki-panel__searchbox > input { flex: 1; width: 100%; padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--mw-text); height: 24px; }\n.memory-wiki-panel__searchbox > input:focus { outline: none; }\n.memory-wiki-panel__searchbox:focus-within { outline: 1px solid var(--mw-blue); }\n.memory-wiki-panel__searchbox > button { border: 0; padding: 2px; }\n.memory-wiki-panel__searchbox kbd { font: 11px inherit; white-space: nowrap; }\n.memory-wiki-panel__search-results { position: absolute; top: calc(100% + 10px); left: 0; width: max(100%, 340px); max-height: 400px; overflow: auto; background: var(--mw-panel); border-radius: 10px; box-shadow: 0 12px 40px #07101980; padding: 6px; z-index: 10; color: var(--mw-text); }\n.memory-wiki-panel__search-results > p { margin: 8px 10px; color: var(--mw-muted); font-size: 12px; }\n.memory-wiki-panel__search-results > button { border: 0; display: flex; width: 100%; justify-content: space-between; text-align: left; padding: 10px; }\n.memory-wiki-panel__search-results small { display: block; font-size: 11px; color: var(--mw-muted); overflow-wrap: anywhere; }\n.memory-wiki-panel__head-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; white-space: nowrap; }\n.memory-wiki-panel button.memory-wiki-panel__icon { border: 0; padding: 8px; }\n.memory-wiki-panel__head-actions button[aria-expanded=true] { background: #2b4053; color: var(--mw-blue); }\n.memory-wiki-panel__workspace { position: relative; flex: 1; min-height: 0; overflow: hidden; }\n.memory-wiki-panel__graph { position: absolute; inset: 0; }\n.memory-wiki-panel__sigma, .memory-wiki-panel__sigma-instance { position: absolute; inset: 0; }\n.memory-wiki-panel__sigma canvas { display: block; }\n.memory-wiki-panel__graph-fallback { position: absolute; inset: 0 0 90px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; background: var(--mw-bg); }\n.memory-wiki-panel__graph-fallback h3 { margin: 0 0 10px; font-size: 17px; font-weight: 500; }\n.memory-wiki-panel__graph-fallback p { max-width: 400px; margin: 0; color: var(--mw-muted); }\n.memory-wiki-panel__page-index { position: absolute; top: 18px; right: 22px; z-index: 2; max-width: min(360px, 50%); color: var(--mw-muted); }\n.memory-wiki-panel__page-index summary { display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding: 5px 0; font-size: 11px; }\n.memory-wiki-panel__page-index summary span { color: var(--mw-text); font-variant-numeric: tabular-nums; }\n.memory-wiki-panel__page-index > div { max-height: 320px; overflow: auto; padding: 6px; border: 1px solid var(--mw-line); border-radius: 9px; background: var(--mw-panel); box-shadow: 0 10px 28px #070e175c; scrollbar-width: thin; }\n.memory-wiki-panel__page-index button { display: block; width: 100%; padding: 7px 9px; border: 0; text-align: left; font-size: 12px; }\n.memory-wiki-panel__page-index button.is-active { color: var(--mw-blue); }\n.memory-wiki-panel__zoom { min-width: 38px; margin: 0 !important; text-align: center; font-size: 11px !important; }\n.memory-wiki-panel__canvas-tools { position: absolute; left: 24px; bottom: 24px; display: flex; align-items: center; gap: 4px; padding: 4px 6px 4px 14px; border: 1px solid var(--mw-line); border-radius: 9px; background: var(--mw-panel-2); z-index: 2; }\n.memory-wiki-panel__canvas-tools > span { margin-right: 12px; font-size: 12px; color: var(--mw-muted); font-variant-numeric: tabular-nums; }\n.memory-wiki-panel__canvas-tools > button { border: 0; padding: 6px; }\n.memory-wiki-panel__graph-legend { position: absolute; left: 26px; bottom: 76px; display: flex; align-items: center; flex-wrap: wrap; gap: 14px; color: var(--mw-muted); font-size: 11px; pointer-events: none; }\n.memory-wiki-panel__graph-legend > span { display: inline-flex; align-items: center; gap: 6px; }\n.memory-wiki-panel__graph-legend i { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #829ab2; }\n.memory-wiki-panel__graph-legend i.is-hub { width: 9px; height: 9px; background: #c7e4fa; }\n.memory-wiki-panel__canvas-status { position: absolute; right: 24px; bottom: 32px; color: var(--mw-muted); font-size: 12px; pointer-events: none; }\n.memory-wiki-panel__empty { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 32px; text-align: center; background: var(--mw-bg); }\n.memory-wiki-panel__empty > svg { color: var(--mw-muted); width: 30px; height: 30px; }\n.memory-wiki-panel__empty h3 { margin: 4px 0 0; font-size: 17px; font-weight: 500; }\n.memory-wiki-panel__empty p { margin: 0; max-width: 440px; color: var(--mw-muted); }\n.memory-wiki-panel__updating { position: absolute; left: 24px; top: 16px; color: var(--mw-muted); font-size: 12px; }\n.memory-wiki-panel__drawer { position: absolute; right: 20px; top: 20px; bottom: 84px; display: flex; flex-direction: column; width: 400px; max-width: 42%; border-radius: 12px; background: var(--mw-panel); box-shadow: 0 10px 36px #070e175c; z-index: 3; overflow: hidden; animation: mw-drawer-in 180ms ease-out; }\n.memory-wiki-panel__drawer-head { display: flex; align-items: flex-start; justify-content: space-between; flex-shrink: 0; gap: 16px; padding: 26px 26px 12px; }\n.memory-wiki-panel__drawer-head h3 { margin: 0; font-size: 23px; line-height: 1.4; font-weight: 600; overflow-wrap: anywhere; }\n.memory-wiki-panel__drawer-head p { margin: 6px 0 0; color: var(--mw-muted); font-size: 12px; }\n.memory-wiki-panel__drawer-head > button { margin: -4px -8px 0 0; color: var(--mw-muted); }\n.memory-wiki-panel__reader { overflow: auto; flex: 1; min-height: 0; padding: 0 26px 24px; scrollbar-width: thin; scrollbar-color: #536a80 transparent; }\n.memory-wiki-panel__page-meta { margin: 0 0 24px; color: var(--mw-muted); font-size: 12px; }\n.memory-wiki-panel__reader-footer { flex-shrink: 0; margin: 0 26px; padding: 18px 0; border-top: 1px solid var(--mw-line); }\n.memory-wiki-panel__reader-footer > button { width: 100%; background: #304253; }\n.memory-wiki-panel__reader-footer > p { margin: 8px 0 0; font-size: 11px; color: var(--mw-muted); }\n.memory-wiki-panel__relations { padding-top: 18px; margin-top: 24px; border-top: 1px solid var(--mw-line); }\n.memory-wiki-panel__relations h4 { margin: 0 0 10px; font-size: 13px; font-weight: 500; }\n.memory-wiki-panel__relations > p { font-size: 12px; color: var(--mw-muted); }\n.memory-wiki-panel__relations > button { display: flex; justify-content: space-between; width: 100%; padding: 10px 0; text-align: left; border: 0; border-radius: 0; color: var(--mw-blue); }\n.memory-wiki-panel__relations > button:hover:not(:disabled) { background: transparent; text-decoration: underline; text-underline-offset: 4px; }\n.memory-wiki-panel__page-info { margin-top: 24px; font-size: 11px; color: var(--mw-muted); overflow-wrap: anywhere; }\n.memory-wiki-panel summary { cursor: pointer; padding: 5px 0; }\n.memory-wiki-panel__drawer--context { width: 480px; max-width: 48%; bottom: 20px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #536a80 transparent; }\n.memory-wiki-panel__context-note { padding: 16px 26px; color: var(--mw-muted); }\n.memory-wiki-panel__context-note h4 { color: var(--mw-text); font-weight: 500; }\n.memory-wiki-panel__context-meta { display: flex; flex-wrap: wrap; gap: 4px 12px; padding: 0 26px 12px; color: var(--mw-muted); font-size: 11px; overflow-wrap: anywhere; }\n.memory-wiki-panel__body { display: flex; flex-direction: column; min-width: 0; padding: 0 26px 24px; }\n.memory-wiki-panel__col { min-width: 0; }\n.memory-wiki-panel__section-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; padding: 18px 0 9px; font-weight: 500; }\n.memory-wiki-panel__section-head > span:last-child:not(:first-child) { margin-left: auto; font-size: 11px; font-weight: 400; color: var(--mw-muted); }\n.memory-wiki-panel__toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }\n.memory-wiki-panel__query { flex: 1; width: 100px; }\n.memory-wiki-panel__candidate { padding: 12px 0; border-bottom: 1px solid var(--mw-line); }\n.memory-wiki-panel__candidate.is-active { background: #263747; }\n.memory-wiki-panel .memory-wiki-panel__pick-open { flex: 1; min-width: 80px; border: 0; padding: 3px; justify-content: flex-start; text-align: left; }\n.memory-wiki-panel .memory-wiki-panel__pick-toggle { padding: 3px 8px; font-size: 11px; }\n.memory-wiki-panel__pick-toggle[aria-pressed=true] { color: var(--mw-blue); border-color: var(--mw-blue); }\n.memory-wiki-panel__candidate-id, .memory-wiki-panel__via { display: block; margin-top: 5px; font-size: 11px; color: var(--mw-muted); overflow-wrap: anywhere; }\n.memory-wiki-panel__chips, .memory-wiki-panel__detail-meta { display: flex; flex-wrap: wrap; gap: 5px; margin: 8px 0; }\n.memory-wiki-panel__chip, .memory-wiki-panel__segment, .memory-wiki-panel__readonly { display: inline-block; padding: 1px 6px; background: #2c3c4c; border-radius: 4px; font-size: 11px; color: var(--mw-muted); overflow-wrap: anywhere; }\n.memory-wiki-panel__chip--why { color: var(--mw-blue); }\n.memory-wiki-panel__readonly { margin-left: 8px; }\n.memory-wiki-panel__over, .memory-wiki-panel__stale { color: var(--mw-gold); font-size: 12px; overflow-wrap: anywhere; }\n.memory-wiki-panel__stale { padding: 14px 0; }\n.memory-wiki-panel__stale p { margin: 8px 0; }\n.memory-wiki-panel__server { padding-bottom: 14px; border-bottom: 1px solid var(--mw-line); }\n.memory-wiki-panel__excerpt-note { margin: 10px 0; font-size: 12px; line-height: 1.7; color: var(--mw-muted); overflow-wrap: anywhere; }\n.memory-wiki-panel__pre { margin: 10px 0; padding: 12px; max-height: 260px; overflow: auto; border-radius: 6px; background: var(--mw-bg); color: var(--mw-text); font: 11px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }\n.memory-wiki-panel__hist { padding-top: 4px; }\n.memory-wiki-panel__subhead { margin: 22px 0 8px; font-size: 13px; font-weight: 500; }\n.memory-wiki-panel__hist-row { padding: 10px 0; border-bottom: 1px solid var(--mw-line); font-size: 12px; overflow-wrap: anywhere; }\n.memory-wiki-panel__hist-facts { display: flex; flex-wrap: wrap; gap: 8px; color: var(--mw-muted); font-size: 11px; margin-top: 5px; }\n.memory-wiki-panel__hist-row > button { margin-top: 6px; padding: 3px 8px; font-size: 11px; }\n.memory-wiki-panel__evidence-detail { margin-top: 16px; font-size: 12px; }\n.memory-wiki-panel__detail-title { margin: 12px 0 0; font-size: 16px; }\n.memory-wiki-panel__detail-path { overflow-wrap: anywhere; font-size: 11px; color: var(--mw-muted); }\n.memory-wiki-panel__segments { display: flex; gap: 5px; flex-wrap: wrap; }\n.memory-wiki-panel__excerpt { font-size: 12px; }\n.memory-wiki-panel__md { font-size: 14px; line-height: 1.85; color: var(--mw-text); overflow-wrap: anywhere; }\n.memory-wiki-panel__md > :first-child { margin-top: 0; }\n.memory-wiki-panel__md h1, .memory-wiki-panel__md h2, .memory-wiki-panel__md h3, .memory-wiki-panel__md h4 { margin: 24px 0 10px; font-size: 16px; font-weight: 600; line-height: 1.5; }\n.memory-wiki-panel__md p { margin: 12px 0; }\n.memory-wiki-panel__md ul, .memory-wiki-panel__md ol { margin: 12px 0; padding-left: 22px; }\n.memory-wiki-panel__md li { margin: 5px 0; }\n.memory-wiki-panel__md a, .memory-wiki-panel__wikilink { color: var(--mw-blue); text-decoration: underline; text-underline-offset: 3px; }\n.memory-wiki-panel__md code { padding: 2px 4px; border-radius: 3px; background: var(--mw-bg); font: 12px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace; }\n.memory-wiki-panel__md pre { margin: 14px 0; padding: 12px; background: var(--mw-bg); border-radius: 6px; overflow: auto; }\n.memory-wiki-panel__md pre code { padding: 0; white-space: pre; }\n.memory-wiki-panel__md table { display: block; max-width: 100%; overflow: auto; border-collapse: collapse; font-size: 12px; margin: 14px 0; }\n.memory-wiki-panel__md th, .memory-wiki-panel__md td { padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--mw-line); }\n.memory-wiki-panel__md blockquote { margin: 16px 0; padding-left: 14px; border-left: 1px solid var(--mw-muted); color: var(--mw-muted); }\n.memory-wiki-panel__md hr { border: 0; border-top: 1px solid var(--mw-line); margin: 24px 0; }\n.memory-wiki-panel__md-fallback { white-space: pre-wrap; }\n@keyframes mw-drawer-in { from { transform: translateX(14px); } to { transform: translateX(0); } }\n@media (max-width: 1000px) {\n  .memory-wiki-panel__head { gap: 16px; padding: 12px 16px; min-height: 64px; }\n  .memory-wiki-panel__brand > span { display: none; }\n  .memory-wiki-panel__searchbox { flex: 1; width: auto; }\n  .memory-wiki-panel__drawer { max-width: 48%; right: 12px; }\n  .memory-wiki-panel__drawer--context { max-width: 55%; }\n  .memory-wiki-panel__drawer-head { padding: 22px 22px 12px; }\n  .memory-wiki-panel__reader { padding: 0 22px 20px; }\n}\n@media (max-width: 700px) {\n  .memory-wiki-panel__head { flex-wrap: wrap; gap: 10px; padding: 12px; }\n  .memory-wiki-panel__brand h2 { font-size: 15px; }\n  .memory-wiki-panel__searchbox { order: 3; width: 100%; flex-basis: 100%; }\n  .memory-wiki-panel__searchbox input { font-size: 16px; }\n  .memory-wiki-panel__search-results { width: 100%; max-width: 100%; }\n  .memory-wiki-panel__head-actions { gap: 4px; }\n  .memory-wiki-panel__drawer, .memory-wiki-panel__drawer--context { inset: 8px; width: auto; max-width: none; border-radius: 10px; }\n  .memory-wiki-panel__drawer-head h3 { font-size: 21px; }\n  .memory-wiki-panel__canvas-tools { left: 12px; bottom: 44px; padding-left: 10px; }\n  .memory-wiki-panel__canvas-tools > span { margin-right: 4px; }\n  .memory-wiki-panel__graph-legend { left: 14px; bottom: 94px; }\n  .memory-wiki-panel__canvas-status { right: 14px; bottom: 14px; font-size: 11px; }\n}\n@media (max-width: 700px) {\n  .memory-wiki-panel__page-index { top: 12px; right: 12px; }\n  .memory-wiki-panel__graph-legend { max-width: calc(100% - 28px); gap: 8px 12px; }\n}\n@media (prefers-reduced-motion: reduce) {\n  .memory-wiki-panel__drawer { animation: none; }\n}\n";
+	return "/* Scoped to the plugin. DSH owns the surrounding application navigation. */\n.memory-wiki-panel {\n  --mw-bg: #171f27;\n  --mw-panel: #212d39;\n  --mw-panel-2: #1c2733;\n  --mw-line: #344350;\n  --mw-text: #e8edf4;\n  --mw-muted: #a8b7c8;\n  --mw-blue: #8bc7f4;\n  --mw-edge: #6988a5;\n  --mw-gold: #efc366;\n  display: flex;\n  flex-direction: column;\n  height: 100%;\n  min-height: 0;\n  min-width: 0;\n  background: var(--mw-bg);\n  color: var(--mw-text);\n  font: 13px/1.6 -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;\n  text-align: left;\n  color-scheme: dark;\n}\n.memory-wiki-panel *, .memory-wiki-panel *::before, .memory-wiki-panel *::after { box-sizing: border-box; }\n.memory-wiki-panel [hidden] { display: none !important; }\n.memory-wiki-panel ::selection { background: #355875; color: var(--mw-text); }\n.memory-wiki-panel button, .memory-wiki-panel input { font: inherit; color: inherit; }\n.memory-wiki-panel button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 7px 12px; border: 1px solid var(--mw-line); border-radius: 7px; background: transparent; cursor: pointer; }\n.memory-wiki-panel button:hover:not(:disabled) { background: #2a3948; }\n.memory-wiki-panel button:disabled { opacity: 0.48; cursor: default; }\n.memory-wiki-panel :focus-visible { outline: 2px solid var(--mw-blue); outline-offset: 3px; }\n.memory-wiki-panel input { min-width: 0; border: 1px solid var(--mw-line); border-radius: 6px; padding: 8px 10px; background: var(--mw-bg); caret-color: var(--mw-blue); }\n.memory-wiki-panel input::placeholder { color: var(--mw-muted); opacity: 1; }\n.memory-wiki-panel svg { flex: 0 0 auto; }\n.memory-wiki-panel__head { display: flex; align-items: center; gap: 24px; min-height: 72px; padding: 14px 24px; border-bottom: 1px solid var(--mw-line); z-index: 5; }\n.memory-wiki-panel__brand { display: flex; align-items: center; gap: 10px; white-space: nowrap; }\n.memory-wiki-panel__brand > svg { color: var(--mw-blue); }\n.memory-wiki-panel__brand h2 { margin: 0; font-size: 17px; font-weight: 600; }\n.memory-wiki-panel__brand > span { margin-left: 6px; padding-left: 16px; border-left: 1px solid var(--mw-line); font-size: 12px; color: var(--mw-muted); }\n.memory-wiki-panel__searchbox { position: relative; display: flex; align-items: center; gap: 10px; width: min(420px, 42%); padding: 7px 12px; border: 1px solid var(--mw-line); border-radius: 8px; background: var(--mw-panel-2); color: var(--mw-muted); }\n.memory-wiki-panel__searchbox > input { flex: 1; width: 100%; padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--mw-text); height: 24px; }\n.memory-wiki-panel__searchbox > input:focus { outline: none; }\n.memory-wiki-panel__searchbox:focus-within { outline: 1px solid var(--mw-blue); }\n.memory-wiki-panel__searchbox > button { border: 0; padding: 2px; }\n.memory-wiki-panel__searchbox kbd { font: 11px inherit; white-space: nowrap; }\n.memory-wiki-panel__search-results { position: absolute; top: calc(100% + 10px); left: 0; width: max(100%, 340px); max-height: 400px; overflow: auto; background: var(--mw-panel); border-radius: 10px; box-shadow: 0 12px 40px #07101980; padding: 6px; z-index: 10; color: var(--mw-text); }\n.memory-wiki-panel__search-results > p { margin: 8px 10px; color: var(--mw-muted); font-size: 12px; }\n.memory-wiki-panel__search-results > button { border: 0; display: flex; width: 100%; justify-content: space-between; text-align: left; padding: 10px; }\n.memory-wiki-panel__search-results small { display: block; font-size: 11px; color: var(--mw-muted); overflow-wrap: anywhere; }\n.memory-wiki-panel__head-actions { margin-left: auto; display: flex; align-items: center; gap: 8px; white-space: nowrap; }\n.memory-wiki-panel button.memory-wiki-panel__icon { border: 0; padding: 8px; }\n.memory-wiki-panel__head-actions button[aria-expanded=true] { background: #2b4053; color: var(--mw-blue); }\n.memory-wiki-panel__workspace { position: relative; flex: 1; min-height: 0; overflow: hidden; }\n.memory-wiki-panel__graph { position: absolute; inset: 0; }\n.memory-wiki-panel__sigma, .memory-wiki-panel__sigma-instance { position: absolute; inset: 0; }\n.memory-wiki-panel__sigma canvas { display: block; }\n.memory-wiki-panel__graph-fallback { position: absolute; inset: 0 0 90px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; background: var(--mw-bg); }\n.memory-wiki-panel__graph-fallback h3 { margin: 0 0 10px; font-size: 17px; font-weight: 500; }\n.memory-wiki-panel__graph-fallback p { max-width: 400px; margin: 0; color: var(--mw-muted); }\n.memory-wiki-panel__page-index { position: absolute; top: 18px; right: 22px; z-index: 2; max-width: min(360px, 50%); color: var(--mw-muted); }\n.memory-wiki-panel__page-index summary { display: flex; align-items: center; justify-content: flex-end; gap: 8px; padding: 5px 0; font-size: 11px; }\n.memory-wiki-panel__page-index summary span { color: var(--mw-text); font-variant-numeric: tabular-nums; }\n.memory-wiki-panel__page-index > div { max-height: 320px; overflow: auto; padding: 6px; border: 1px solid var(--mw-line); border-radius: 9px; background: var(--mw-panel); box-shadow: 0 10px 28px #070e175c; scrollbar-width: thin; }\n.memory-wiki-panel__page-index button { display: block; width: 100%; padding: 7px 9px; border: 0; text-align: left; font-size: 12px; }\n.memory-wiki-panel__page-index button.is-active { color: var(--mw-blue); }\n.memory-wiki-panel__zoom { min-width: 38px; margin: 0 !important; text-align: center; font-size: 11px !important; }\n.memory-wiki-panel__canvas-tools { position: absolute; left: 24px; bottom: 24px; display: flex; align-items: center; gap: 4px; padding: 4px 6px 4px 14px; border: 1px solid var(--mw-line); border-radius: 9px; background: var(--mw-panel-2); z-index: 2; }\n.memory-wiki-panel__canvas-tools > span { margin-right: 12px; font-size: 12px; color: var(--mw-muted); font-variant-numeric: tabular-nums; }\n.memory-wiki-panel__canvas-tools > button { border: 0; padding: 6px; }\n.memory-wiki-panel__graph-legend { position: absolute; left: 26px; bottom: 76px; display: flex; align-items: center; flex-wrap: wrap; gap: 14px; color: var(--mw-muted); font-size: 11px; pointer-events: none; }\n.memory-wiki-panel__graph-legend > span { display: inline-flex; align-items: center; gap: 6px; }\n.memory-wiki-panel__graph-legend i { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #829ab2; }\n.memory-wiki-panel__graph-legend i.is-hub { width: 9px; height: 9px; background: #c7e4fa; }\n.memory-wiki-panel__canvas-status { position: absolute; right: 24px; bottom: 32px; color: var(--mw-muted); font-size: 12px; pointer-events: none; }\n.memory-wiki-panel__empty { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 32px; text-align: center; background: var(--mw-bg); }\n.memory-wiki-panel__empty > svg { color: var(--mw-muted); width: 30px; height: 30px; }\n.memory-wiki-panel__empty h3 { margin: 4px 0 0; font-size: 17px; font-weight: 500; }\n.memory-wiki-panel__empty p { margin: 0; max-width: 440px; color: var(--mw-muted); }\n.memory-wiki-panel__updating { position: absolute; left: 24px; top: 16px; color: var(--mw-muted); font-size: 12px; }\n.memory-wiki-panel__drawer { position: absolute; right: 20px; top: 20px; bottom: 84px; display: flex; flex-direction: column; width: 400px; max-width: 42%; border-radius: 12px; background: var(--mw-panel); box-shadow: 0 10px 36px #070e175c; z-index: 3; overflow: hidden; animation: mw-drawer-in 180ms ease-out; }\n.memory-wiki-panel__drawer-head { display: flex; align-items: flex-start; justify-content: space-between; flex-shrink: 0; gap: 16px; padding: 26px 26px 12px; }\n.memory-wiki-panel__drawer-head h3 { margin: 0; font-size: 23px; line-height: 1.4; font-weight: 600; overflow-wrap: anywhere; }\n.memory-wiki-panel__drawer-head p { margin: 6px 0 0; color: var(--mw-muted); font-size: 12px; }\n.memory-wiki-panel__drawer-head > button { margin: -4px -8px 0 0; color: var(--mw-muted); }\n.memory-wiki-panel__reader { overflow: auto; flex: 1; min-height: 0; padding: 0 26px 24px; scrollbar-width: thin; scrollbar-color: #536a80 transparent; }\n.memory-wiki-panel__page-meta { margin: 0 0 24px; color: var(--mw-muted); font-size: 12px; }\n.memory-wiki-panel__reader-footer { flex-shrink: 0; margin: 0 26px; padding: 18px 0; border-top: 1px solid var(--mw-line); }\n.memory-wiki-panel__reader-footer > button { width: 100%; background: #304253; }\n.memory-wiki-panel__reader-footer > p { margin: 8px 0 0; font-size: 11px; color: var(--mw-muted); }\n.memory-wiki-panel__relations { padding-top: 18px; margin-top: 24px; border-top: 1px solid var(--mw-line); }\n.memory-wiki-panel__relations h4 { margin: 0 0 10px; font-size: 13px; font-weight: 500; }\n.memory-wiki-panel__relations > p { font-size: 12px; color: var(--mw-muted); }\n.memory-wiki-panel__relations > button { display: flex; justify-content: space-between; width: 100%; padding: 10px 0; text-align: left; border: 0; border-radius: 0; color: var(--mw-blue); }\n.memory-wiki-panel__relations > button:hover:not(:disabled) { background: transparent; text-decoration: underline; text-underline-offset: 4px; }\n.memory-wiki-panel__page-info { margin-top: 24px; font-size: 11px; color: var(--mw-muted); overflow-wrap: anywhere; }\n.memory-wiki-panel summary { cursor: pointer; padding: 5px 0; }\n.memory-wiki-panel__drawer--context { width: 480px; max-width: 48%; bottom: 20px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #536a80 transparent; }\n.memory-wiki-panel__context-note { padding: 16px 26px; color: var(--mw-muted); }\n.memory-wiki-panel__context-note h4 { color: var(--mw-text); font-weight: 500; }\n.memory-wiki-panel__context-meta { display: flex; flex-wrap: wrap; gap: 4px 12px; padding: 0 26px 12px; color: var(--mw-muted); font-size: 11px; overflow-wrap: anywhere; }\n.memory-wiki-panel__body { display: flex; flex-direction: column; min-width: 0; padding: 0 26px 24px; }\n.memory-wiki-panel__col { min-width: 0; }\n.memory-wiki-panel__section-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; padding: 18px 0 9px; font-weight: 500; }\n.memory-wiki-panel__section-head > span:last-child:not(:first-child) { margin-left: auto; font-size: 11px; font-weight: 400; color: var(--mw-muted); }\n.memory-wiki-panel__toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; }\n.memory-wiki-panel__query { flex: 1; width: 100px; }\n.memory-wiki-panel__candidate { padding: 12px 0; border-bottom: 1px solid var(--mw-line); }\n.memory-wiki-panel__candidate.is-active { background: #263747; }\n.memory-wiki-panel .memory-wiki-panel__pick-open { flex: 1; min-width: 80px; border: 0; padding: 3px; justify-content: flex-start; text-align: left; }\n.memory-wiki-panel .memory-wiki-panel__pick-toggle { padding: 3px 8px; font-size: 11px; }\n.memory-wiki-panel__pick-toggle[aria-pressed=true] { color: var(--mw-blue); border-color: var(--mw-blue); }\n.memory-wiki-panel__candidate-id, .memory-wiki-panel__via { display: block; margin-top: 5px; font-size: 11px; color: var(--mw-muted); overflow-wrap: anywhere; }\n.memory-wiki-panel__chips, .memory-wiki-panel__detail-meta { display: flex; flex-wrap: wrap; gap: 5px; margin: 8px 0; }\n.memory-wiki-panel__chip, .memory-wiki-panel__segment, .memory-wiki-panel__readonly { display: inline-block; padding: 1px 6px; background: #2c3c4c; border-radius: 4px; font-size: 11px; color: var(--mw-muted); overflow-wrap: anywhere; }\n.memory-wiki-panel__chip--why { color: var(--mw-blue); }\n.memory-wiki-panel__readonly { margin-left: 8px; }\n.memory-wiki-panel__over, .memory-wiki-panel__stale { color: var(--mw-gold); font-size: 12px; overflow-wrap: anywhere; }\n.memory-wiki-panel__stale { padding: 14px 0; }\n.memory-wiki-panel__stale p { margin: 8px 0; }\n.memory-wiki-panel__server { padding-bottom: 14px; border-bottom: 1px solid var(--mw-line); }\n.memory-wiki-panel__excerpt-note { margin: 10px 0; font-size: 12px; line-height: 1.7; color: var(--mw-muted); overflow-wrap: anywhere; }\n.memory-wiki-panel__pre { margin: 10px 0; padding: 12px; max-height: 260px; overflow: auto; border-radius: 6px; background: var(--mw-bg); color: var(--mw-text); font: 11px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }\n.memory-wiki-panel__hist { padding-top: 4px; }\n.memory-wiki-panel__subhead { margin: 22px 0 8px; font-size: 13px; font-weight: 500; }\n.memory-wiki-panel__hist-row { padding: 10px 0; border-bottom: 1px solid var(--mw-line); font-size: 12px; overflow-wrap: anywhere; }\n.memory-wiki-panel__hist-facts { display: flex; flex-wrap: wrap; gap: 8px; color: var(--mw-muted); font-size: 11px; margin-top: 5px; }\n.memory-wiki-panel__hist-row > button { margin-top: 6px; padding: 3px 8px; font-size: 11px; }\n.memory-wiki-panel__evidence-detail { margin-top: 16px; font-size: 12px; }\n.memory-wiki-panel__detail-title { margin: 12px 0 0; font-size: 16px; }\n.memory-wiki-panel__detail-path { overflow-wrap: anywhere; font-size: 11px; color: var(--mw-muted); }\n.memory-wiki-panel__segments { display: flex; gap: 5px; flex-wrap: wrap; }\n.memory-wiki-panel__excerpt { font-size: 12px; }\n.memory-wiki-panel__md { font-size: 14px; line-height: 1.85; color: var(--mw-text); overflow-wrap: anywhere; }\n.memory-wiki-panel__md > :first-child { margin-top: 0; }\n.memory-wiki-panel__md h1, .memory-wiki-panel__md h2, .memory-wiki-panel__md h3, .memory-wiki-panel__md h4 { margin: 24px 0 10px; font-size: 16px; font-weight: 600; line-height: 1.5; }\n.memory-wiki-panel__md p { margin: 12px 0; }\n.memory-wiki-panel__md ul, .memory-wiki-panel__md ol { margin: 12px 0; padding-left: 22px; }\n.memory-wiki-panel__md li { margin: 5px 0; }\n.memory-wiki-panel__md a, .memory-wiki-panel__wikilink { color: var(--mw-blue); text-decoration: underline; text-underline-offset: 3px; }\n.memory-wiki-panel__md code { padding: 2px 4px; border-radius: 3px; background: var(--mw-bg); font: 12px/1.7 ui-monospace, SFMono-Regular, Menlo, monospace; }\n.memory-wiki-panel__md pre { margin: 14px 0; padding: 12px; background: var(--mw-bg); border-radius: 6px; overflow: auto; }\n.memory-wiki-panel__md pre code { padding: 0; white-space: pre; }\n.memory-wiki-panel__md table { display: block; max-width: 100%; overflow: auto; border-collapse: collapse; font-size: 12px; margin: 14px 0; }\n.memory-wiki-panel__md th, .memory-wiki-panel__md td { padding: 7px 10px; text-align: left; border-bottom: 1px solid var(--mw-line); }\n.memory-wiki-panel__md blockquote { margin: 16px 0; padding-left: 14px; border-left: 1px solid var(--mw-muted); color: var(--mw-muted); }\n.memory-wiki-panel__md hr { border: 0; border-top: 1px solid var(--mw-line); margin: 24px 0; }\n.memory-wiki-panel__md-fallback { white-space: pre-wrap; }\n@keyframes mw-drawer-in { from { transform: translateX(14px); } to { transform: translateX(0); } }\n@media (max-width: 1000px) {\n  .memory-wiki-panel__head { gap: 16px; padding: 12px 16px; min-height: 64px; }\n  .memory-wiki-panel__brand > span { display: none; }\n  .memory-wiki-panel__searchbox { flex: 1; width: auto; }\n  .memory-wiki-panel__drawer { max-width: 48%; right: 12px; }\n  .memory-wiki-panel__drawer--context { max-width: 55%; }\n  .memory-wiki-panel__drawer-head { padding: 22px 22px 12px; }\n  .memory-wiki-panel__reader { padding: 0 22px 20px; }\n}\n@media (max-width: 700px) {\n  .memory-wiki-panel__head { flex-wrap: wrap; gap: 10px; padding: 12px; }\n  .memory-wiki-panel__brand h2 { font-size: 15px; }\n  .memory-wiki-panel__searchbox { order: 3; width: 100%; flex-basis: 100%; }\n  .memory-wiki-panel__searchbox input { font-size: 16px; }\n  .memory-wiki-panel__search-results { width: 100%; max-width: 100%; }\n  .memory-wiki-panel__head-actions { gap: 4px; }\n  .memory-wiki-panel__drawer, .memory-wiki-panel__drawer--context { inset: 8px; width: auto; max-width: none; border-radius: 10px; }\n  .memory-wiki-panel__drawer-head h3 { font-size: 21px; }\n  .memory-wiki-panel__canvas-tools { left: 12px; bottom: 44px; padding-left: 10px; }\n  .memory-wiki-panel__canvas-tools > span { margin-right: 4px; }\n  .memory-wiki-panel__graph-legend { left: 14px; bottom: 94px; }\n  .memory-wiki-panel__canvas-status { right: 14px; bottom: 14px; font-size: 11px; }\n}\n@media (max-width: 700px) {\n  .memory-wiki-panel__page-index { top: 12px; right: 12px; }\n  .memory-wiki-panel__graph-legend { max-width: calc(100% - 28px); gap: 8px 12px; }\n}\n@media (prefers-reduced-motion: reduce) {\n  .memory-wiki-panel__drawer { animation: none; }\n}\n\n/* History is a separate surface; the graph retains its dimensions and camera. */\n.memory-wiki-panel__surfaces { position: relative; flex: 1; min-height: 0; }\n.memory-wiki-panel__surfaces > .memory-wiki-panel__workspace { position: absolute; inset: 0; }\n.memory-wiki-panel__history { position: absolute; inset: 0; overflow-y: auto; padding: 24px 32px; background: var(--mw-bg); scrollbar-width: thin; }\n.memory-wiki-panel__history-head, .memory-wiki-panel__history-toolbar, .memory-wiki-panel__history-detail-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; }\n.memory-wiki-panel__history-head h2 { margin: 0; font-size: 22px; }\n.memory-wiki-panel__history-head p, .memory-wiki-panel__history-availability p { margin: 4px 0; color: var(--mw-muted); }\n.memory-wiki-panel__history-head button, .memory-wiki-panel__history-toolbar button, .memory-wiki-panel__history-detail-head button { flex-shrink: 0; }\n.memory-wiki-panel__history-availability { margin: 20px 0; padding: 16px 0; border-block: 1px solid var(--mw-line); }\n.memory-wiki-panel__history-toolbar { margin-bottom: 20px; flex-wrap: wrap; }\n.memory-wiki-panel__history-toolbar select { margin-left: 8px; padding: 7px 12px; border: 1px solid var(--mw-line); border-radius: 6px; background: var(--mw-panel); color: var(--mw-text); font: inherit; }\n.memory-wiki-panel__history-toolbar > span { flex: 1; overflow-wrap: anywhere; color: var(--mw-muted); }\n.memory-wiki-panel__history-layout { display: grid; grid-template-columns: minmax(240px, 0.8fr) minmax(0, 1.5fr); gap: 32px; }\n.memory-wiki-panel__history-list > button { display: flex; align-items: flex-start; flex-direction: column; gap: 6px; width: 100%; padding: 16px; margin-bottom: 8px; text-align: left; white-space: normal; height: auto; overflow-wrap: anywhere; border-radius: 8px; background: transparent; }\n.memory-wiki-panel__history-list > button[aria-pressed=\"true\"] { background: var(--mw-panel); }\n.memory-wiki-panel__history-list time, .memory-wiki-panel__history-list small, .memory-wiki-panel__timeline time { color: var(--mw-muted); font-size: 11px; }\n.memory-wiki-panel__history-list strong { font-size: 14px; font-weight: 500; }\n.memory-wiki-panel__history-placeholder { padding-top: 24px; color: var(--mw-muted); }\n.memory-wiki-panel__history-detail { min-width: 0; padding-bottom: 32px; overflow-wrap: anywhere; }\n.memory-wiki-panel__history-detail h3 { margin: 24px 0 8px; font-size: 20px; }\n.memory-wiki-panel__history-detail h4 { margin: 28px 0 12px; font-size: 15px; }\n.memory-wiki-panel__history-detail h5 { font-size: 13px; margin: 12px 0 4px; }\n.memory-wiki-panel__history-note { padding: 12px 16px; background: var(--mw-panel-2); border-radius: 8px; }\n.memory-wiki-panel__history-detail pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12px; background: var(--mw-panel-2); padding: 12px; border-radius: 6px; }\n.memory-wiki-panel__timeline { list-style: none; padding: 0; }\n.memory-wiki-panel__timeline > li { padding: 14px 0; border-bottom: 1px solid var(--mw-line); }\n.memory-wiki-panel__timeline time, .memory-wiki-panel__timeline > li > strong { display: block; }\n.memory-wiki-panel__timeline p { margin: 6px 0; }\n.memory-wiki-panel__judgment { margin-top: 12px; }\n.memory-wiki-panel__judgment > summary { color: var(--mw-blue); }\n.memory-wiki-panel__judgment > div { padding: 12px 0; }\n.memory-wiki-panel__question { padding: 12px 0; border-bottom: 1px solid var(--mw-line); }\n.memory-wiki-panel__history-hash { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }\n.memory-wiki-panel__history-hash details { width: 100%; }\n.memory-wiki-panel__history-pages button { display: block; margin: 8px 0; max-width: 100%; height: auto; white-space: normal; overflow-wrap: anywhere; }\n.memory-wiki-panel__history .is-pass, .memory-wiki-panel__history .is-ingested { color: #a8d5b6; }\n.memory-wiki-panel__history .is-deferred, .memory-wiki-panel__history .is-needs_attention { color: var(--mw-gold); }\n.memory-wiki-panel__history [role=\"alert\"], .memory-wiki-panel__history .is-failed { color: #f3b9ae; }\n@media (max-width: 699px) {\n  .memory-wiki-panel__history { padding: 20px 16px; }\n  .memory-wiki-panel__history-layout { grid-template-columns: minmax(0, 1fr); }\n  .memory-wiki-panel__history-layout.has-selection .memory-wiki-panel__history-list { display: none; }\n  .memory-wiki-panel__history-placeholder { display: none; }\n  .memory-wiki-panel__head-actions { flex-wrap: wrap; }\n}\n.memory-wiki-panel__history { display: flex; flex-direction: column; overflow: hidden; }\n.memory-wiki-panel__history-head, .memory-wiki-panel__history-availability, .memory-wiki-panel__history-toolbar { flex-shrink: 0; }\n.memory-wiki-panel__history-layout { flex: 1; min-height: 0; }\n.memory-wiki-panel__history-list, .memory-wiki-panel__history-detail { overflow-y: auto; scrollbar-width: thin; }\n.memory-wiki-panel__history-detail-head { position: sticky; top: 0; padding: 8px 0; background: var(--mw-bg); z-index: 1; }\n";
 }
 function installStyles() {
 	document.getElementById(STYLE_ID)?.remove();

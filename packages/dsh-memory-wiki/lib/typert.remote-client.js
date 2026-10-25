@@ -3,6 +3,401 @@ import { z } from 'zod'
 
 import { createTypertRemoteInfo } from '@deepseek-ai/dsh-typert-protocol/remote-info'
 
+let dsh_memory_wiki_memoryWiki_captureHistory_parameter_0$schema$value
+const dsh_memory_wiki_memoryWiki_captureHistory_parameter_0$schema = () => (dsh_memory_wiki_memoryWiki_captureHistory_parameter_0$schema$value ??= z.object({
+  'sessionId': z.string(),
+  'cursor': z.union([z.undefined(), z.string()]).optional(),
+  'limit': z.union([z.undefined(), z.number()]).optional(),
+  'status': z.union([z.undefined(), z.literal("ingested"), z.literal("skipped"), z.literal("deferred"), z.literal("processing"), z.literal("error")]).optional(),
+}))
+let dsh_memory_wiki_memoryWiki_captureHistory_result$schema$value
+const dsh_memory_wiki_memoryWiki_captureHistory_result$schema = () => (dsh_memory_wiki_memoryWiki_captureHistory_result$schema$value ??= z.object({
+  'items': z.array(z.object({
+  'jobId': z.string(),
+  'phase': z.union([z.literal("queued"), z.literal("judging"), z.literal("preparing"), z.literal("verifying"), z.literal("publishing"), z.literal("ingested"), z.literal("skipped"), z.literal("deferred"), z.literal("failed"), z.literal("needs_attention")]),
+  'reason': z.string(),
+  'pages': z.array(z.string()),
+  'updatedAt': z.string(),
+  'registeredAt': z.union([z.undefined(), z.string()]).optional(),
+  'historyCoverage': z.union([z.literal("complete"), z.literal("legacy_snapshot")]),
+  'origin': z.object({
+  'sessionId': z.string(),
+  'turn': z.number(),
+  'turnStartSeq': z.number(),
+  'turnEndSeq': z.number(),
+}),
+  'task': z.string(),
+  'taskTruncated': z.boolean(),
+  'evidenceHash': z.string(),
+  'rubricVersion': z.string(),
+  'rulesHash': z.union([z.undefined(), z.string()]).optional(),
+  'patchHash': z.union([z.undefined(), z.string()]).optional(),
+  'lastEventSeq': z.number(),
+  'publicationUncertain': z.union([z.undefined(), z.literal(false), z.literal(true)]).optional(),
+  'retryable': z.union([z.undefined(), z.literal(false), z.literal(true)]).optional(),
+  'judgments': z.array(z.object({
+  'id': z.string(),
+  'stage': z.union([z.literal("assessment"), z.literal("verification")]),
+  'attempt': z.number(),
+  'model': z.string(),
+  'state': z.union([z.literal("failed"), z.literal("started"), z.literal("completed"), z.literal("interrupted")]),
+  'startedAt': z.string(),
+  'finishedAt': z.union([z.undefined(), z.string()]).optional(),
+  'durationMs': z.union([z.undefined(), z.number()]).optional(),
+  'disposition': z.union([z.undefined(), z.literal("skipped"), z.literal("deferred"), z.literal("prepare"), z.literal("publish")]).optional(),
+  'reason': z.union([z.undefined(), z.string()]).optional(),
+})),
+})),
+  'nextCursor': z.union([z.undefined(), z.string()]).optional(),
+  'readCompleteness': z.union([z.literal("complete"), z.literal("partial")]),
+  'error': z.union([z.undefined(), z.object({
+  'code': z.literal("unknown-session"),
+  'sessionId': z.string(),
+}), z.object({
+  'code': z.literal("stale-revision"),
+  'expected': z.number(),
+  'actual': z.number(),
+}), z.object({
+  'code': z.literal("nothing-selected"),
+}), z.object({
+  'code': z.literal("unknown-page"),
+  'pageId': z.string(),
+}), z.object({
+  'code': z.literal("library-changed"),
+  'expected': z.string(),
+  'actual': z.string(),
+}), z.object({
+  'code': z.literal("page-version-mismatch"),
+  'pageId': z.string(),
+  'expected': z.string(),
+  'actual': z.string(),
+}), z.object({
+  'code': z.literal("manual-over-budget"),
+  'overBy': z.number(),
+  'budgetChars': z.number(),
+  'selectedChars': z.number(),
+}), z.object({
+  'code': z.literal("no-usable-block"),
+  'pageIds': z.array(z.string()),
+}), z.object({
+  'code': z.literal("wiki-unavailable"),
+  'reason': z.union([z.literal("not-configured"), z.literal("read-failed")]),
+}), z.object({
+  'code': z.literal("capture-unavailable"),
+}), z.object({
+  'code': z.literal("capture-record-unavailable"),
+}), z.object({
+  'code': z.literal("capture-invalid-query"),
+  'field': z.union([z.literal("limit"), z.literal("cursor"), z.literal("status"), z.literal("event-seq")]),
+})]).optional(),
+}))
+let dsh_memory_wiki_memoryWiki_captureJudgment_parameter_0$schema$value
+const dsh_memory_wiki_memoryWiki_captureJudgment_parameter_0$schema = () => (dsh_memory_wiki_memoryWiki_captureJudgment_parameter_0$schema$value ??= z.object({
+  'sessionId': z.string(),
+  'jobId': z.string(),
+  'judgmentId': z.string(),
+}))
+let dsh_memory_wiki_memoryWiki_captureJudgment_result$schema$value
+const dsh_memory_wiki_memoryWiki_captureJudgment_result$schema = () => (dsh_memory_wiki_memoryWiki_captureJudgment_result$schema$value ??= z.object({
+  'judgment': z.union([z.undefined(), z.object({
+  'id': z.string(),
+  'stage': z.union([z.literal("assessment"), z.literal("verification")]),
+  'attempt': z.number(),
+  'model': z.string(),
+  'rubricVersion': z.string(),
+  'requestHash': z.string(),
+  'evidenceHash': z.string(),
+  'patchHash': z.union([z.undefined(), z.string()]).optional(),
+  'questions': z.array(z.object({
+  'id': z.string(),
+  'type': z.union([z.literal("choice"), z.literal("noul")]),
+  'text': z.string(),
+  'options': z.union([z.undefined(), z.array(z.object({
+  'value': z.string(),
+  'description': z.string(),
+}))]).optional(),
+})),
+  'result': z.union([z.undefined(), z.object({
+  'kind': z.literal("decision"),
+  'answers': z.array(z.union([z.object({
+  'id': z.string(),
+  'type': z.literal("choice"),
+  'choice': z.string(),
+  'confidence': z.number(),
+  'probabilities': z.array(z.object({
+  'option': z.string(),
+  'probability': z.number(),
+})),
+}), z.object({
+  'id': z.string(),
+  'type': z.literal("noul"),
+  'value': z.number(),
+})])),
+  'gateResults': z.array(z.object({
+  'id': z.string(),
+  'questionId': z.union([z.undefined(), z.string()]).optional(),
+  'description': z.string(),
+  'operator': z.union([z.literal("gte"), z.literal("eq")]),
+  'actual': z.union([z.string(), z.number(), z.literal(false), z.literal(true)]),
+  'expected': z.union([z.string(), z.number(), z.literal(false), z.literal(true)]),
+  'passed': z.boolean(),
+})),
+  'disposition': z.union([z.literal("skipped"), z.literal("deferred"), z.literal("prepare"), z.literal("publish")]),
+  'reasonCode': z.string(),
+  'reason': z.string(),
+  'usage': z.union([z.undefined(), z.object({
+  'inputTokens': z.union([z.literal(null), z.number()]),
+  'outputTokens': z.union([z.literal(null), z.number()]),
+})]).optional(),
+  'requestId': z.union([z.undefined(), z.string()]).optional(),
+}), z.object({
+  'kind': z.literal("error"),
+  'error': z.object({
+  'category': z.string(),
+  'message': z.string(),
+  'httpStatus': z.union([z.undefined(), z.number()]).optional(),
+}),
+})]).optional(),
+})]).optional(),
+  'lifecycle': z.union([z.undefined(), z.object({
+  'id': z.string(),
+  'stage': z.union([z.literal("assessment"), z.literal("verification")]),
+  'attempt': z.number(),
+  'model': z.string(),
+  'state': z.union([z.literal("failed"), z.literal("started"), z.literal("completed"), z.literal("interrupted")]),
+  'startedAt': z.string(),
+  'finishedAt': z.union([z.undefined(), z.string()]).optional(),
+  'durationMs': z.union([z.undefined(), z.number()]).optional(),
+  'disposition': z.union([z.undefined(), z.literal("skipped"), z.literal("deferred"), z.literal("prepare"), z.literal("publish")]).optional(),
+  'reason': z.union([z.undefined(), z.string()]).optional(),
+})]).optional(),
+  'error': z.union([z.undefined(), z.object({
+  'code': z.literal("unknown-session"),
+  'sessionId': z.string(),
+}), z.object({
+  'code': z.literal("stale-revision"),
+  'expected': z.number(),
+  'actual': z.number(),
+}), z.object({
+  'code': z.literal("nothing-selected"),
+}), z.object({
+  'code': z.literal("unknown-page"),
+  'pageId': z.string(),
+}), z.object({
+  'code': z.literal("library-changed"),
+  'expected': z.string(),
+  'actual': z.string(),
+}), z.object({
+  'code': z.literal("page-version-mismatch"),
+  'pageId': z.string(),
+  'expected': z.string(),
+  'actual': z.string(),
+}), z.object({
+  'code': z.literal("manual-over-budget"),
+  'overBy': z.number(),
+  'budgetChars': z.number(),
+  'selectedChars': z.number(),
+}), z.object({
+  'code': z.literal("no-usable-block"),
+  'pageIds': z.array(z.string()),
+}), z.object({
+  'code': z.literal("wiki-unavailable"),
+  'reason': z.union([z.literal("not-configured"), z.literal("read-failed")]),
+}), z.object({
+  'code': z.literal("capture-unavailable"),
+}), z.object({
+  'code': z.literal("capture-record-unavailable"),
+}), z.object({
+  'code': z.literal("capture-invalid-query"),
+  'field': z.union([z.literal("limit"), z.literal("cursor"), z.literal("status"), z.literal("event-seq")]),
+})]).optional(),
+}))
+let dsh_memory_wiki_memoryWiki_captureRecord_parameter_0$schema$value
+const dsh_memory_wiki_memoryWiki_captureRecord_parameter_0$schema = () => (dsh_memory_wiki_memoryWiki_captureRecord_parameter_0$schema$value ??= z.object({
+  'sessionId': z.string(),
+  'jobId': z.string(),
+  'afterEventSeq': z.union([z.undefined(), z.number()]).optional(),
+  'limit': z.union([z.undefined(), z.number()]).optional(),
+}))
+let dsh_memory_wiki_memoryWiki_captureRecord_result$schema$value
+const dsh_memory_wiki_memoryWiki_captureRecord_result$schema = () => (dsh_memory_wiki_memoryWiki_captureRecord_result$schema$value ??= z.object({
+  'summary': z.union([z.undefined(), z.object({
+  'jobId': z.string(),
+  'phase': z.union([z.literal("queued"), z.literal("judging"), z.literal("preparing"), z.literal("verifying"), z.literal("publishing"), z.literal("ingested"), z.literal("skipped"), z.literal("deferred"), z.literal("failed"), z.literal("needs_attention")]),
+  'reason': z.string(),
+  'pages': z.array(z.string()),
+  'updatedAt': z.string(),
+  'registeredAt': z.union([z.undefined(), z.string()]).optional(),
+  'historyCoverage': z.union([z.literal("complete"), z.literal("legacy_snapshot")]),
+  'origin': z.object({
+  'sessionId': z.string(),
+  'turn': z.number(),
+  'turnStartSeq': z.number(),
+  'turnEndSeq': z.number(),
+}),
+  'task': z.string(),
+  'taskTruncated': z.boolean(),
+  'evidenceHash': z.string(),
+  'rubricVersion': z.string(),
+  'rulesHash': z.union([z.undefined(), z.string()]).optional(),
+  'patchHash': z.union([z.undefined(), z.string()]).optional(),
+  'lastEventSeq': z.number(),
+  'publicationUncertain': z.union([z.undefined(), z.literal(false), z.literal(true)]).optional(),
+  'retryable': z.union([z.undefined(), z.literal(false), z.literal(true)]).optional(),
+  'judgments': z.array(z.object({
+  'id': z.string(),
+  'stage': z.union([z.literal("assessment"), z.literal("verification")]),
+  'attempt': z.number(),
+  'model': z.string(),
+  'state': z.union([z.literal("failed"), z.literal("started"), z.literal("completed"), z.literal("interrupted")]),
+  'startedAt': z.string(),
+  'finishedAt': z.union([z.undefined(), z.string()]).optional(),
+  'durationMs': z.union([z.undefined(), z.number()]).optional(),
+  'disposition': z.union([z.undefined(), z.literal("skipped"), z.literal("deferred"), z.literal("prepare"), z.literal("publish")]).optional(),
+  'reason': z.union([z.undefined(), z.string()]).optional(),
+})),
+})]).optional(),
+  'events': z.array(z.object({
+  'seq': z.number(),
+  'at': z.string(),
+  'kind': z.union([z.literal("legacy_snapshot"), z.literal("registered"), z.literal("phase_changed"), z.literal("judgment_started"), z.literal("judgment_finished"), z.literal("judgment_failed"), z.literal("judgment_interrupted"), z.literal("recovery_started"), z.literal("publication_finished"), z.literal("publication_interrupted"), z.literal("operation_failed")]),
+  'phase': z.union([z.undefined(), z.literal("queued"), z.literal("judging"), z.literal("preparing"), z.literal("verifying"), z.literal("publishing"), z.literal("ingested"), z.literal("skipped"), z.literal("deferred"), z.literal("failed"), z.literal("needs_attention")]).optional(),
+  'reason': z.union([z.undefined(), z.string()]).optional(),
+  'judgmentId': z.union([z.undefined(), z.string()]).optional(),
+  'stage': z.union([z.undefined(), z.literal("queued"), z.literal("judging"), z.literal("preparing"), z.literal("verifying"), z.literal("publishing"), z.literal("ingested"), z.literal("skipped"), z.literal("deferred"), z.literal("failed"), z.literal("needs_attention")]).optional(),
+  'error': z.union([z.undefined(), z.object({
+  'category': z.string(),
+  'message': z.string(),
+})]).optional(),
+  'durationMs': z.union([z.undefined(), z.number()]).optional(),
+})),
+  'judgments': z.array(z.object({
+  'id': z.string(),
+  'stage': z.union([z.literal("assessment"), z.literal("verification")]),
+  'attempt': z.number(),
+  'model': z.string(),
+  'state': z.union([z.literal("failed"), z.literal("started"), z.literal("completed"), z.literal("interrupted")]),
+  'startedAt': z.string(),
+  'finishedAt': z.union([z.undefined(), z.string()]).optional(),
+  'durationMs': z.union([z.undefined(), z.number()]).optional(),
+  'disposition': z.union([z.undefined(), z.literal("skipped"), z.literal("deferred"), z.literal("prepare"), z.literal("publish")]).optional(),
+  'reason': z.union([z.undefined(), z.string()]).optional(),
+})),
+  'nextEventSeq': z.union([z.undefined(), z.number()]).optional(),
+  'evidence': z.array(z.object({
+  'seq': z.number(),
+  'kind': z.string(),
+  'text': z.string(),
+  'truncated': z.boolean(),
+})),
+  'evidenceTruncated': z.boolean(),
+  'limitations': z.array(z.string()),
+  'changes': z.array(z.object({
+  'path': z.string(),
+  'beforeHash': z.union([z.undefined(), z.string()]).optional(),
+  'afterHash': z.string(),
+})),
+  'error': z.union([z.undefined(), z.object({
+  'code': z.literal("unknown-session"),
+  'sessionId': z.string(),
+}), z.object({
+  'code': z.literal("stale-revision"),
+  'expected': z.number(),
+  'actual': z.number(),
+}), z.object({
+  'code': z.literal("nothing-selected"),
+}), z.object({
+  'code': z.literal("unknown-page"),
+  'pageId': z.string(),
+}), z.object({
+  'code': z.literal("library-changed"),
+  'expected': z.string(),
+  'actual': z.string(),
+}), z.object({
+  'code': z.literal("page-version-mismatch"),
+  'pageId': z.string(),
+  'expected': z.string(),
+  'actual': z.string(),
+}), z.object({
+  'code': z.literal("manual-over-budget"),
+  'overBy': z.number(),
+  'budgetChars': z.number(),
+  'selectedChars': z.number(),
+}), z.object({
+  'code': z.literal("no-usable-block"),
+  'pageIds': z.array(z.string()),
+}), z.object({
+  'code': z.literal("wiki-unavailable"),
+  'reason': z.union([z.literal("not-configured"), z.literal("read-failed")]),
+}), z.object({
+  'code': z.literal("capture-unavailable"),
+}), z.object({
+  'code': z.literal("capture-record-unavailable"),
+}), z.object({
+  'code': z.literal("capture-invalid-query"),
+  'field': z.union([z.literal("limit"), z.literal("cursor"), z.literal("status"), z.literal("event-seq")]),
+})]).optional(),
+}))
+let dsh_memory_wiki_memoryWiki_captureStatus_parameter_0$schema$value
+const dsh_memory_wiki_memoryWiki_captureStatus_parameter_0$schema = () => (dsh_memory_wiki_memoryWiki_captureStatus_parameter_0$schema$value ??= z.object({
+  'sessionId': z.union([z.undefined(), z.string()]).optional(),
+}))
+let dsh_memory_wiki_memoryWiki_captureStatus_result$schema$value
+const dsh_memory_wiki_memoryWiki_captureStatus_result$schema = () => (dsh_memory_wiki_memoryWiki_captureStatus_result$schema$value ??= z.object({
+  'collector': z.union([z.literal("disabled"), z.literal("starting"), z.literal("ready"), z.literal("blocked")]),
+  'history': z.union([z.literal("readable"), z.literal("degraded"), z.literal("unavailable")]),
+  'reasonCode': z.string(),
+  'reason': z.string(),
+  'lastIssue': z.union([z.undefined(), z.object({
+  'at': z.string(),
+  'stage': z.union([z.literal("collecting"), z.literal("worker_lock"), z.literal("journal_write")]),
+  'code': z.string(),
+  'message': z.string(),
+  'persisted': z.boolean(),
+  'turnEndSeq': z.union([z.undefined(), z.number()]).optional(),
+  'jobId': z.union([z.undefined(), z.string()]).optional(),
+})]).optional(),
+  'error': z.union([z.undefined(), z.object({
+  'code': z.literal("unknown-session"),
+  'sessionId': z.string(),
+}), z.object({
+  'code': z.literal("stale-revision"),
+  'expected': z.number(),
+  'actual': z.number(),
+}), z.object({
+  'code': z.literal("nothing-selected"),
+}), z.object({
+  'code': z.literal("unknown-page"),
+  'pageId': z.string(),
+}), z.object({
+  'code': z.literal("library-changed"),
+  'expected': z.string(),
+  'actual': z.string(),
+}), z.object({
+  'code': z.literal("page-version-mismatch"),
+  'pageId': z.string(),
+  'expected': z.string(),
+  'actual': z.string(),
+}), z.object({
+  'code': z.literal("manual-over-budget"),
+  'overBy': z.number(),
+  'budgetChars': z.number(),
+  'selectedChars': z.number(),
+}), z.object({
+  'code': z.literal("no-usable-block"),
+  'pageIds': z.array(z.string()),
+}), z.object({
+  'code': z.literal("wiki-unavailable"),
+  'reason': z.union([z.literal("not-configured"), z.literal("read-failed")]),
+}), z.object({
+  'code': z.literal("capture-unavailable"),
+}), z.object({
+  'code': z.literal("capture-record-unavailable"),
+}), z.object({
+  'code': z.literal("capture-invalid-query"),
+  'field': z.union([z.literal("limit"), z.literal("cursor"), z.literal("status"), z.literal("event-seq")]),
+})]).optional(),
+}))
 let dsh_memory_wiki_memoryWiki_clearOverride_parameter_0$schema$value
 const dsh_memory_wiki_memoryWiki_clearOverride_parameter_0$schema = () => (dsh_memory_wiki_memoryWiki_clearOverride_parameter_0$schema$value ??= z.object({
   'sessionId': z.string(),
@@ -44,6 +439,13 @@ const dsh_memory_wiki_memoryWiki_clearOverride_result$schema = () => (dsh_memory
 }), z.object({
   'code': z.literal("wiki-unavailable"),
   'reason': z.union([z.literal("not-configured"), z.literal("read-failed")]),
+}), z.object({
+  'code': z.literal("capture-unavailable"),
+}), z.object({
+  'code': z.literal("capture-record-unavailable"),
+}), z.object({
+  'code': z.literal("capture-invalid-query"),
+  'field': z.union([z.literal("limit"), z.literal("cursor"), z.literal("status"), z.literal("event-seq")]),
 })]).optional(),
 }))
 let dsh_memory_wiki_memoryWiki_graph_parameter_0$schema$value
@@ -97,6 +499,13 @@ const dsh_memory_wiki_memoryWiki_graph_result$schema = () => (dsh_memory_wiki_me
 }), z.object({
   'code': z.literal("wiki-unavailable"),
   'reason': z.union([z.literal("not-configured"), z.literal("read-failed")]),
+}), z.object({
+  'code': z.literal("capture-unavailable"),
+}), z.object({
+  'code': z.literal("capture-record-unavailable"),
+}), z.object({
+  'code': z.literal("capture-invalid-query"),
+  'field': z.union([z.literal("limit"), z.literal("cursor"), z.literal("status"), z.literal("event-seq")]),
 })]).optional(),
 }))
 let dsh_memory_wiki_memoryWiki_prepareOverride_parameter_0$schema$value
@@ -186,6 +595,13 @@ const dsh_memory_wiki_memoryWiki_prepareOverride_result$schema = () => (dsh_memo
 }), z.object({
   'code': z.literal("wiki-unavailable"),
   'reason': z.union([z.literal("not-configured"), z.literal("read-failed")]),
+}), z.object({
+  'code': z.literal("capture-unavailable"),
+}), z.object({
+  'code': z.literal("capture-record-unavailable"),
+}), z.object({
+  'code': z.literal("capture-invalid-query"),
+  'field': z.union([z.literal("limit"), z.literal("cursor"), z.literal("status"), z.literal("event-seq")]),
 })]).optional(),
 }))
 let dsh_memory_wiki_memoryWiki_readPage_parameter_0$schema$value
@@ -242,6 +658,13 @@ const dsh_memory_wiki_memoryWiki_readPage_result$schema = () => (dsh_memory_wiki
 }), z.object({
   'code': z.literal("wiki-unavailable"),
   'reason': z.union([z.literal("not-configured"), z.literal("read-failed")]),
+}), z.object({
+  'code': z.literal("capture-unavailable"),
+}), z.object({
+  'code': z.literal("capture-record-unavailable"),
+}), z.object({
+  'code': z.literal("capture-invalid-query"),
+  'field': z.union([z.literal("limit"), z.literal("cursor"), z.literal("status"), z.literal("event-seq")]),
 })]).optional(),
 }))
 let dsh_memory_wiki_memoryWiki_reviseDraft_parameter_0$schema$value
@@ -319,6 +742,13 @@ const dsh_memory_wiki_memoryWiki_reviseDraft_result$schema = () => (dsh_memory_w
 }), z.object({
   'code': z.literal("wiki-unavailable"),
   'reason': z.union([z.literal("not-configured"), z.literal("read-failed")]),
+}), z.object({
+  'code': z.literal("capture-unavailable"),
+}), z.object({
+  'code': z.literal("capture-record-unavailable"),
+}), z.object({
+  'code': z.literal("capture-invalid-query"),
+  'field': z.union([z.literal("limit"), z.literal("cursor"), z.literal("status"), z.literal("event-seq")]),
 })]).optional(),
 }))
 let dsh_memory_wiki_memoryWiki_search_parameter_0$schema$value
@@ -387,6 +817,13 @@ const dsh_memory_wiki_memoryWiki_search_result$schema = () => (dsh_memory_wiki_m
 }), z.object({
   'code': z.literal("wiki-unavailable"),
   'reason': z.union([z.literal("not-configured"), z.literal("read-failed")]),
+}), z.object({
+  'code': z.literal("capture-unavailable"),
+}), z.object({
+  'code': z.literal("capture-record-unavailable"),
+}), z.object({
+  'code': z.literal("capture-invalid-query"),
+  'field': z.union([z.literal("limit"), z.literal("cursor"), z.literal("status"), z.literal("event-seq")]),
 })]).optional(),
 }))
 let dsh_memory_wiki_memoryWiki_view_parameter_0$schema$value
@@ -534,7 +971,38 @@ const dsh_memory_wiki_memoryWiki_view_result$schema = () => (dsh_memory_wiki_mem
 }), z.object({
   'code': z.literal("wiki-unavailable"),
   'reason': z.union([z.literal("not-configured"), z.literal("read-failed")]),
+}), z.object({
+  'code': z.literal("capture-unavailable"),
+}), z.object({
+  'code': z.literal("capture-record-unavailable"),
+}), z.object({
+  'code': z.literal("capture-invalid-query"),
+  'field': z.union([z.literal("limit"), z.literal("cursor"), z.literal("status"), z.literal("event-seq")]),
 })]).optional(),
+}))
+let dsh_memory_wiki_memoryWiki_captureHistory_parameter_0_strict$schema$value
+const dsh_memory_wiki_memoryWiki_captureHistory_parameter_0_strict$schema = () => (dsh_memory_wiki_memoryWiki_captureHistory_parameter_0_strict$schema$value ??= z.strictObject({
+  'sessionId': z.string(),
+  'cursor': z.union([z.undefined(), z.string()]).optional(),
+  'limit': z.union([z.undefined(), z.number()]).optional(),
+  'status': z.union([z.undefined(), z.literal("ingested"), z.literal("skipped"), z.literal("deferred"), z.literal("processing"), z.literal("error")]).optional(),
+}))
+let dsh_memory_wiki_memoryWiki_captureJudgment_parameter_0_strict$schema$value
+const dsh_memory_wiki_memoryWiki_captureJudgment_parameter_0_strict$schema = () => (dsh_memory_wiki_memoryWiki_captureJudgment_parameter_0_strict$schema$value ??= z.strictObject({
+  'sessionId': z.string(),
+  'jobId': z.string(),
+  'judgmentId': z.string(),
+}))
+let dsh_memory_wiki_memoryWiki_captureRecord_parameter_0_strict$schema$value
+const dsh_memory_wiki_memoryWiki_captureRecord_parameter_0_strict$schema = () => (dsh_memory_wiki_memoryWiki_captureRecord_parameter_0_strict$schema$value ??= z.strictObject({
+  'sessionId': z.string(),
+  'jobId': z.string(),
+  'afterEventSeq': z.union([z.undefined(), z.number()]).optional(),
+  'limit': z.union([z.undefined(), z.number()]).optional(),
+}))
+let dsh_memory_wiki_memoryWiki_captureStatus_parameter_0_strict$schema$value
+const dsh_memory_wiki_memoryWiki_captureStatus_parameter_0_strict$schema = () => (dsh_memory_wiki_memoryWiki_captureStatus_parameter_0_strict$schema$value ??= z.strictObject({
+  'sessionId': z.union([z.undefined(), z.string()]).optional(),
 }))
 let dsh_memory_wiki_memoryWiki_clearOverride_parameter_0_strict$schema$value
 const dsh_memory_wiki_memoryWiki_clearOverride_parameter_0_strict$schema = () => (dsh_memory_wiki_memoryWiki_clearOverride_parameter_0_strict$schema$value ??= z.strictObject({
@@ -580,6 +1048,122 @@ const dsh_memory_wiki_memoryWiki_view_parameter_0_strict$schema = () => (dsh_mem
 export const TYPERT_REMOTE = createTypertRemoteInfo({
   package: 'dsh-memory-wiki',
   methods: {
+    'memoryWiki/captureHistory': {
+      service: 'memoryWiki',
+      invocation: { kind: 'direct' },
+      parameters: [
+        {
+          name: 'input',
+          source: 'json',
+          codec: {
+            mode: 'strict',
+            typeSymbol: 'dsh-memory-wiki/contracts#CaptureHistoryInput',
+            create: dsh_memory_wiki_memoryWiki_captureHistory_parameter_0$schema,
+            jsonSchema: {"type":"object","properties":{"sessionId":{"type":"string"},"cursor":{"type":"string"},"limit":{"type":"number"},"status":{"type":"string","enum":["ingested","skipped","deferred","processing","error"]}},"required":["sessionId"],"additionalProperties":true},
+          },
+          strictCodec: {
+            mode: 'strict',
+            typeSymbol: 'dsh-memory-wiki/contracts#CaptureHistoryInput',
+            create: dsh_memory_wiki_memoryWiki_captureHistory_parameter_0_strict$schema,
+            jsonSchema: {"type":"object","properties":{"sessionId":{"type":"string"},"cursor":{"type":"string"},"limit":{"type":"number"},"status":{"type":"string","enum":["ingested","skipped","deferred","processing","error"]}},"required":["sessionId"],"additionalProperties":false},
+          },
+        },
+      ],
+      result: {
+        mode: 'strict',
+        typeSymbol: 'dsh-memory-wiki/contracts#CaptureHistoryResult',
+        create: dsh_memory_wiki_memoryWiki_captureHistory_result$schema,
+        jsonSchema: {"type":"object","properties":{"items":{"type":"array","items":{"type":"object","properties":{"jobId":{"type":"string"},"phase":{"type":"string","enum":["queued","judging","preparing","verifying","publishing","ingested","skipped","deferred","failed","needs_attention"]},"reason":{"type":"string"},"pages":{"type":"array","items":{"type":"string"}},"updatedAt":{"type":"string"},"registeredAt":{"type":"string"},"historyCoverage":{"type":"string","enum":["complete","legacy_snapshot"]},"origin":{"type":"object","properties":{"sessionId":{"type":"string"},"turn":{"type":"number"},"turnStartSeq":{"type":"number"},"turnEndSeq":{"type":"number"}},"required":["sessionId","turn","turnStartSeq","turnEndSeq"],"additionalProperties":true},"task":{"type":"string"},"taskTruncated":{"type":"boolean"},"evidenceHash":{"type":"string"},"rubricVersion":{"type":"string"},"rulesHash":{"type":"string"},"patchHash":{"type":"string"},"lastEventSeq":{"type":"number"},"publicationUncertain":{"type":"boolean","enum":[false,true]},"retryable":{"type":"boolean","enum":[false,true]},"judgments":{"type":"array","items":{"type":"object","properties":{"id":{"type":"string"},"stage":{"type":"string","enum":["assessment","verification"]},"attempt":{"type":"number"},"model":{"type":"string"},"state":{"type":"string","enum":["failed","started","completed","interrupted"]},"startedAt":{"type":"string"},"finishedAt":{"type":"string"},"durationMs":{"type":"number"},"disposition":{"type":"string","enum":["skipped","deferred","prepare","publish"]},"reason":{"type":"string"}},"required":["id","stage","attempt","model","state","startedAt"],"additionalProperties":true}}},"required":["jobId","phase","reason","pages","updatedAt","historyCoverage","origin","task","taskTruncated","evidenceHash","rubricVersion","lastEventSeq","judgments"],"additionalProperties":true}},"nextCursor":{"type":"string"},"readCompleteness":{"type":"string","enum":["complete","partial"]},"error":{"oneOf":[{"type":"object","properties":{"code":{"type":"string","const":"unknown-session"},"sessionId":{"type":"string"}},"required":["code","sessionId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"stale-revision"},"expected":{"type":"number"},"actual":{"type":"number"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"nothing-selected"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"unknown-page"},"pageId":{"type":"string"}},"required":["code","pageId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"library-changed"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"page-version-mismatch"},"pageId":{"type":"string"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","pageId","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"manual-over-budget"},"overBy":{"type":"number"},"budgetChars":{"type":"number"},"selectedChars":{"type":"number"}},"required":["code","overBy","budgetChars","selectedChars"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"no-usable-block"},"pageIds":{"type":"array","items":{"type":"string"}}},"required":["code","pageIds"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"wiki-unavailable"},"reason":{"type":"string","enum":["not-configured","read-failed"]}},"required":["code","reason"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-record-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-invalid-query"},"field":{"type":"string","enum":["limit","cursor","status","event-seq"]}},"required":["code","field"],"additionalProperties":true}]}},"required":["items","readCompleteness"],"additionalProperties":true},
+      },
+      sourceLocation: {"file":"packages/dsh-memory-wiki/src/server/index.ts","line":161,"column":9},
+    },
+    'memoryWiki/captureJudgment': {
+      service: 'memoryWiki',
+      invocation: { kind: 'direct' },
+      parameters: [
+        {
+          name: 'input',
+          source: 'json',
+          codec: {
+            mode: 'strict',
+            typeSymbol: 'dsh-memory-wiki/contracts#CaptureJudgmentInput',
+            create: dsh_memory_wiki_memoryWiki_captureJudgment_parameter_0$schema,
+            jsonSchema: {"type":"object","properties":{"sessionId":{"type":"string"},"jobId":{"type":"string"},"judgmentId":{"type":"string"}},"required":["sessionId","jobId","judgmentId"],"additionalProperties":true},
+          },
+          strictCodec: {
+            mode: 'strict',
+            typeSymbol: 'dsh-memory-wiki/contracts#CaptureJudgmentInput',
+            create: dsh_memory_wiki_memoryWiki_captureJudgment_parameter_0_strict$schema,
+            jsonSchema: {"type":"object","properties":{"sessionId":{"type":"string"},"jobId":{"type":"string"},"judgmentId":{"type":"string"}},"required":["sessionId","jobId","judgmentId"],"additionalProperties":false},
+          },
+        },
+      ],
+      result: {
+        mode: 'strict',
+        typeSymbol: 'dsh-memory-wiki/contracts#CaptureJudgmentResult',
+        create: dsh_memory_wiki_memoryWiki_captureJudgment_result$schema,
+        jsonSchema: {"type":"object","properties":{"judgment":{"type":"object","properties":{"id":{"type":"string"},"stage":{"type":"string","enum":["assessment","verification"]},"attempt":{"type":"number"},"model":{"type":"string"},"rubricVersion":{"type":"string"},"requestHash":{"type":"string"},"evidenceHash":{"type":"string"},"patchHash":{"type":"string"},"questions":{"type":"array","items":{"type":"object","properties":{"id":{"type":"string"},"type":{"type":"string","enum":["choice","noul"]},"text":{"type":"string"},"options":{"type":"array","items":{"type":"object","properties":{"value":{"type":"string"},"description":{"type":"string"}},"required":["value","description"],"additionalProperties":true}}},"required":["id","type","text"],"additionalProperties":true}},"result":{"oneOf":[{"type":"object","properties":{"kind":{"type":"string","const":"decision"},"answers":{"type":"array","items":{"oneOf":[{"type":"object","properties":{"id":{"type":"string"},"type":{"type":"string","const":"choice"},"choice":{"type":"string"},"confidence":{"type":"number"},"probabilities":{"type":"array","items":{"type":"object","properties":{"option":{"type":"string"},"probability":{"type":"number"}},"required":["option","probability"],"additionalProperties":true}}},"required":["id","type","choice","confidence","probabilities"],"additionalProperties":true},{"type":"object","properties":{"id":{"type":"string"},"type":{"type":"string","const":"noul"},"value":{"type":"number"}},"required":["id","type","value"],"additionalProperties":true}]}},"gateResults":{"type":"array","items":{"type":"object","properties":{"id":{"type":"string"},"questionId":{"type":"string"},"description":{"type":"string"},"operator":{"type":"string","enum":["gte","eq"]},"actual":{"oneOf":[{"type":"string"},{"type":"number"},{"type":"boolean","enum":[false,true]}]},"expected":{"oneOf":[{"type":"string"},{"type":"number"},{"type":"boolean","enum":[false,true]}]},"passed":{"type":"boolean"}},"required":["id","description","operator","actual","expected","passed"],"additionalProperties":true}},"disposition":{"type":"string","enum":["skipped","deferred","prepare","publish"]},"reasonCode":{"type":"string"},"reason":{"type":"string"},"usage":{"type":"object","properties":{"inputTokens":{"oneOf":[{"type":"null","const":null},{"type":"number"}]},"outputTokens":{"oneOf":[{"type":"null","const":null},{"type":"number"}]}},"required":["inputTokens","outputTokens"],"additionalProperties":true},"requestId":{"type":"string"}},"required":["kind","answers","gateResults","disposition","reasonCode","reason"],"additionalProperties":true},{"type":"object","properties":{"kind":{"type":"string","const":"error"},"error":{"type":"object","properties":{"category":{"type":"string"},"message":{"type":"string"},"httpStatus":{"type":"number"}},"required":["category","message"],"additionalProperties":true}},"required":["kind","error"],"additionalProperties":true}]}},"required":["id","stage","attempt","model","rubricVersion","requestHash","evidenceHash","questions"],"additionalProperties":true},"lifecycle":{"type":"object","properties":{"id":{"type":"string"},"stage":{"type":"string","enum":["assessment","verification"]},"attempt":{"type":"number"},"model":{"type":"string"},"state":{"type":"string","enum":["failed","started","completed","interrupted"]},"startedAt":{"type":"string"},"finishedAt":{"type":"string"},"durationMs":{"type":"number"},"disposition":{"type":"string","enum":["skipped","deferred","prepare","publish"]},"reason":{"type":"string"}},"required":["id","stage","attempt","model","state","startedAt"],"additionalProperties":true},"error":{"oneOf":[{"type":"object","properties":{"code":{"type":"string","const":"unknown-session"},"sessionId":{"type":"string"}},"required":["code","sessionId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"stale-revision"},"expected":{"type":"number"},"actual":{"type":"number"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"nothing-selected"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"unknown-page"},"pageId":{"type":"string"}},"required":["code","pageId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"library-changed"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"page-version-mismatch"},"pageId":{"type":"string"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","pageId","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"manual-over-budget"},"overBy":{"type":"number"},"budgetChars":{"type":"number"},"selectedChars":{"type":"number"}},"required":["code","overBy","budgetChars","selectedChars"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"no-usable-block"},"pageIds":{"type":"array","items":{"type":"string"}}},"required":["code","pageIds"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"wiki-unavailable"},"reason":{"type":"string","enum":["not-configured","read-failed"]}},"required":["code","reason"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-record-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-invalid-query"},"field":{"type":"string","enum":["limit","cursor","status","event-seq"]}},"required":["code","field"],"additionalProperties":true}]}},"required":[],"additionalProperties":true},
+      },
+      sourceLocation: {"file":"packages/dsh-memory-wiki/src/server/index.ts","line":167,"column":9},
+    },
+    'memoryWiki/captureRecord': {
+      service: 'memoryWiki',
+      invocation: { kind: 'direct' },
+      parameters: [
+        {
+          name: 'input',
+          source: 'json',
+          codec: {
+            mode: 'strict',
+            typeSymbol: 'dsh-memory-wiki/contracts#CaptureRecordInput',
+            create: dsh_memory_wiki_memoryWiki_captureRecord_parameter_0$schema,
+            jsonSchema: {"type":"object","properties":{"sessionId":{"type":"string"},"jobId":{"type":"string"},"afterEventSeq":{"type":"number"},"limit":{"type":"number"}},"required":["sessionId","jobId"],"additionalProperties":true},
+          },
+          strictCodec: {
+            mode: 'strict',
+            typeSymbol: 'dsh-memory-wiki/contracts#CaptureRecordInput',
+            create: dsh_memory_wiki_memoryWiki_captureRecord_parameter_0_strict$schema,
+            jsonSchema: {"type":"object","properties":{"sessionId":{"type":"string"},"jobId":{"type":"string"},"afterEventSeq":{"type":"number"},"limit":{"type":"number"}},"required":["sessionId","jobId"],"additionalProperties":false},
+          },
+        },
+      ],
+      result: {
+        mode: 'strict',
+        typeSymbol: 'dsh-memory-wiki/contracts#CaptureRecordResult',
+        create: dsh_memory_wiki_memoryWiki_captureRecord_result$schema,
+        jsonSchema: {"type":"object","properties":{"summary":{"type":"object","properties":{"jobId":{"type":"string"},"phase":{"type":"string","enum":["queued","judging","preparing","verifying","publishing","ingested","skipped","deferred","failed","needs_attention"]},"reason":{"type":"string"},"pages":{"type":"array","items":{"type":"string"}},"updatedAt":{"type":"string"},"registeredAt":{"type":"string"},"historyCoverage":{"type":"string","enum":["complete","legacy_snapshot"]},"origin":{"type":"object","properties":{"sessionId":{"type":"string"},"turn":{"type":"number"},"turnStartSeq":{"type":"number"},"turnEndSeq":{"type":"number"}},"required":["sessionId","turn","turnStartSeq","turnEndSeq"],"additionalProperties":true},"task":{"type":"string"},"taskTruncated":{"type":"boolean"},"evidenceHash":{"type":"string"},"rubricVersion":{"type":"string"},"rulesHash":{"type":"string"},"patchHash":{"type":"string"},"lastEventSeq":{"type":"number"},"publicationUncertain":{"type":"boolean","enum":[false,true]},"retryable":{"type":"boolean","enum":[false,true]},"judgments":{"type":"array","items":{"type":"object","properties":{"id":{"type":"string"},"stage":{"type":"string","enum":["assessment","verification"]},"attempt":{"type":"number"},"model":{"type":"string"},"state":{"type":"string","enum":["failed","started","completed","interrupted"]},"startedAt":{"type":"string"},"finishedAt":{"type":"string"},"durationMs":{"type":"number"},"disposition":{"type":"string","enum":["skipped","deferred","prepare","publish"]},"reason":{"type":"string"}},"required":["id","stage","attempt","model","state","startedAt"],"additionalProperties":true}}},"required":["jobId","phase","reason","pages","updatedAt","historyCoverage","origin","task","taskTruncated","evidenceHash","rubricVersion","lastEventSeq","judgments"],"additionalProperties":true},"events":{"type":"array","items":{"type":"object","properties":{"seq":{"type":"number"},"at":{"type":"string"},"kind":{"type":"string","enum":["legacy_snapshot","registered","phase_changed","judgment_started","judgment_finished","judgment_failed","judgment_interrupted","recovery_started","publication_finished","publication_interrupted","operation_failed"]},"phase":{"type":"string","enum":["queued","judging","preparing","verifying","publishing","ingested","skipped","deferred","failed","needs_attention"]},"reason":{"type":"string"},"judgmentId":{"type":"string"},"stage":{"type":"string","enum":["queued","judging","preparing","verifying","publishing","ingested","skipped","deferred","failed","needs_attention"]},"error":{"type":"object","properties":{"category":{"type":"string"},"message":{"type":"string"}},"required":["category","message"],"additionalProperties":true},"durationMs":{"type":"number"}},"required":["seq","at","kind"],"additionalProperties":true}},"judgments":{"type":"array","items":{"type":"object","properties":{"id":{"type":"string"},"stage":{"type":"string","enum":["assessment","verification"]},"attempt":{"type":"number"},"model":{"type":"string"},"state":{"type":"string","enum":["failed","started","completed","interrupted"]},"startedAt":{"type":"string"},"finishedAt":{"type":"string"},"durationMs":{"type":"number"},"disposition":{"type":"string","enum":["skipped","deferred","prepare","publish"]},"reason":{"type":"string"}},"required":["id","stage","attempt","model","state","startedAt"],"additionalProperties":true}},"nextEventSeq":{"type":"number"},"evidence":{"type":"array","items":{"type":"object","properties":{"seq":{"type":"number"},"kind":{"type":"string"},"text":{"type":"string"},"truncated":{"type":"boolean"}},"required":["seq","kind","text","truncated"],"additionalProperties":true}},"evidenceTruncated":{"type":"boolean"},"limitations":{"type":"array","items":{"type":"string"}},"changes":{"type":"array","items":{"type":"object","properties":{"path":{"type":"string"},"beforeHash":{"type":"string"},"afterHash":{"type":"string"}},"required":["path","afterHash"],"additionalProperties":true}},"error":{"oneOf":[{"type":"object","properties":{"code":{"type":"string","const":"unknown-session"},"sessionId":{"type":"string"}},"required":["code","sessionId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"stale-revision"},"expected":{"type":"number"},"actual":{"type":"number"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"nothing-selected"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"unknown-page"},"pageId":{"type":"string"}},"required":["code","pageId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"library-changed"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"page-version-mismatch"},"pageId":{"type":"string"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","pageId","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"manual-over-budget"},"overBy":{"type":"number"},"budgetChars":{"type":"number"},"selectedChars":{"type":"number"}},"required":["code","overBy","budgetChars","selectedChars"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"no-usable-block"},"pageIds":{"type":"array","items":{"type":"string"}}},"required":["code","pageIds"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"wiki-unavailable"},"reason":{"type":"string","enum":["not-configured","read-failed"]}},"required":["code","reason"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-record-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-invalid-query"},"field":{"type":"string","enum":["limit","cursor","status","event-seq"]}},"required":["code","field"],"additionalProperties":true}]}},"required":["events","judgments","evidence","evidenceTruncated","limitations","changes"],"additionalProperties":true},
+      },
+      sourceLocation: {"file":"packages/dsh-memory-wiki/src/server/index.ts","line":164,"column":9},
+    },
+    'memoryWiki/captureStatus': {
+      service: 'memoryWiki',
+      invocation: { kind: 'direct' },
+      parameters: [
+        {
+          name: 'input',
+          source: 'json',
+          codec: {
+            mode: 'strict',
+            typeSymbol: 'dsh-memory-wiki/contracts#CaptureStatusInput',
+            create: dsh_memory_wiki_memoryWiki_captureStatus_parameter_0$schema,
+            jsonSchema: {"type":"object","properties":{"sessionId":{"type":"string"}},"required":[],"additionalProperties":true},
+          },
+          strictCodec: {
+            mode: 'strict',
+            typeSymbol: 'dsh-memory-wiki/contracts#CaptureStatusInput',
+            create: dsh_memory_wiki_memoryWiki_captureStatus_parameter_0_strict$schema,
+            jsonSchema: {"type":"object","properties":{"sessionId":{"type":"string"}},"required":[],"additionalProperties":false},
+          },
+        },
+      ],
+      result: {
+        mode: 'strict',
+        typeSymbol: 'dsh-memory-wiki/contracts#CaptureStatusResult',
+        create: dsh_memory_wiki_memoryWiki_captureStatus_result$schema,
+        jsonSchema: {"type":"object","properties":{"collector":{"type":"string","enum":["disabled","starting","ready","blocked"]},"history":{"type":"string","enum":["readable","degraded","unavailable"]},"reasonCode":{"type":"string"},"reason":{"type":"string"},"lastIssue":{"type":"object","properties":{"at":{"type":"string"},"stage":{"type":"string","enum":["collecting","worker_lock","journal_write"]},"code":{"type":"string"},"message":{"type":"string"},"persisted":{"type":"boolean"},"turnEndSeq":{"type":"number"},"jobId":{"type":"string"}},"required":["at","stage","code","message","persisted"],"additionalProperties":true},"error":{"oneOf":[{"type":"object","properties":{"code":{"type":"string","const":"unknown-session"},"sessionId":{"type":"string"}},"required":["code","sessionId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"stale-revision"},"expected":{"type":"number"},"actual":{"type":"number"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"nothing-selected"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"unknown-page"},"pageId":{"type":"string"}},"required":["code","pageId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"library-changed"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"page-version-mismatch"},"pageId":{"type":"string"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","pageId","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"manual-over-budget"},"overBy":{"type":"number"},"budgetChars":{"type":"number"},"selectedChars":{"type":"number"}},"required":["code","overBy","budgetChars","selectedChars"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"no-usable-block"},"pageIds":{"type":"array","items":{"type":"string"}}},"required":["code","pageIds"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"wiki-unavailable"},"reason":{"type":"string","enum":["not-configured","read-failed"]}},"required":["code","reason"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-record-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-invalid-query"},"field":{"type":"string","enum":["limit","cursor","status","event-seq"]}},"required":["code","field"],"additionalProperties":true}]}},"required":["collector","history","reasonCode","reason"],"additionalProperties":true},
+      },
+      sourceLocation: {"file":"packages/dsh-memory-wiki/src/server/index.ts","line":154,"column":9},
+    },
     'memoryWiki/clearOverride': {
       service: 'memoryWiki',
       description: 'Drop a still-unconsumed prepared override and return to automatic selection.',
@@ -608,9 +1192,9 @@ export const TYPERT_REMOTE = createTypertRemoteInfo({
         typeSymbol: 'dsh-memory-wiki/contracts#ClearResult',
         create: dsh_memory_wiki_memoryWiki_clearOverride_result$schema,
         description: 'the automatic mode and the new revision.',
-        jsonSchema: {"type":"object","properties":{"revision":{"type":"number"},"mode":{"type":"string","enum":["automatic","manual-ready","manual-invalid"]},"error":{"oneOf":[{"type":"object","properties":{"code":{"type":"string","const":"unknown-session"},"sessionId":{"type":"string"}},"required":["code","sessionId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"stale-revision"},"expected":{"type":"number"},"actual":{"type":"number"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"nothing-selected"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"unknown-page"},"pageId":{"type":"string"}},"required":["code","pageId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"library-changed"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"page-version-mismatch"},"pageId":{"type":"string"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","pageId","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"manual-over-budget"},"overBy":{"type":"number"},"budgetChars":{"type":"number"},"selectedChars":{"type":"number"}},"required":["code","overBy","budgetChars","selectedChars"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"no-usable-block"},"pageIds":{"type":"array","items":{"type":"string"}}},"required":["code","pageIds"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"wiki-unavailable"},"reason":{"type":"string","enum":["not-configured","read-failed"]}},"required":["code","reason"],"additionalProperties":true}]}},"required":["revision","mode"],"additionalProperties":true},
+        jsonSchema: {"type":"object","properties":{"revision":{"type":"number"},"mode":{"type":"string","enum":["automatic","manual-ready","manual-invalid"]},"error":{"oneOf":[{"type":"object","properties":{"code":{"type":"string","const":"unknown-session"},"sessionId":{"type":"string"}},"required":["code","sessionId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"stale-revision"},"expected":{"type":"number"},"actual":{"type":"number"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"nothing-selected"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"unknown-page"},"pageId":{"type":"string"}},"required":["code","pageId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"library-changed"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"page-version-mismatch"},"pageId":{"type":"string"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","pageId","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"manual-over-budget"},"overBy":{"type":"number"},"budgetChars":{"type":"number"},"selectedChars":{"type":"number"}},"required":["code","overBy","budgetChars","selectedChars"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"no-usable-block"},"pageIds":{"type":"array","items":{"type":"string"}}},"required":["code","pageIds"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"wiki-unavailable"},"reason":{"type":"string","enum":["not-configured","read-failed"]}},"required":["code","reason"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-record-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-invalid-query"},"field":{"type":"string","enum":["limit","cursor","status","event-seq"]}},"required":["code","field"],"additionalProperties":true}]}},"required":["revision","mode"],"additionalProperties":true},
       },
-      sourceLocation: {"file":"packages/dsh-memory-wiki/src/server/index.ts","line":190,"column":9},
+      sourceLocation: {"file":"packages/dsh-memory-wiki/src/server/index.ts","line":221,"column":9},
     },
     'memoryWiki/graph': {
       service: 'memoryWiki',
@@ -638,9 +1222,9 @@ export const TYPERT_REMOTE = createTypertRemoteInfo({
         mode: 'strict',
         typeSymbol: 'dsh-memory-wiki/contracts#GraphResult',
         create: dsh_memory_wiki_memoryWiki_graph_result$schema,
-        jsonSchema: {"type":"object","properties":{"libraryRevision":{"type":"string"},"pages":{"type":"array","items":{"type":"object","properties":{"pageId":{"type":"string"},"title":{"type":"string"},"kind":{"type":"string","enum":["source","entity","concept","synthesis","output"]},"contentHash":{"type":"string"},"asOf":{"type":"string"}},"required":["pageId","title","kind","contentHash"],"additionalProperties":true}},"edges":{"type":"array","items":{"type":"object","properties":{"from":{"type":"string"},"to":{"type":"string"},"source":{"type":"string","enum":["body","related"]},"line":{"type":"number","description":"1-based file line for body edges; undefined for `related` edges."}},"required":["from","to","source"],"additionalProperties":true}},"brokenLinks":{"type":"number"},"error":{"oneOf":[{"type":"object","properties":{"code":{"type":"string","const":"unknown-session"},"sessionId":{"type":"string"}},"required":["code","sessionId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"stale-revision"},"expected":{"type":"number"},"actual":{"type":"number"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"nothing-selected"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"unknown-page"},"pageId":{"type":"string"}},"required":["code","pageId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"library-changed"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"page-version-mismatch"},"pageId":{"type":"string"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","pageId","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"manual-over-budget"},"overBy":{"type":"number"},"budgetChars":{"type":"number"},"selectedChars":{"type":"number"}},"required":["code","overBy","budgetChars","selectedChars"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"no-usable-block"},"pageIds":{"type":"array","items":{"type":"string"}}},"required":["code","pageIds"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"wiki-unavailable"},"reason":{"type":"string","enum":["not-configured","read-failed"]}},"required":["code","reason"],"additionalProperties":true}]}},"required":["libraryRevision","pages","edges","brokenLinks"],"additionalProperties":true},
+        jsonSchema: {"type":"object","properties":{"libraryRevision":{"type":"string"},"pages":{"type":"array","items":{"type":"object","properties":{"pageId":{"type":"string"},"title":{"type":"string"},"kind":{"type":"string","enum":["source","entity","concept","synthesis","output"]},"contentHash":{"type":"string"},"asOf":{"type":"string"}},"required":["pageId","title","kind","contentHash"],"additionalProperties":true}},"edges":{"type":"array","items":{"type":"object","properties":{"from":{"type":"string"},"to":{"type":"string"},"source":{"type":"string","enum":["body","related"]},"line":{"type":"number","description":"1-based file line for body edges; undefined for `related` edges."}},"required":["from","to","source"],"additionalProperties":true}},"brokenLinks":{"type":"number"},"error":{"oneOf":[{"type":"object","properties":{"code":{"type":"string","const":"unknown-session"},"sessionId":{"type":"string"}},"required":["code","sessionId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"stale-revision"},"expected":{"type":"number"},"actual":{"type":"number"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"nothing-selected"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"unknown-page"},"pageId":{"type":"string"}},"required":["code","pageId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"library-changed"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"page-version-mismatch"},"pageId":{"type":"string"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","pageId","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"manual-over-budget"},"overBy":{"type":"number"},"budgetChars":{"type":"number"},"selectedChars":{"type":"number"}},"required":["code","overBy","budgetChars","selectedChars"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"no-usable-block"},"pageIds":{"type":"array","items":{"type":"string"}}},"required":["code","pageIds"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"wiki-unavailable"},"reason":{"type":"string","enum":["not-configured","read-failed"]}},"required":["code","reason"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-record-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-invalid-query"},"field":{"type":"string","enum":["limit","cursor","status","event-seq"]}},"required":["code","field"],"additionalProperties":true}]}},"required":["libraryRevision","pages","edges","brokenLinks"],"additionalProperties":true},
       },
-      sourceLocation: {"file":"packages/dsh-memory-wiki/src/server/index.ts","line":140,"column":9},
+      sourceLocation: {"file":"packages/dsh-memory-wiki/src/server/index.ts","line":171,"column":9},
     },
     'memoryWiki/prepareOverride': {
       service: 'memoryWiki',
@@ -670,9 +1254,9 @@ export const TYPERT_REMOTE = createTypertRemoteInfo({
         typeSymbol: 'dsh-memory-wiki/contracts#OverrideResult',
         create: dsh_memory_wiki_memoryWiki_prepareOverride_result$schema,
         description: 'the prepared snapshot, or the reason it could not be prepared.',
-        jsonSchema: {"type":"object","properties":{"revision":{"type":"number"},"mode":{"type":"string","enum":["automatic","manual-ready","manual-invalid"]},"prepared":{"type":"object","properties":{"snapshotId":{"type":"string"},"libraryRevision":{"type":"string"},"origin":{"type":"string","enum":["automatic","manual"]},"budgetChars":{"type":"number","description":"Production values are 4000 | 8000; tests may pass smaller numbers."},"sources":{"type":"array","items":{"type":"object","properties":{"title":{"type":"string"},"segments":{"type":"array","items":{"type":"object","properties":{"startLine":{"type":"number"},"endLine":{"type":"number"}},"required":["startLine","endLine"],"additionalProperties":true}},"pageId":{"type":"string"},"contentHash":{"type":"string"},"asOf":{"type":"string"}},"required":["title","segments","pageId","contentHash"],"additionalProperties":true}},"text":{"type":"string"},"payloadHash":{"type":"string"},"chars":{"type":"number"},"report":{"type":"object","properties":{"libraryRevision":{"type":"string"},"query":{"type":"string"},"hops":{"type":"number","enum":[0,1]},"candidates":{"type":"array","items":{"type":"object","properties":{"pageId":{"type":"string"},"title":{"type":"string"},"contentHash":{"type":"string"},"asOf":{"type":"string"},"match":{"type":"string","enum":["direct","linked"]},"viaPageId":{"type":"string","description":"For linked candidates: the direct hit that pulled this page in."},"selected":{"type":"boolean"},"excludedReason":{"type":"string","enum":["budget","no-usable-block","not-selected"]},"why":{"type":"array","items":{"type":"string"},"description":"命中依据: the query terms that matched, most informative first."},"score":{"type":"number","description":"BM25 score for direct hits; 0 for linked-only candidates."},"rank":{"type":"number","description":"1-based ranking position among direct hits; 0 for linked candidates."},"segments":{"type":"array","items":{"type":"object","properties":{"startLine":{"type":"number"},"endLine":{"type":"number"}},"required":["startLine","endLine"],"additionalProperties":true},"description":"Block line ranges the compiler actually used (filled in by the compiler)."}},"required":["pageId","title","contentHash","match","selected","why","score","rank"],"additionalProperties":true}},"edges":{"type":"array","items":{"type":"object","properties":{"from":{"type":"string"},"to":{"type":"string"},"source":{"type":"string","enum":["body","related"]}},"required":["from","to","source"],"additionalProperties":true}}},"required":["libraryRevision","query","hops","candidates","edges"],"additionalProperties":true}},"required":["snapshotId","libraryRevision","origin","budgetChars","sources","text","payloadHash","chars"],"additionalProperties":true},"error":{"oneOf":[{"type":"object","properties":{"code":{"type":"string","const":"unknown-session"},"sessionId":{"type":"string"}},"required":["code","sessionId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"stale-revision"},"expected":{"type":"number"},"actual":{"type":"number"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"nothing-selected"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"unknown-page"},"pageId":{"type":"string"}},"required":["code","pageId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"library-changed"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"page-version-mismatch"},"pageId":{"type":"string"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","pageId","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"manual-over-budget"},"overBy":{"type":"number"},"budgetChars":{"type":"number"},"selectedChars":{"type":"number"}},"required":["code","overBy","budgetChars","selectedChars"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"no-usable-block"},"pageIds":{"type":"array","items":{"type":"string"}}},"required":["code","pageIds"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"wiki-unavailable"},"reason":{"type":"string","enum":["not-configured","read-failed"]}},"required":["code","reason"],"additionalProperties":true}]}},"required":["revision","mode"],"additionalProperties":true},
+        jsonSchema: {"type":"object","properties":{"revision":{"type":"number"},"mode":{"type":"string","enum":["automatic","manual-ready","manual-invalid"]},"prepared":{"type":"object","properties":{"snapshotId":{"type":"string"},"libraryRevision":{"type":"string"},"origin":{"type":"string","enum":["automatic","manual"]},"budgetChars":{"type":"number","description":"Production values are 4000 | 8000; tests may pass smaller numbers."},"sources":{"type":"array","items":{"type":"object","properties":{"title":{"type":"string"},"segments":{"type":"array","items":{"type":"object","properties":{"startLine":{"type":"number"},"endLine":{"type":"number"}},"required":["startLine","endLine"],"additionalProperties":true}},"pageId":{"type":"string"},"contentHash":{"type":"string"},"asOf":{"type":"string"}},"required":["title","segments","pageId","contentHash"],"additionalProperties":true}},"text":{"type":"string"},"payloadHash":{"type":"string"},"chars":{"type":"number"},"report":{"type":"object","properties":{"libraryRevision":{"type":"string"},"query":{"type":"string"},"hops":{"type":"number","enum":[0,1]},"candidates":{"type":"array","items":{"type":"object","properties":{"pageId":{"type":"string"},"title":{"type":"string"},"contentHash":{"type":"string"},"asOf":{"type":"string"},"match":{"type":"string","enum":["direct","linked"]},"viaPageId":{"type":"string","description":"For linked candidates: the direct hit that pulled this page in."},"selected":{"type":"boolean"},"excludedReason":{"type":"string","enum":["budget","no-usable-block","not-selected"]},"why":{"type":"array","items":{"type":"string"},"description":"命中依据: the query terms that matched, most informative first."},"score":{"type":"number","description":"BM25 score for direct hits; 0 for linked-only candidates."},"rank":{"type":"number","description":"1-based ranking position among direct hits; 0 for linked candidates."},"segments":{"type":"array","items":{"type":"object","properties":{"startLine":{"type":"number"},"endLine":{"type":"number"}},"required":["startLine","endLine"],"additionalProperties":true},"description":"Block line ranges the compiler actually used (filled in by the compiler)."}},"required":["pageId","title","contentHash","match","selected","why","score","rank"],"additionalProperties":true}},"edges":{"type":"array","items":{"type":"object","properties":{"from":{"type":"string"},"to":{"type":"string"},"source":{"type":"string","enum":["body","related"]}},"required":["from","to","source"],"additionalProperties":true}}},"required":["libraryRevision","query","hops","candidates","edges"],"additionalProperties":true}},"required":["snapshotId","libraryRevision","origin","budgetChars","sources","text","payloadHash","chars"],"additionalProperties":true},"error":{"oneOf":[{"type":"object","properties":{"code":{"type":"string","const":"unknown-session"},"sessionId":{"type":"string"}},"required":["code","sessionId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"stale-revision"},"expected":{"type":"number"},"actual":{"type":"number"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"nothing-selected"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"unknown-page"},"pageId":{"type":"string"}},"required":["code","pageId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"library-changed"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"page-version-mismatch"},"pageId":{"type":"string"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","pageId","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"manual-over-budget"},"overBy":{"type":"number"},"budgetChars":{"type":"number"},"selectedChars":{"type":"number"}},"required":["code","overBy","budgetChars","selectedChars"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"no-usable-block"},"pageIds":{"type":"array","items":{"type":"string"}}},"required":["code","pageIds"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"wiki-unavailable"},"reason":{"type":"string","enum":["not-configured","read-failed"]}},"required":["code","reason"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-record-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-invalid-query"},"field":{"type":"string","enum":["limit","cursor","status","event-seq"]}},"required":["code","field"],"additionalProperties":true}]}},"required":["revision","mode"],"additionalProperties":true},
       },
-      sourceLocation: {"file":"packages/dsh-memory-wiki/src/server/index.ts","line":180,"column":9},
+      sourceLocation: {"file":"packages/dsh-memory-wiki/src/server/index.ts","line":211,"column":9},
     },
     'memoryWiki/readPage': {
       service: 'memoryWiki',
@@ -702,9 +1286,9 @@ export const TYPERT_REMOTE = createTypertRemoteInfo({
         typeSymbol: 'dsh-memory-wiki/contracts#ReadPageResult',
         create: dsh_memory_wiki_memoryWiki_readPage_result$schema,
         description: 'the page, or a typed error when it is unknown or has changed.',
-        jsonSchema: {"type":"object","properties":{"page":{"type":"object","properties":{"pageId":{"type":"string"},"title":{"type":"string"},"kind":{"type":"string","enum":["source","entity","concept","synthesis","output"]},"contentHash":{"type":"string"},"asOf":{"type":"string"},"body":{"type":"string","description":"Markdown body (frontmatter removed). When `truncated` is true this is a prefix cut on a line boundary — never present it as the whole page."},"totalLines":{"type":"number"},"bodyStartLine":{"type":"number","description":"1-based **file** line of the first body line (frontmatter lines included). The server parses frontmatter, so this offset is derived here exactly once (design §4.2); clients must never recompute it."},"bodyChars":{"type":"number","description":"UTF-16 code units of `body` (the returned slice)."},"bodyBytes":{"type":"number","description":"UTF-8 bytes of `body` (the returned slice)."},"fullChars":{"type":"number","description":"UTF-16 code units of the FULL body, for a \"read the rest\" affordance."},"truncated":{"type":"boolean","description":"True when the page body exceeded the server threshold and was cut."},"limitChars":{"type":"number","description":"Server threshold that produced `truncated` (UTF-16 code units)."}},"required":["pageId","title","kind","contentHash","body","totalLines","bodyStartLine","bodyChars","bodyBytes","fullChars","truncated","limitChars"],"additionalProperties":true},"error":{"oneOf":[{"type":"object","properties":{"code":{"type":"string","const":"unknown-session"},"sessionId":{"type":"string"}},"required":["code","sessionId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"stale-revision"},"expected":{"type":"number"},"actual":{"type":"number"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"nothing-selected"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"unknown-page"},"pageId":{"type":"string"}},"required":["code","pageId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"library-changed"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"page-version-mismatch"},"pageId":{"type":"string"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","pageId","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"manual-over-budget"},"overBy":{"type":"number"},"budgetChars":{"type":"number"},"selectedChars":{"type":"number"}},"required":["code","overBy","budgetChars","selectedChars"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"no-usable-block"},"pageIds":{"type":"array","items":{"type":"string"}}},"required":["code","pageIds"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"wiki-unavailable"},"reason":{"type":"string","enum":["not-configured","read-failed"]}},"required":["code","reason"],"additionalProperties":true}]}},"required":[],"additionalProperties":true},
+        jsonSchema: {"type":"object","properties":{"page":{"type":"object","properties":{"pageId":{"type":"string"},"title":{"type":"string"},"kind":{"type":"string","enum":["source","entity","concept","synthesis","output"]},"contentHash":{"type":"string"},"asOf":{"type":"string"},"body":{"type":"string","description":"Markdown body (frontmatter removed). When `truncated` is true this is a prefix cut on a line boundary — never present it as the whole page."},"totalLines":{"type":"number"},"bodyStartLine":{"type":"number","description":"1-based **file** line of the first body line (frontmatter lines included). The server parses frontmatter, so this offset is derived here exactly once (design §4.2); clients must never recompute it."},"bodyChars":{"type":"number","description":"UTF-16 code units of `body` (the returned slice)."},"bodyBytes":{"type":"number","description":"UTF-8 bytes of `body` (the returned slice)."},"fullChars":{"type":"number","description":"UTF-16 code units of the FULL body, for a \"read the rest\" affordance."},"truncated":{"type":"boolean","description":"True when the page body exceeded the server threshold and was cut."},"limitChars":{"type":"number","description":"Server threshold that produced `truncated` (UTF-16 code units)."}},"required":["pageId","title","kind","contentHash","body","totalLines","bodyStartLine","bodyChars","bodyBytes","fullChars","truncated","limitChars"],"additionalProperties":true},"error":{"oneOf":[{"type":"object","properties":{"code":{"type":"string","const":"unknown-session"},"sessionId":{"type":"string"}},"required":["code","sessionId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"stale-revision"},"expected":{"type":"number"},"actual":{"type":"number"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"nothing-selected"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"unknown-page"},"pageId":{"type":"string"}},"required":["code","pageId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"library-changed"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"page-version-mismatch"},"pageId":{"type":"string"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","pageId","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"manual-over-budget"},"overBy":{"type":"number"},"budgetChars":{"type":"number"},"selectedChars":{"type":"number"}},"required":["code","overBy","budgetChars","selectedChars"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"no-usable-block"},"pageIds":{"type":"array","items":{"type":"string"}}},"required":["code","pageIds"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"wiki-unavailable"},"reason":{"type":"string","enum":["not-configured","read-failed"]}},"required":["code","reason"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-record-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-invalid-query"},"field":{"type":"string","enum":["limit","cursor","status","event-seq"]}},"required":["code","field"],"additionalProperties":true}]}},"required":[],"additionalProperties":true},
       },
-      sourceLocation: {"file":"packages/dsh-memory-wiki/src/server/index.ts","line":160,"column":9},
+      sourceLocation: {"file":"packages/dsh-memory-wiki/src/server/index.ts","line":191,"column":9},
     },
     'memoryWiki/reviseDraft': {
       service: 'memoryWiki',
@@ -734,9 +1318,9 @@ export const TYPERT_REMOTE = createTypertRemoteInfo({
         typeSymbol: 'dsh-memory-wiki/contracts#DraftResult',
         create: dsh_memory_wiki_memoryWiki_reviseDraft_result$schema,
         description: 'the new draft, or the actionable reason it could not be compiled.',
-        jsonSchema: {"type":"object","properties":{"revision":{"type":"number"},"mode":{"type":"string","enum":["automatic","manual-ready","manual-invalid"]},"draft":{"type":"object","properties":{"query":{"type":"string"},"libraryRevision":{"type":"string"},"selectedPages":{"type":"array","items":{"type":"object","properties":{"pageId":{"type":"string"},"contentHash":{"type":"string"},"asOf":{"type":"string"}},"required":["pageId","contentHash"],"additionalProperties":true}},"budgetChars":{"type":"number","enum":[4000,8000]},"hops":{"type":"number","enum":[0,1]},"preview":{"type":"object","properties":{"text":{"type":"string","description":"The exact text the panel shows. `prepareOverride` freezes THIS string."},"chars":{"type":"number"},"payloadHash":{"type":"string","description":"Hash of `text`; the prepared snapshot reuses it verbatim (design §5.2)."},"fits":{"type":"boolean"},"overBy":{"type":"number"},"sources":{"type":"array","items":{"type":"object","properties":{"pageId":{"type":"string"},"title":{"type":"string"},"contentHash":{"type":"string"},"segments":{"type":"array","items":{"type":"object","properties":{"startLine":{"type":"number"},"endLine":{"type":"number"}},"required":["startLine","endLine"],"additionalProperties":true}}},"required":["pageId","title","contentHash","segments"],"additionalProperties":true}}},"required":["text","chars","payloadHash","fits","overBy","sources"],"additionalProperties":true}},"required":["query","libraryRevision","selectedPages","budgetChars","hops","preview"],"additionalProperties":true},"error":{"oneOf":[{"type":"object","properties":{"code":{"type":"string","const":"unknown-session"},"sessionId":{"type":"string"}},"required":["code","sessionId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"stale-revision"},"expected":{"type":"number"},"actual":{"type":"number"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"nothing-selected"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"unknown-page"},"pageId":{"type":"string"}},"required":["code","pageId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"library-changed"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"page-version-mismatch"},"pageId":{"type":"string"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","pageId","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"manual-over-budget"},"overBy":{"type":"number"},"budgetChars":{"type":"number"},"selectedChars":{"type":"number"}},"required":["code","overBy","budgetChars","selectedChars"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"no-usable-block"},"pageIds":{"type":"array","items":{"type":"string"}}},"required":["code","pageIds"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"wiki-unavailable"},"reason":{"type":"string","enum":["not-configured","read-failed"]}},"required":["code","reason"],"additionalProperties":true}]}},"required":["revision","mode"],"additionalProperties":true},
+        jsonSchema: {"type":"object","properties":{"revision":{"type":"number"},"mode":{"type":"string","enum":["automatic","manual-ready","manual-invalid"]},"draft":{"type":"object","properties":{"query":{"type":"string"},"libraryRevision":{"type":"string"},"selectedPages":{"type":"array","items":{"type":"object","properties":{"pageId":{"type":"string"},"contentHash":{"type":"string"},"asOf":{"type":"string"}},"required":["pageId","contentHash"],"additionalProperties":true}},"budgetChars":{"type":"number","enum":[4000,8000]},"hops":{"type":"number","enum":[0,1]},"preview":{"type":"object","properties":{"text":{"type":"string","description":"The exact text the panel shows. `prepareOverride` freezes THIS string."},"chars":{"type":"number"},"payloadHash":{"type":"string","description":"Hash of `text`; the prepared snapshot reuses it verbatim (design §5.2)."},"fits":{"type":"boolean"},"overBy":{"type":"number"},"sources":{"type":"array","items":{"type":"object","properties":{"pageId":{"type":"string"},"title":{"type":"string"},"contentHash":{"type":"string"},"segments":{"type":"array","items":{"type":"object","properties":{"startLine":{"type":"number"},"endLine":{"type":"number"}},"required":["startLine","endLine"],"additionalProperties":true}}},"required":["pageId","title","contentHash","segments"],"additionalProperties":true}}},"required":["text","chars","payloadHash","fits","overBy","sources"],"additionalProperties":true}},"required":["query","libraryRevision","selectedPages","budgetChars","hops","preview"],"additionalProperties":true},"error":{"oneOf":[{"type":"object","properties":{"code":{"type":"string","const":"unknown-session"},"sessionId":{"type":"string"}},"required":["code","sessionId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"stale-revision"},"expected":{"type":"number"},"actual":{"type":"number"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"nothing-selected"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"unknown-page"},"pageId":{"type":"string"}},"required":["code","pageId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"library-changed"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"page-version-mismatch"},"pageId":{"type":"string"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","pageId","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"manual-over-budget"},"overBy":{"type":"number"},"budgetChars":{"type":"number"},"selectedChars":{"type":"number"}},"required":["code","overBy","budgetChars","selectedChars"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"no-usable-block"},"pageIds":{"type":"array","items":{"type":"string"}}},"required":["code","pageIds"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"wiki-unavailable"},"reason":{"type":"string","enum":["not-configured","read-failed"]}},"required":["code","reason"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-record-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-invalid-query"},"field":{"type":"string","enum":["limit","cursor","status","event-seq"]}},"required":["code","field"],"additionalProperties":true}]}},"required":["revision","mode"],"additionalProperties":true},
       },
-      sourceLocation: {"file":"packages/dsh-memory-wiki/src/server/index.ts","line":170,"column":9},
+      sourceLocation: {"file":"packages/dsh-memory-wiki/src/server/index.ts","line":201,"column":9},
     },
     'memoryWiki/search': {
       service: 'memoryWiki',
@@ -766,9 +1350,9 @@ export const TYPERT_REMOTE = createTypertRemoteInfo({
         typeSymbol: 'dsh-memory-wiki/contracts#SearchResult',
         create: dsh_memory_wiki_memoryWiki_search_result$schema,
         description: 'candidates, edges and the library revision they were taken against.',
-        jsonSchema: {"type":"object","properties":{"revision":{"type":"number"},"libraryRevision":{"type":"string"},"query":{"type":"string"},"hops":{"type":"number","enum":[0,1]},"candidates":{"type":"array","items":{"type":"object","properties":{"pageId":{"type":"string"},"title":{"type":"string"},"contentHash":{"type":"string"},"asOf":{"type":"string"},"match":{"type":"string","enum":["direct","linked"]},"viaPageId":{"type":"string","description":"For linked candidates: the direct hit that pulled this page in."},"selected":{"type":"boolean"},"excludedReason":{"type":"string","enum":["budget","no-usable-block","not-selected"]},"why":{"type":"array","items":{"type":"string"},"description":"命中依据: the query terms that matched, most informative first."},"score":{"type":"number","description":"BM25 score for direct hits; 0 for linked-only candidates."},"rank":{"type":"number","description":"1-based ranking position among direct hits; 0 for linked candidates."},"segments":{"type":"array","items":{"type":"object","properties":{"startLine":{"type":"number"},"endLine":{"type":"number"}},"required":["startLine","endLine"],"additionalProperties":true},"description":"Block line ranges the compiler actually used (filled in by the compiler)."}},"required":["pageId","title","contentHash","match","selected","why","score","rank"],"additionalProperties":true}},"edges":{"type":"array","items":{"type":"object","properties":{"from":{"type":"string"},"to":{"type":"string"},"source":{"type":"string","enum":["body","related"]}},"required":["from","to","source"],"additionalProperties":true}},"error":{"oneOf":[{"type":"object","properties":{"code":{"type":"string","const":"unknown-session"},"sessionId":{"type":"string"}},"required":["code","sessionId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"stale-revision"},"expected":{"type":"number"},"actual":{"type":"number"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"nothing-selected"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"unknown-page"},"pageId":{"type":"string"}},"required":["code","pageId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"library-changed"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"page-version-mismatch"},"pageId":{"type":"string"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","pageId","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"manual-over-budget"},"overBy":{"type":"number"},"budgetChars":{"type":"number"},"selectedChars":{"type":"number"}},"required":["code","overBy","budgetChars","selectedChars"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"no-usable-block"},"pageIds":{"type":"array","items":{"type":"string"}}},"required":["code","pageIds"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"wiki-unavailable"},"reason":{"type":"string","enum":["not-configured","read-failed"]}},"required":["code","reason"],"additionalProperties":true}]}},"required":["revision","libraryRevision","query","hops","candidates","edges"],"additionalProperties":true},
+        jsonSchema: {"type":"object","properties":{"revision":{"type":"number"},"libraryRevision":{"type":"string"},"query":{"type":"string"},"hops":{"type":"number","enum":[0,1]},"candidates":{"type":"array","items":{"type":"object","properties":{"pageId":{"type":"string"},"title":{"type":"string"},"contentHash":{"type":"string"},"asOf":{"type":"string"},"match":{"type":"string","enum":["direct","linked"]},"viaPageId":{"type":"string","description":"For linked candidates: the direct hit that pulled this page in."},"selected":{"type":"boolean"},"excludedReason":{"type":"string","enum":["budget","no-usable-block","not-selected"]},"why":{"type":"array","items":{"type":"string"},"description":"命中依据: the query terms that matched, most informative first."},"score":{"type":"number","description":"BM25 score for direct hits; 0 for linked-only candidates."},"rank":{"type":"number","description":"1-based ranking position among direct hits; 0 for linked candidates."},"segments":{"type":"array","items":{"type":"object","properties":{"startLine":{"type":"number"},"endLine":{"type":"number"}},"required":["startLine","endLine"],"additionalProperties":true},"description":"Block line ranges the compiler actually used (filled in by the compiler)."}},"required":["pageId","title","contentHash","match","selected","why","score","rank"],"additionalProperties":true}},"edges":{"type":"array","items":{"type":"object","properties":{"from":{"type":"string"},"to":{"type":"string"},"source":{"type":"string","enum":["body","related"]}},"required":["from","to","source"],"additionalProperties":true}},"error":{"oneOf":[{"type":"object","properties":{"code":{"type":"string","const":"unknown-session"},"sessionId":{"type":"string"}},"required":["code","sessionId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"stale-revision"},"expected":{"type":"number"},"actual":{"type":"number"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"nothing-selected"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"unknown-page"},"pageId":{"type":"string"}},"required":["code","pageId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"library-changed"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"page-version-mismatch"},"pageId":{"type":"string"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","pageId","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"manual-over-budget"},"overBy":{"type":"number"},"budgetChars":{"type":"number"},"selectedChars":{"type":"number"}},"required":["code","overBy","budgetChars","selectedChars"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"no-usable-block"},"pageIds":{"type":"array","items":{"type":"string"}}},"required":["code","pageIds"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"wiki-unavailable"},"reason":{"type":"string","enum":["not-configured","read-failed"]}},"required":["code","reason"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-record-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-invalid-query"},"field":{"type":"string","enum":["limit","cursor","status","event-seq"]}},"required":["code","field"],"additionalProperties":true}]}},"required":["revision","libraryRevision","query","hops","candidates","edges"],"additionalProperties":true},
       },
-      sourceLocation: {"file":"packages/dsh-memory-wiki/src/server/index.ts","line":150,"column":9},
+      sourceLocation: {"file":"packages/dsh-memory-wiki/src/server/index.ts","line":181,"column":9},
     },
     'memoryWiki/view': {
       service: 'memoryWiki',
@@ -799,9 +1383,9 @@ export const TYPERT_REMOTE = createTypertRemoteInfo({
         typeSymbol: 'dsh-memory-wiki/contracts#SessionView',
         create: dsh_memory_wiki_memoryWiki_view_result$schema,
         description: 'mode, draft, prepared snapshot and the current turn record.',
-        jsonSchema: {"type":"object","properties":{"revision":{"type":"number"},"mode":{"type":"string","enum":["automatic","manual-ready","manual-invalid"]},"budgetChars":{"type":"number","enum":[4000,8000]},"hops":{"type":"number","enum":[0,1]},"draft":{"type":"object","properties":{"query":{"type":"string"},"libraryRevision":{"type":"string"},"selectedPages":{"type":"array","items":{"type":"object","properties":{"pageId":{"type":"string"},"contentHash":{"type":"string"},"asOf":{"type":"string"}},"required":["pageId","contentHash"],"additionalProperties":true}},"budgetChars":{"type":"number","enum":[4000,8000]},"hops":{"type":"number","enum":[0,1]},"preview":{"type":"object","properties":{"text":{"type":"string","description":"The exact text the panel shows. `prepareOverride` freezes THIS string."},"chars":{"type":"number"},"payloadHash":{"type":"string","description":"Hash of `text`; the prepared snapshot reuses it verbatim (design §5.2)."},"fits":{"type":"boolean"},"overBy":{"type":"number"},"sources":{"type":"array","items":{"type":"object","properties":{"pageId":{"type":"string"},"title":{"type":"string"},"contentHash":{"type":"string"},"segments":{"type":"array","items":{"type":"object","properties":{"startLine":{"type":"number"},"endLine":{"type":"number"}},"required":["startLine","endLine"],"additionalProperties":true}}},"required":["pageId","title","contentHash","segments"],"additionalProperties":true}}},"required":["text","chars","payloadHash","fits","overBy","sources"],"additionalProperties":true}},"required":["query","libraryRevision","selectedPages","budgetChars","hops","preview"],"additionalProperties":true},"prepared":{"type":"object","properties":{"snapshotId":{"type":"string"},"libraryRevision":{"type":"string"},"origin":{"type":"string","enum":["automatic","manual"]},"budgetChars":{"type":"number","description":"Production values are 4000 | 8000; tests may pass smaller numbers."},"sources":{"type":"array","items":{"type":"object","properties":{"title":{"type":"string"},"segments":{"type":"array","items":{"type":"object","properties":{"startLine":{"type":"number"},"endLine":{"type":"number"}},"required":["startLine","endLine"],"additionalProperties":true}},"pageId":{"type":"string"},"contentHash":{"type":"string"},"asOf":{"type":"string"}},"required":["title","segments","pageId","contentHash"],"additionalProperties":true}},"text":{"type":"string"},"payloadHash":{"type":"string"},"chars":{"type":"number"},"report":{"type":"object","properties":{"libraryRevision":{"type":"string"},"query":{"type":"string"},"hops":{"type":"number","enum":[0,1]},"candidates":{"type":"array","items":{"type":"object","properties":{"pageId":{"type":"string"},"title":{"type":"string"},"contentHash":{"type":"string"},"asOf":{"type":"string"},"match":{"type":"string","enum":["direct","linked"]},"viaPageId":{"type":"string","description":"For linked candidates: the direct hit that pulled this page in."},"selected":{"type":"boolean"},"excludedReason":{"type":"string","enum":["budget","no-usable-block","not-selected"]},"why":{"type":"array","items":{"type":"string"},"description":"命中依据: the query terms that matched, most informative first."},"score":{"type":"number","description":"BM25 score for direct hits; 0 for linked-only candidates."},"rank":{"type":"number","description":"1-based ranking position among direct hits; 0 for linked candidates."},"segments":{"type":"array","items":{"type":"object","properties":{"startLine":{"type":"number"},"endLine":{"type":"number"}},"required":["startLine","endLine"],"additionalProperties":true},"description":"Block line ranges the compiler actually used (filled in by the compiler)."}},"required":["pageId","title","contentHash","match","selected","why","score","rank"],"additionalProperties":true}},"edges":{"type":"array","items":{"type":"object","properties":{"from":{"type":"string"},"to":{"type":"string"},"source":{"type":"string","enum":["body","related"]}},"required":["from","to","source"],"additionalProperties":true}}},"required":["libraryRevision","query","hops","candidates","edges"],"additionalProperties":true}},"required":["snapshotId","libraryRevision","origin","budgetChars","sources","text","payloadHash","chars"],"additionalProperties":true},"currentTurn":{"type":"object","properties":{"turn":{"type":"number"},"phase":{"type":"string"},"snapshotId":{"type":"string"},"payloadHash":{"type":"string"},"committedSeq":{"type":"number"},"reInjections":{"type":"number"}},"required":["turn","phase","reInjections"],"additionalProperties":true},"capture":{"type":"object","properties":{"jobId":{"type":"string"},"phase":{"type":"string","enum":["queued","judging","preparing","verifying","publishing","ingested","skipped","deferred","failed","needs_attention"]},"reason":{"type":"string"},"pages":{"type":"array","items":{"type":"string"}},"updatedAt":{"type":"string"},"evidence":{"type":"array","items":{"type":"object","properties":{"seq":{"type":"number"},"kind":{"type":"string"},"text":{"type":"string"},"truncated":{"type":"boolean"}},"required":["seq","kind","text","truncated"],"additionalProperties":true}},"evidenceTruncated":{"type":"boolean","enum":[false,true]},"changes":{"type":"array","items":{"type":"object","properties":{"path":{"type":"string"},"beforeHash":{"type":"string"},"afterHash":{"type":"string"}},"required":["path","afterHash"],"additionalProperties":true}},"limitations":{"type":"array","items":{"type":"string"}}},"required":["jobId","phase","reason","pages","updatedAt"],"additionalProperties":true},"skippedReason":{"type":"string"},"error":{"oneOf":[{"type":"object","properties":{"code":{"type":"string","const":"unknown-session"},"sessionId":{"type":"string"}},"required":["code","sessionId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"stale-revision"},"expected":{"type":"number"},"actual":{"type":"number"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"nothing-selected"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"unknown-page"},"pageId":{"type":"string"}},"required":["code","pageId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"library-changed"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"page-version-mismatch"},"pageId":{"type":"string"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","pageId","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"manual-over-budget"},"overBy":{"type":"number"},"budgetChars":{"type":"number"},"selectedChars":{"type":"number"}},"required":["code","overBy","budgetChars","selectedChars"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"no-usable-block"},"pageIds":{"type":"array","items":{"type":"string"}}},"required":["code","pageIds"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"wiki-unavailable"},"reason":{"type":"string","enum":["not-configured","read-failed"]}},"required":["code","reason"],"additionalProperties":true}]}},"required":["revision","mode","budgetChars","hops"],"additionalProperties":true},
+        jsonSchema: {"type":"object","properties":{"revision":{"type":"number"},"mode":{"type":"string","enum":["automatic","manual-ready","manual-invalid"]},"budgetChars":{"type":"number","enum":[4000,8000]},"hops":{"type":"number","enum":[0,1]},"draft":{"type":"object","properties":{"query":{"type":"string"},"libraryRevision":{"type":"string"},"selectedPages":{"type":"array","items":{"type":"object","properties":{"pageId":{"type":"string"},"contentHash":{"type":"string"},"asOf":{"type":"string"}},"required":["pageId","contentHash"],"additionalProperties":true}},"budgetChars":{"type":"number","enum":[4000,8000]},"hops":{"type":"number","enum":[0,1]},"preview":{"type":"object","properties":{"text":{"type":"string","description":"The exact text the panel shows. `prepareOverride` freezes THIS string."},"chars":{"type":"number"},"payloadHash":{"type":"string","description":"Hash of `text`; the prepared snapshot reuses it verbatim (design §5.2)."},"fits":{"type":"boolean"},"overBy":{"type":"number"},"sources":{"type":"array","items":{"type":"object","properties":{"pageId":{"type":"string"},"title":{"type":"string"},"contentHash":{"type":"string"},"segments":{"type":"array","items":{"type":"object","properties":{"startLine":{"type":"number"},"endLine":{"type":"number"}},"required":["startLine","endLine"],"additionalProperties":true}}},"required":["pageId","title","contentHash","segments"],"additionalProperties":true}}},"required":["text","chars","payloadHash","fits","overBy","sources"],"additionalProperties":true}},"required":["query","libraryRevision","selectedPages","budgetChars","hops","preview"],"additionalProperties":true},"prepared":{"type":"object","properties":{"snapshotId":{"type":"string"},"libraryRevision":{"type":"string"},"origin":{"type":"string","enum":["automatic","manual"]},"budgetChars":{"type":"number","description":"Production values are 4000 | 8000; tests may pass smaller numbers."},"sources":{"type":"array","items":{"type":"object","properties":{"title":{"type":"string"},"segments":{"type":"array","items":{"type":"object","properties":{"startLine":{"type":"number"},"endLine":{"type":"number"}},"required":["startLine","endLine"],"additionalProperties":true}},"pageId":{"type":"string"},"contentHash":{"type":"string"},"asOf":{"type":"string"}},"required":["title","segments","pageId","contentHash"],"additionalProperties":true}},"text":{"type":"string"},"payloadHash":{"type":"string"},"chars":{"type":"number"},"report":{"type":"object","properties":{"libraryRevision":{"type":"string"},"query":{"type":"string"},"hops":{"type":"number","enum":[0,1]},"candidates":{"type":"array","items":{"type":"object","properties":{"pageId":{"type":"string"},"title":{"type":"string"},"contentHash":{"type":"string"},"asOf":{"type":"string"},"match":{"type":"string","enum":["direct","linked"]},"viaPageId":{"type":"string","description":"For linked candidates: the direct hit that pulled this page in."},"selected":{"type":"boolean"},"excludedReason":{"type":"string","enum":["budget","no-usable-block","not-selected"]},"why":{"type":"array","items":{"type":"string"},"description":"命中依据: the query terms that matched, most informative first."},"score":{"type":"number","description":"BM25 score for direct hits; 0 for linked-only candidates."},"rank":{"type":"number","description":"1-based ranking position among direct hits; 0 for linked candidates."},"segments":{"type":"array","items":{"type":"object","properties":{"startLine":{"type":"number"},"endLine":{"type":"number"}},"required":["startLine","endLine"],"additionalProperties":true},"description":"Block line ranges the compiler actually used (filled in by the compiler)."}},"required":["pageId","title","contentHash","match","selected","why","score","rank"],"additionalProperties":true}},"edges":{"type":"array","items":{"type":"object","properties":{"from":{"type":"string"},"to":{"type":"string"},"source":{"type":"string","enum":["body","related"]}},"required":["from","to","source"],"additionalProperties":true}}},"required":["libraryRevision","query","hops","candidates","edges"],"additionalProperties":true}},"required":["snapshotId","libraryRevision","origin","budgetChars","sources","text","payloadHash","chars"],"additionalProperties":true},"currentTurn":{"type":"object","properties":{"turn":{"type":"number"},"phase":{"type":"string"},"snapshotId":{"type":"string"},"payloadHash":{"type":"string"},"committedSeq":{"type":"number"},"reInjections":{"type":"number"}},"required":["turn","phase","reInjections"],"additionalProperties":true},"capture":{"type":"object","properties":{"jobId":{"type":"string"},"phase":{"type":"string","enum":["queued","judging","preparing","verifying","publishing","ingested","skipped","deferred","failed","needs_attention"]},"reason":{"type":"string"},"pages":{"type":"array","items":{"type":"string"}},"updatedAt":{"type":"string"},"evidence":{"type":"array","items":{"type":"object","properties":{"seq":{"type":"number"},"kind":{"type":"string"},"text":{"type":"string"},"truncated":{"type":"boolean"}},"required":["seq","kind","text","truncated"],"additionalProperties":true}},"evidenceTruncated":{"type":"boolean","enum":[false,true]},"changes":{"type":"array","items":{"type":"object","properties":{"path":{"type":"string"},"beforeHash":{"type":"string"},"afterHash":{"type":"string"}},"required":["path","afterHash"],"additionalProperties":true}},"limitations":{"type":"array","items":{"type":"string"}}},"required":["jobId","phase","reason","pages","updatedAt"],"additionalProperties":true},"skippedReason":{"type":"string"},"error":{"oneOf":[{"type":"object","properties":{"code":{"type":"string","const":"unknown-session"},"sessionId":{"type":"string"}},"required":["code","sessionId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"stale-revision"},"expected":{"type":"number"},"actual":{"type":"number"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"nothing-selected"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"unknown-page"},"pageId":{"type":"string"}},"required":["code","pageId"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"library-changed"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"page-version-mismatch"},"pageId":{"type":"string"},"expected":{"type":"string"},"actual":{"type":"string"}},"required":["code","pageId","expected","actual"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"manual-over-budget"},"overBy":{"type":"number"},"budgetChars":{"type":"number"},"selectedChars":{"type":"number"}},"required":["code","overBy","budgetChars","selectedChars"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"no-usable-block"},"pageIds":{"type":"array","items":{"type":"string"}}},"required":["code","pageIds"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"wiki-unavailable"},"reason":{"type":"string","enum":["not-configured","read-failed"]}},"required":["code","reason"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-record-unavailable"}},"required":["code"],"additionalProperties":true},{"type":"object","properties":{"code":{"type":"string","const":"capture-invalid-query"},"field":{"type":"string","enum":["limit","cursor","status","event-seq"]}},"required":["code","field"],"additionalProperties":true}]}},"required":["revision","mode","budgetChars","hops"],"additionalProperties":true},
       },
-      sourceLocation: {"file":"packages/dsh-memory-wiki/src/server/index.ts","line":131,"column":9},
+      sourceLocation: {"file":"packages/dsh-memory-wiki/src/server/index.ts","line":146,"column":9},
     },
   },
 }, z)

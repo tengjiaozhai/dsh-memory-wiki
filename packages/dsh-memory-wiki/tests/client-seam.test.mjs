@@ -245,3 +245,15 @@ test('生产 import 图：src/client 里没有任何 fixture 模块或示例数�
   assert.match(indexSource, /export function registerFixtureSource/)
   assert.match(indexSource, /fixture-not-bundled/)
 })
+
+test('capture history reads forward exact DTOs and preserve server failures',async()=>{
+ const requests=[]
+ const dto={items:[],readCompleteness:'partial',nextCursor:'opaque'}
+ const source=createRemoteSource({
+  async captureHistory(input) { requests.push(input); return { ok: true, value: dto } },
+  async captureJudgment() { return { ok: true, value: { error: { code: 'capture-record-unavailable' } } } },
+ })
+ assert.deepEqual(await source.captureHistory({sessionId:'session',limit:20,status:'deferred'}),dto)
+ assert.deepEqual(requests,[{sessionId:'session',limit:20,status:'deferred'}])
+ await assert.rejects(source.captureJudgment({sessionId:'session',jobId:'job',judgmentId:'attempt'}),error=>error.code==='capture-record-unavailable')
+})

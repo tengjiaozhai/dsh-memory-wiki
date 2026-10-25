@@ -16,7 +16,7 @@ export function redact(text: string): string {
     .replace(/\buser_[A-Za-z0-9_-]{40,}/g, '[REDACTED]')
     .replace(/\bsk-[A-Za-z0-9_-]{12,}/g, '[REDACTED]')
     .replace(/(Bearer\s+)[A-Za-z0-9._~+\/-]+/gi, '$1[REDACTED]')
-    .replace(/(["']?(?:api[_-]?key|access[_-]?token|refresh[_-]?token|password|secret|authorization|cookie|client[_-]?secret)["']?\s*[=:]\s*)(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|[^\s,"'}]+)/gi, '$1"[REDACTED]"')
+    .replace(/(["']?(?:(?:[A-Za-z][A-Za-z0-9]*[_-])*(?:api[_-]?key|token|access[_-]?token|refresh[_-]?token|password|secret|authorization|cookie|client[_-]?secret))["']?\s*[=:]\s*)(?:"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|[^\s,"'}]+)/gi, '$1"[REDACTED]"')
 }
 
 export function safeError(error: unknown): string {
@@ -28,7 +28,7 @@ export function redactRecord(value: unknown): unknown {
   if (typeof value === 'string') return redact(value)
   if (Array.isArray(value)) return value.map(redactRecord)
   if (value !== null && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([key, entry]) => [key,
-    /^(?:apikey|accesstoken|refreshtoken|password|secret|authorization|cookie|clientsecret|credentials|privatekey)$/i.test(key.replace(/[_-]/g, '')) ? '[REDACTED]' : redactRecord(entry),
+    /(?:^|[_-])(?:api[_-]?key|token|password|secret|authorization|cookie|credentials?|private[_-]?key)$|^(?:apikey|accesstoken|refreshtoken|clientsecret|privatekey)$/i.test(key) ? '[REDACTED]' : redactRecord(entry),
   ]))
   return value
 }

@@ -1,3 +1,4 @@
+import type { CaptureStatusInput, CaptureStatusResult, CaptureHistoryInput, CaptureHistoryResult, CaptureRecordInput, CaptureRecordResult, CaptureJudgmentInput, CaptureJudgmentResult } from '../../shared/contracts.js'
 /**
  * The data-source seam.
  *
@@ -153,6 +154,11 @@ export interface ReviseRequest extends RevisionRequest {
 
 export interface MemoryWikiSource {
   readonly mode: SourceMode
+  captureStatus(input: CaptureStatusInput): Promise<CaptureStatusResult>
+  captureHistory(input: CaptureHistoryInput): Promise<CaptureHistoryResult>
+  captureRecord(input: CaptureRecordInput): Promise<CaptureRecordResult>
+  captureJudgment(input: CaptureJudgmentInput): Promise<CaptureJudgmentResult>
+
   getGraph(): Promise<GraphResult>
   getView(request: ViewRequest): Promise<MemoryWikiView>
   search(request: SearchRequest): Promise<RetrievalReport>
@@ -180,6 +186,11 @@ export interface MemoryWikiSource {
  * the single place that decides what a failure means.
  */
 export interface RemoteClient {
+  captureStatus(input: CaptureStatusInput): Promise<unknown>
+  captureHistory(input: CaptureHistoryInput): Promise<unknown>
+  captureRecord(input: CaptureRecordInput): Promise<unknown>
+  captureJudgment(input: CaptureJudgmentInput): Promise<unknown>
+
   graph(request: {}): Promise<unknown>
   /** Read path: no revision (B1). Writes use `RevisionRequest` below. */
   getView(request: { sessionId: string | null }): Promise<unknown>

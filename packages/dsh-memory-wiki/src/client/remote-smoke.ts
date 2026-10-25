@@ -14,6 +14,10 @@ import type { RemoteClient } from './source/types.js'
 
 /** Namespace method names as the generated contribution exports them. */
 type NamespaceMethod =
+  | 'captureStatus'
+  | 'captureHistory'
+  | 'captureRecord'
+  | 'captureJudgment'
   | 'graph'
   | 'view'
   | 'search'
@@ -125,6 +129,10 @@ export function createLazyRemoteClient(ctx: unknown): RemoteClient {
     return fn(input)
   }
   return {
+    captureStatus: call('captureStatus'),
+    captureHistory: call('captureHistory'),
+    captureRecord: call('captureRecord'),
+    captureJudgment: call('captureJudgment'),
     graph: call('graph'),
     getView: call('view'),
     search: call('search'),

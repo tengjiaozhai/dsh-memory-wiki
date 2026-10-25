@@ -1,3 +1,4 @@
+import type { CaptureStatusInput, CaptureStatusResult, CaptureHistoryInput, CaptureHistoryResult, CaptureRecordInput, CaptureRecordResult, CaptureJudgmentInput, CaptureJudgmentResult } from '../../shared/contracts.js'
 /**
  * Remote implementation of the seam.
  *
@@ -46,6 +47,9 @@ import type {
  */
 export function errorDetail(error: RemoteError): string {
   switch (error.code) {
+    case 'capture-unavailable': return '暂时无法读取沉淀记录，请检查本地存储后重试。'
+    case 'capture-record-unavailable': return '记录不存在或不属于当前会话。'
+    case 'capture-invalid-query': return '记录查询参数无效：' + error.field
     case 'wiki-unavailable':
       return error.reason === 'not-configured'
         ? '尚未设置 Wiki 路径，请在插件设置中配置 wikiRoot。'
@@ -103,6 +107,27 @@ export function createRemoteSource(client: RemoteClient | undefined, reason: str
 
   return {
     mode: 'remote',
+    async captureStatus(input: CaptureStatusInput) {
+      const result = unwrap<CaptureStatusResult>(await requireClient().captureStatus(input))
+      if (result.error) throw new RemoteCallError(result.error.code, errorDetail(result.error))
+      return result
+    },
+    async captureHistory(input: CaptureHistoryInput) {
+      const result = unwrap<CaptureHistoryResult>(await requireClient().captureHistory(input))
+      if (result.error) throw new RemoteCallError(result.error.code, errorDetail(result.error))
+      return result
+    },
+    async captureRecord(input: CaptureRecordInput) {
+      const result = unwrap<CaptureRecordResult>(await requireClient().captureRecord(input))
+      if (result.error) throw new RemoteCallError(result.error.code, errorDetail(result.error))
+      return result
+    },
+    async captureJudgment(input: CaptureJudgmentInput) {
+      const result = unwrap<CaptureJudgmentResult>(await requireClient().captureJudgment(input))
+      if (result.error) throw new RemoteCallError(result.error.code, errorDetail(result.error))
+      return result
+    },
+
 
     async getGraph() {
       const result = unwrap<GraphResult>(await requireClient().graph({}))

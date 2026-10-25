@@ -9,6 +9,8 @@ import { WikiIngest } from './ingest.js'
 import { hash, safeError } from './files.js'
 import type { GenerateWiki } from './ingest.js'
 
+export function captureDataRoot(wikiRoot: string): string { return dshHomePath('storages', 'memory-wiki-auto-capture', hash(fs.realpathSync(wikiRoot))) }
+
 export type CaptureConfig = { enabled: boolean; judgeModel: string; judgeBaseURL: string; skillPath: string }
 
 /** Independent one-shot model request: an empty tool set is a permission limit. */
@@ -39,7 +41,7 @@ export function createHostCapture(ctx: any, wikiRoot: string, config: CaptureCon
   const keyFile = dshHomePath('credentials', 'memory-wiki-commandcode.key')
   const apiKey = process.env.CMD_API_KEY?.trim() || (fs.existsSync(keyFile) ? fs.readFileSync(keyFile, 'utf8').trim() : '')
   if (!apiKey) throw new Error('CommandCode Jev 未配置：请设置 CMD_API_KEY 或 memory-wiki-commandcode.key')
-  const dataRoot = dshHomePath('storages', 'memory-wiki-auto-capture', hash(fs.realpathSync(wikiRoot)))
+  const dataRoot = captureDataRoot(wikiRoot)
   const judge = new JevJudge({ apiKey, model: config.judgeModel, baseURL: config.judgeBaseURL })
   const ingest = new WikiIngest({ wikiRoot, dataRoot, skillPath: path.resolve(config.skillPath), generate: createWikiWriter(ctx.llm) })
   return new ExperienceCapture({ wikiRoot, dataRoot, judge, ingest,

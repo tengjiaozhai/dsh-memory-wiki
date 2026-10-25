@@ -1,3 +1,4 @@
+                                                                                                                                                                                                                         
 /**
  * Remote implementation of the seam.
  *
@@ -13,29 +14,29 @@
  *     second parser here would let the two disagree silently.
  *   - No `as any` / `as unknown as`: every field is a contracts type or a core DTO.
  */
-
-
-
-
-
-
-
-
-
-
-
-
+             
+              
+              
+              
+                 
+               
+                 
+              
+               
+              
+                                  
+                                                          
 import { RemoteCallError, unwrap } from './unwrap.js'
-
-
-
-
-
-
-
-
-
-
+             
+                   
+           
+                  
+               
+                
+                  
+                
+              
+                   
 
 /**
  * Turn a structured business error into one readable line.
@@ -46,6 +47,9 @@ import { RemoteCallError, unwrap } from './unwrap.js'
  */
 export function errorDetail(error             )         {
   switch (error.code) {
+    case 'capture-unavailable': return '暂时无法读取沉淀记录，请检查本地存储后重试。'
+    case 'capture-record-unavailable': return '记录不存在或不属于当前会话。'
+    case 'capture-invalid-query': return '记录查询参数无效：' + error.field
     case 'wiki-unavailable':
       return error.reason === 'not-configured'
         ? '尚未设置 Wiki 路径，请在插件设置中配置 wikiRoot。'
@@ -103,6 +107,27 @@ export function createRemoteSource(client                          , reason     
 
   return {
     mode: 'remote',
+    async captureStatus(input                    ) {
+      const result = unwrap                     (await requireClient().captureStatus(input))
+      if (result.error) throw new RemoteCallError(result.error.code, errorDetail(result.error))
+      return result
+    },
+    async captureHistory(input                     ) {
+      const result = unwrap                      (await requireClient().captureHistory(input))
+      if (result.error) throw new RemoteCallError(result.error.code, errorDetail(result.error))
+      return result
+    },
+    async captureRecord(input                    ) {
+      const result = unwrap                     (await requireClient().captureRecord(input))
+      if (result.error) throw new RemoteCallError(result.error.code, errorDetail(result.error))
+      return result
+    },
+    async captureJudgment(input                      ) {
+      const result = unwrap                       (await requireClient().captureJudgment(input))
+      if (result.error) throw new RemoteCallError(result.error.code, errorDetail(result.error))
+      return result
+    },
+
 
     async getGraph() {
       const result = unwrap             (await requireClient().graph({}))

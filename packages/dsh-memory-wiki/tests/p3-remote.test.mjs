@@ -35,6 +35,10 @@ const adapter = () => new MemoryWikiAdapter(ctx, { enabled: true, wikiRoot: FIXT
 // ---------------------------------------------------------------- strict codec
 
 const VALID = {
+  captureStatus: {},
+  captureHistory: { sessionId: knownSession },
+  captureRecord: { sessionId: knownSession, jobId: 'a'.repeat(64) },
+  captureJudgment: { sessionId: knownSession, jobId: 'a'.repeat(64), judgmentId: 'attempt' },
   graph: {},
   view: { sessionId: knownSession, expectedRevision: 1 },
   search: { sessionId: knownSession, query: '工具熔断', hops: 1 },
@@ -45,6 +49,11 @@ const VALID = {
 }
 
 const WITH_EXTRA = {
+  captureStatus: { ...VALID.captureStatus, injected: 'x' },
+  captureHistory: { ...VALID.captureHistory, injected: 'x' },
+  captureRecord: { ...VALID.captureRecord, injected: 'x' },
+  captureJudgment: { ...VALID.captureJudgment, injected: 'x' },
+
   graph: { sessionId: knownSession },
   view: { ...VALID.view, injected: 'x' },
   search: { ...VALID.search, injected: 'x' },
@@ -55,6 +64,11 @@ const WITH_EXTRA = {
 }
 
 const WRONG_TYPE = {
+  captureStatus: { sessionId: 2 },
+  captureHistory: { sessionId: 2 },
+  captureRecord: { sessionId: 2 },
+  captureJudgment: { sessionId: 2 },
+
   graph: null,
   view: { sessionId: 1, expectedRevision: 1 },
   search: { sessionId: knownSession, query: 1, hops: 1 },

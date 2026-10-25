@@ -39,6 +39,9 @@ export type RemoteError =
   | { code: 'manual-over-budget', overBy: number, budgetChars: number, selectedChars: number }
   | { code: 'no-usable-block', pageIds: string[] }
   | { code: 'wiki-unavailable', reason: 'not-configured' | 'read-failed' }
+  | { code: 'capture-unavailable' }
+  | { code: 'capture-record-unavailable' }
+  | { code: 'capture-invalid-query', field: 'limit' | 'cursor' | 'status' | 'event-seq' }
 
 // ---------------------------------------------------------------- graph
 
@@ -127,6 +130,137 @@ export interface CaptureView {
   evidenceTruncated?: boolean
   changes?: Array<{ path: string; beforeHash?: string; afterHash: string }>
   limitations?: string[]
+}
+
+// ---------------------------------------------------------------- capture history
+
+export type CaptureHistoryStatus = 'processing' | 'ingested' | 'skipped' | 'deferred' | 'error'
+export type CaptureJudgmentStage = 'assessment' | 'verification'
+export interface CaptureIssue {
+  at: string
+  stage: 'collecting' | 'worker_lock' | 'journal_write'
+  code: string
+  message: string
+  persisted: boolean
+  turnEndSeq?: number
+  jobId?: string
+}
+export interface CaptureStatusInput { sessionId?: string }
+export interface CaptureStatusResult {
+  collector: 'disabled' | 'starting' | 'ready' | 'blocked'
+  history: 'readable' | 'degraded' | 'unavailable'
+  reasonCode: string
+  reason: string
+  lastIssue?: CaptureIssue
+  error?: RemoteError
+}
+export interface CaptureHistoryInput { sessionId: string; cursor?: string; limit?: number; status?: CaptureHistoryStatus }
+export interface CaptureRecordInput { sessionId: string; jobId: string; afterEventSeq?: number; limit?: number }
+export interface CaptureJudgmentInput { sessionId: string; jobId: string; judgmentId: string }
+export interface CaptureQuestion {
+  id: string
+  type: 'choice' | 'noul'
+  text: string
+  options?: Array<{ value: string; description: string }>
+}
+export type CaptureAnswer =
+  | { id: string; type: 'choice'; choice: string; confidence: number; probabilities: Array<{ option: string; probability: number }> }
+  | { id: string; type: 'noul'; value: number }
+export interface CaptureGate {
+  id: string
+  questionId?: string
+  description: string
+  operator: 'gte' | 'eq'
+  actual: string | number | boolean
+  expected: string | number | boolean
+  passed: boolean
+}
+export type CaptureDecision = {
+  kind: 'decision'
+  answers: CaptureAnswer[]
+  gateResults: CaptureGate[]
+  disposition: 'prepare' | 'publish' | 'skipped' | 'deferred'
+  reasonCode: string
+  reason: string
+  usage?: { inputTokens: number | null; outputTokens: number | null }
+  requestId?: string
+} | { kind: 'error'; error: { category: string; message: string; httpStatus?: number } }
+export interface CaptureJudgmentRecord {
+  id: string
+  stage: CaptureJudgmentStage
+  attempt: number
+  model: string
+  rubricVersion: string
+  requestHash: string
+  evidenceHash: string
+  patchHash?: string
+  questions: CaptureQuestion[]
+  result?: CaptureDecision
+}
+export interface CaptureEvent {
+  seq: number
+  at: string
+  kind: 'registered' | 'phase_changed' | 'judgment_started' | 'judgment_finished' | 'judgment_failed' | 'judgment_interrupted' | 'recovery_started' | 'publication_finished' | 'publication_interrupted' | 'operation_failed' | 'legacy_snapshot'
+  phase?: CaptureView['phase']
+  reason?: string
+  judgmentId?: string
+  stage?: CaptureView['phase']
+  error?: { category: string; message: string }
+  durationMs?: number
+}
+export interface CaptureJudgmentSummary {
+  id: string
+  stage: CaptureJudgmentStage
+  attempt: number
+  model: string
+  state: 'started' | 'completed' | 'failed' | 'interrupted'
+  startedAt: string
+  finishedAt?: string
+  durationMs?: number
+  disposition?: 'prepare' | 'publish' | 'skipped' | 'deferred'
+  reason?: string
+}
+export interface CaptureSummary {
+  jobId: string
+  phase: CaptureView['phase']
+  reason: string
+  pages: string[]
+  updatedAt: string
+  registeredAt?: string
+  historyCoverage: 'complete' | 'legacy_snapshot'
+  origin: { sessionId: string; turn: number; turnStartSeq: number; turnEndSeq: number }
+  task: string
+  taskTruncated: boolean
+  evidenceHash: string
+  rubricVersion: string
+  rulesHash?: string
+  patchHash?: string
+  lastEventSeq: number
+  publicationUncertain?: boolean
+  retryable?: boolean
+  judgments: CaptureJudgmentSummary[]
+}
+export interface CaptureHistoryResult {
+  items: CaptureSummary[]
+  nextCursor?: string
+  readCompleteness: 'complete' | 'partial'
+  error?: RemoteError
+}
+export interface CaptureRecordResult {
+  summary?: CaptureSummary
+  events: CaptureEvent[]
+  judgments: CaptureJudgmentSummary[]
+  nextEventSeq?: number
+  evidence: Array<{ seq: number; kind: string; text: string; truncated: boolean }>
+  evidenceTruncated: boolean
+  limitations: string[]
+  changes: Array<{ path: string; beforeHash?: string; afterHash: string }>
+  error?: RemoteError
+}
+export interface CaptureJudgmentResult {
+  judgment?: CaptureJudgmentRecord
+  lifecycle?: CaptureJudgmentSummary
+  error?: RemoteError
 }
 
 export interface SessionView {

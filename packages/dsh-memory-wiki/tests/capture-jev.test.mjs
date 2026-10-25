@@ -13,6 +13,7 @@ test('CommandCode Jev uses the versioned Provider API without duplicating v1', a
     for await (const chunk of req) raw += chunk
     request = { path: req.url, authorization: req.headers.authorization, body: JSON.parse(raw) }
     res.setHeader('content-type', 'application/json')
+    res.setHeader('x-typesafe-request-id', 'fixture-request')
     res.end(JSON.stringify({ model: 'typesafe/jev-1.14.0', answers: {
       activity: { type: 'choice', choice: 'coding', confidence: .99, probabilities: { coding: .995, non_coding: .003, unclear: .002 } },
       lesson_kind: { type: 'choice', choice: 'failed_approach', confidence: .99, probabilities: { verified_fix: 0, failed_approach: 1, workflow_lesson: 0, none: 0, unclear: 0 } },
@@ -30,6 +31,10 @@ test('CommandCode Jev uses the versioned Provider API without duplicating v1', a
   assert.equal(request.body.questions.lasting_value.type, 'noul')
   assert.equal(decision.disposition, 'prepare')
   assert.equal(decision.model, 'typesafe/jev-1.14.0')
+  assert.equal(decision.audit.requestId, 'fixture-request')
+  assert.deepEqual(decision.audit.usage, { inputTokens: 30, outputTokens: 10 })
+  assert.equal(decision.audit.answers.find(answer => answer.id === 'activity').choice, 'coding')
+  assert.equal(decision.audit.gateResults.find(gate => gate.id === 'activity.probability').expected, .95)
 })
 
 test('old direct model IDs and an unversioned API root are explicitly rejected', () => {
@@ -82,4 +87,25 @@ test('host uses the CommandCode key file or CMD_API_KEY and ignores old TypeSafe
   }
   assert.deepEqual(requests.map(request => request.authorization), ['Bearer commandcode-file-key', 'Bearer commandcode-env-key'])
   assert.ok(requests.every(request => request.path === '/provider/v1/systemone' && request.model === 'typesafe/jev-1.14.0'))
+})
+
+test('Jev records actual verification questions and deferred gates without loosening thresholds',async t=>{
+ const server=createServer(async(req,res)=>{
+  let raw='';for await(const chunk of req)raw+=chunk
+  const body=JSON.parse(raw)
+  assert.equal(body.questions.claim_0.type,'choice')
+  res.setHeader('content-type','application/json')
+  res.end(JSON.stringify({model:body.model,answers:{relationship:{type:'choice',choice:'new',confidence:.99,probabilities:{new:1,supplement:0,duplicate:0,conflict:0,unclear:0}},complete:{type:'noul',noul:.94},outcome_scope:{type:'noul',noul:1},claim_0:{type:'choice',choice:'supported',confidence:1,probabilities:{supported:1,unsupported:0,contradicted:0,unclear:0}}},usage:{input_tokens:null,output_tokens:null}}))
+ })
+ await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));t.after(()=>server.close())
+ const judge=new JevJudge({apiKey:'fixture',model:'typesafe/jev-1.14.0',baseURL:`http://127.0.0.1:${server.address().port}/provider/v1`})
+ let request
+ const decision=await judge.verify({outcome:'completed'},{claims:[{text:'Bounded observation',evidenceRefs:[2]}],files:[],comparisonPages:[],comparisonIndex:[]},new AbortController().signal,value=>request=value)
+ assert.equal(request.questions.find(question=>question.id==='claim_0').text.includes('seq references 2'),true)
+ assert.equal(decision.disposition,'deferred')
+ assert.equal(decision.audit.gateResults.find(gate=>gate.id==='complete.threshold').passed,false)
+ assert.equal(decision.audit.gateResults.find(gate=>gate.id==='complete.threshold').expected,.95)
+ assert.equal(decision.audit.answers.length,4)
+ assert.deepEqual(decision.audit.usage,{inputTokens:null,outputTokens:null})
+ assert.ok(decision.durationMs>=0)
 })
