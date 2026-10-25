@@ -5,6 +5,7 @@
 - `packages/dsh-memory-wiki/src/server/index.ts` — Declares configuration, authenticated Remote methods and plugin lifecycle wiring.
 - `packages/dsh-memory-wiki/src/server/dsh-adapter.ts` — Integrates the read-only corpus, retrieval and session evidence with DSH.
 - `packages/dsh-memory-wiki/src/shared/contracts.ts` — Owns the server/client DTOs and Remote contracts.
+- `packages/dsh-memory-wiki/tests/client-graph-lifecycle.test.mjs` — Exercises renderer replacement and WebGL context-loss recovery through the client component's lifecycle effect.
 
 ## Automatic experience capture
 

@@ -32,7 +32,7 @@ let react = require("react");
 react = __toESM(react, 1);
 let react_jsx_runtime = require("react/jsx-runtime");
 let zod = require("zod");
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/inherits-d1a1e29b.esm.js
+//#region ../../node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/inherits-d1a1e29b.esm.js
 function _toPrimitive$1(t, r) {
 	if ("object" != typeof t || !t) return t;
 	var e = t[Symbol.toPrimitive];
@@ -98,7 +98,7 @@ function _inherits$1(t, e) {
 	} }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf$1(t, e);
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/colors-beb06eb2.esm.js
+//#region ../../node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/colors-beb06eb2.esm.js
 function _arrayWithHoles(r) {
 	if (Array.isArray(r)) return r;
 }
@@ -378,7 +378,7 @@ function getPixelColor(gl, frameBuffer, x, y, pixelRatio, downSizingRatio) {
 	];
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/index-fad77a13.esm.js
+//#region ../../node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/index-fad77a13.esm.js
 function _defineProperty$1(e, r, t) {
 	return (r = _toPropertyKey$1(r)) in e ? Object.defineProperty(e, r, {
 		value: t,
@@ -1440,7 +1440,7 @@ var EdgeRectangleProgram = /*#__PURE__*/ function(_EdgeProgram) {
 	]);
 }(EdgeProgram);
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/types/dist/sigma-types.esm.js
+//#region ../../node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/types/dist/sigma-types.esm.js
 var import_events = (/* @__PURE__ */ __commonJSMin(((exports, module) => {
 	var R = typeof Reflect === "object" ? Reflect : null;
 	var ReflectApply = R && typeof R.apply === "function" ? R.apply : function ReflectApply(target, receiver, args) {
@@ -1760,7 +1760,7 @@ var TypedEventEmitter = /*#__PURE__*/ function(_ref) {
 	return _createClass$1(TypedEventEmitter);
 }(import_events.EventEmitter);
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology-utils@2.5.2_graphology-types@0.24.8/node_modules/graphology-utils/is-graph.js
+//#region ../../node_modules/.pnpm/graphology-utils@2.5.2_graphology-types@0.24.8/node_modules/graphology-utils/is-graph.js
 var require_is_graph = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	/**
 	* Graphology isGraph
@@ -1780,7 +1780,7 @@ var require_is_graph = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	};
 }));
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/normalization-be445518.esm.js
+//#region ../../node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/normalization-be445518.esm.js
 var import_is_graph = /* @__PURE__ */ __toESM(require_is_graph());
 var easings = {
 	linear: function linear(k) {
@@ -2018,7 +2018,7 @@ function createNormalizationFunction(extent) {
 	return fn;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/data-11df7124.esm.js
+//#region ../../node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/data-11df7124.esm.js
 function _typeof(o) {
 	"@babel/helpers - typeof";
 	return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o) {
@@ -2054,7 +2054,7 @@ function assign$1(target) {
 	return target;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/settings/dist/sigma-settings.esm.js
+//#region ../../node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/settings/dist/sigma-settings.esm.js
 /**
 * Sigma.js Settings
 * =================================
@@ -2138,7 +2138,7 @@ function resolveSettings(settings) {
 	return resolvedSettings;
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/sigma.esm.js
+//#region ../../node_modules/.pnpm/sigma@3.0.3_graphology-types@0.24.8/node_modules/sigma/dist/sigma.esm.js
 /**
 * Defaults.
 */
@@ -4619,7 +4619,7 @@ var Sigma = /* @__PURE__ */ function(_TypedEventEmitter) {
 	]);
 }(TypedEventEmitter);
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/@sigma+edge-curve@3.1.0_sigma@3.0.3_graphology-types@0.24.8_/node_modules/@sigma/edge-curve/dist/sigma-edge-curve.esm.js
+//#region ../../node_modules/.pnpm/@sigma+edge-curve@3.1.0_sigma@3.0.3_graphology-types@0.24.8_/node_modules/@sigma/edge-curve/dist/sigma-edge-curve.esm.js
 function _toPrimitive(t, r) {
 	if ("object" != typeof t || !t) return t;
 	var e = t[Symbol.toPrimitive];
@@ -5066,7 +5066,7 @@ createEdgeCurveProgram();
 createEdgeCurveProgram({ arrowHead: DEFAULT_EDGE_ARROW_HEAD_PROGRAM_OPTIONS });
 createEdgeCurveProgram({ arrowHead: _objectSpread2(_objectSpread2({}, DEFAULT_EDGE_ARROW_HEAD_PROGRAM_OPTIONS), {}, { extremity: "both" }) });
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology@0.26.0_graphology-types@0.24.8/node_modules/graphology/dist/graphology.mjs
+//#region ../../node_modules/.pnpm/graphology@0.26.0_graphology-types@0.24.8/node_modules/graphology/dist/graphology.mjs
 /**
 * Graphology Utilities
 * =====================
@@ -9326,7 +9326,7 @@ Graph.InvalidArgumentsGraphError = InvalidArgumentsGraphError;
 Graph.NotFoundGraphError = NotFoundGraphError;
 Graph.UsageGraphError = UsageGraphError;
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology-utils@2.5.2_graphology-types@0.24.8/node_modules/graphology-utils/getters.js
+//#region ../../node_modules/.pnpm/graphology-utils@2.5.2_graphology-types@0.24.8/node_modules/graphology-utils/getters.js
 var require_getters = /* @__PURE__ */ __commonJSMin(((exports) => {
 	/**
 	* Graphology Weight Getter
@@ -9431,7 +9431,7 @@ var require_getters = /* @__PURE__ */ __commonJSMin(((exports) => {
 	};
 }));
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology-layout-forceatlas2@0.9.2_graphology-types@0.24.8/node_modules/graphology-layout-forceatlas2/iterate.js
+//#region ../../node_modules/.pnpm/graphology-layout-forceatlas2@0.9.2_graphology-types@0.24.8/node_modules/graphology-layout-forceatlas2/iterate.js
 var require_iterate$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	/**
 	* Graphology ForceAtlas2 Iteration
@@ -9786,7 +9786,7 @@ var require_iterate$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	};
 }));
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology-layout-forceatlas2@0.9.2_graphology-types@0.24.8/node_modules/graphology-layout-forceatlas2/helpers.js
+//#region ../../node_modules/.pnpm/graphology-layout-forceatlas2@0.9.2_graphology-types@0.24.8/node_modules/graphology-layout-forceatlas2/helpers.js
 var require_helpers$1 = /* @__PURE__ */ __commonJSMin(((exports) => {
 	/**
 	* Graphology ForceAtlas2 Helpers
@@ -9953,7 +9953,7 @@ var require_helpers$1 = /* @__PURE__ */ __commonJSMin(((exports) => {
 	};
 }));
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology-layout-forceatlas2@0.9.2_graphology-types@0.24.8/node_modules/graphology-layout-forceatlas2/defaults.js
+//#region ../../node_modules/.pnpm/graphology-layout-forceatlas2@0.9.2_graphology-types@0.24.8/node_modules/graphology-layout-forceatlas2/defaults.js
 var require_defaults$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	/**
 	* Graphology ForceAtlas2 Layout Default Settings
@@ -9973,7 +9973,7 @@ var require_defaults$1 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	};
 }));
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology-layout-forceatlas2@0.9.2_graphology-types@0.24.8/node_modules/graphology-layout-forceatlas2/index.js
+//#region ../../node_modules/.pnpm/graphology-layout-forceatlas2@0.9.2_graphology-types@0.24.8/node_modules/graphology-layout-forceatlas2/index.js
 var require_graphology_layout_forceatlas2 = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	/**
 	* Graphology ForceAtlas2 Layout
@@ -10043,7 +10043,7 @@ var require_graphology_layout_forceatlas2 = /* @__PURE__ */ __commonJSMin(((expo
 	module.exports = synchronousLayout;
 }));
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology-layout-noverlap@0.4.2_graphology-types@0.24.8/node_modules/graphology-layout-noverlap/iterate.js
+//#region ../../node_modules/.pnpm/graphology-layout-noverlap@0.4.2_graphology-types@0.24.8/node_modules/graphology-layout-noverlap/iterate.js
 var require_iterate = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	/**
 	* Graphology Noverlap Iteration
@@ -10174,7 +10174,7 @@ var require_iterate = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	};
 }));
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology-layout-noverlap@0.4.2_graphology-types@0.24.8/node_modules/graphology-layout-noverlap/helpers.js
+//#region ../../node_modules/.pnpm/graphology-layout-noverlap@0.4.2_graphology-types@0.24.8/node_modules/graphology-layout-noverlap/helpers.js
 var require_helpers = /* @__PURE__ */ __commonJSMin(((exports) => {
 	/**
 	* Graphology Noverlap Helpers
@@ -10277,7 +10277,7 @@ var require_helpers = /* @__PURE__ */ __commonJSMin(((exports) => {
 	};
 }));
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology-layout-noverlap@0.4.2_graphology-types@0.24.8/node_modules/graphology-layout-noverlap/defaults.js
+//#region ../../node_modules/.pnpm/graphology-layout-noverlap@0.4.2_graphology-types@0.24.8/node_modules/graphology-layout-noverlap/defaults.js
 var require_defaults = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	/**
 	* Graphology Noverlap Layout Default Settings
@@ -10292,7 +10292,7 @@ var require_defaults = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	};
 }));
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/graphology-layout-noverlap@0.4.2_graphology-types@0.24.8/node_modules/graphology-layout-noverlap/index.js
+//#region ../../node_modules/.pnpm/graphology-layout-noverlap@0.4.2_graphology-types@0.24.8/node_modules/graphology-layout-noverlap/index.js
 var require_graphology_layout_noverlap = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 	/**
 	* Graphology Noverlap Layout
@@ -10572,21 +10572,27 @@ function Canvas({ visible = true, graph, activePageId, onSelect, matches, drawer
 		let instance = null;
 		let frame = 0;
 		let observer = null;
-		let currentGeneration = 0;
-		const cleanup = () => {
+		let detachContextListeners = () => {};
+		const disposeRenderer = () => {
 			observer?.disconnect();
+			observer = null;
 			if (frame !== 0) cancelAnimationFrame(frame);
-			if (instance !== null) {
-				instance.getCamera().removeAllListeners("updated");
-				instance.kill();
-				instance = null;
-			}
-			mount.remove();
+			frame = 0;
+			detachContextListeners();
+			detachContextListeners = () => {};
+			const previous = instance;
+			instance = null;
 			renderer.current = null;
+			if (previous !== null) {
+				previous.getCamera().removeAllListeners("updated");
+				previous.kill();
+			}
+		};
+		const cleanup = () => {
+			disposeRenderer();
+			mount.remove();
 		};
 		const create = () => {
-			currentGeneration += 1;
-			const expected = currentGeneration;
 			try {
 				indexParallelEdgesIndex(layout.graph);
 				applyParallelCurvatures(layout);
@@ -10629,21 +10635,27 @@ function Canvas({ visible = true, graph, activePageId, onSelect, matches, drawer
 					});
 				});
 				const lost = (event) => {
+					if (instance !== next) return;
 					event.preventDefault();
 					setFailed(true);
 				};
 				const restored = () => {
-					if (expected !== currentGeneration) return;
-					next.getCamera().removeAllListeners("updated");
-					next.kill();
+					if (instance !== next) return;
+					disposeRenderer();
 					mount.replaceChildren();
 					create();
-					if (expected === currentGeneration) setGeneration((value) => value + 1);
 				};
-				for (const canvas of Object.values(next.getCanvases())) {
+				const canvases = Object.values(next.getCanvases());
+				for (const canvas of canvases) {
 					canvas.addEventListener("webglcontextlost", lost);
 					canvas.addEventListener("webglcontextrestored", restored, { once: true });
 				}
+				detachContextListeners = () => {
+					for (const canvas of canvases) {
+						canvas.removeEventListener("webglcontextlost", lost);
+						canvas.removeEventListener("webglcontextrestored", restored);
+					}
+				};
 				observer = new ResizeObserver(() => {
 					if (instance === next && mount.clientWidth > 0 && mount.clientHeight > 0) next.resize();
 				});
@@ -10687,27 +10699,18 @@ function Canvas({ visible = true, graph, activePageId, onSelect, matches, drawer
 			page: activePageId,
 			drawer
 		};
-		const ratio = Math.min(camera.ratio, .85);
-		const width = host.current.clientWidth - (drawer ? Math.min(420, host.current.clientWidth * .4) + 32 : 0);
+		const state = camera.getState();
+		const node = instance.getNodeDisplayData(activePageId);
+		if (!node) return;
+		const width = (drawer ? host.current.closest(".memory-wiki-panel__workspace")?.querySelector(".memory-wiki-panel__drawer:not([hidden])") : null)?.offsetLeft ?? host.current.clientWidth;
 		const height = host.current.clientHeight;
-		const attributes = layout.graph.getNodeAttributes(activePageId);
-		const point = instance.graphToViewport({
-			x: attributes.x,
-			y: attributes.y
-		});
-		const zoomed = instance.getViewportZoomedState(point, ratio);
-		const centre = instance.viewportToFramedGraph({
-			x: host.current.clientWidth / 2,
-			y: height / 2
-		}, { cameraState: zoomed });
 		const target = instance.viewportToFramedGraph({
 			x: width / 2,
 			y: height / 2
-		}, { cameraState: zoomed });
+		}, { cameraState: state });
 		camera.animate({
-			x: zoomed.x + target.x - centre.x,
-			y: zoomed.y + target.y - centre.y,
-			ratio: zoomed.ratio
+			x: state.x + node.x - target.x,
+			y: state.y + node.y - target.y
 		}, { duration: motion() ? 220 : 0 });
 	}, [
 		activePageId,
@@ -13269,6 +13272,7 @@ function MemoryPanel({ source, uiSession }) {
 							className: "memory-wiki-panel__icon",
 							onClick: refreshGraph,
 							"aria-label": "刷新知识图谱",
+							title: "重新读取 Wiki 页面与链接",
 							disabled: graphBusy || historyOpen,
 							children: /* @__PURE__ */ (0, react_jsx_runtime.jsx)(Icon, { name: "refresh" })
 						}),
@@ -13586,7 +13590,7 @@ function createSource(mode = SOURCE_MODE, remote) {
 	return unregisteredFixtureSource("no fixture source registered; production bundles none");
 }
 //#endregion
-//#region ../../../../../../../../../Volumes/PortableSSD/workspace/dsh-plugin-research/plugin/node_modules/.pnpm/@deepseek-ai+dsh-typert-protocol@0.2.1-rc.3_@deepseek-ai+cordis@4.0.5/node_modules/@deepseek-ai/dsh-typert-protocol/lib/types/remote-info.js
+//#region ../../node_modules/.pnpm/@deepseek-ai+dsh-typert-protocol@0.2.1-rc.3_@deepseek-ai+cordis@4.0.5/node_modules/@deepseek-ai/dsh-typert-protocol/lib/types/remote-info.js
 /** Lazy assembly of generated Remote definitions using caller-supplied Zod; no runtime imports. */
 /**
 * Retain one generated definition per endpoint without constructing parsers or projections.

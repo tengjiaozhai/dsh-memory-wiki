@@ -169,7 +169,7 @@ export function MemoryPanel({ source, uiSession }: { source: MemoryWikiSource; u
         </div>
         <div className="memory-wiki-panel__head-actions">
           <button type="button" aria-pressed={historyOpen} onClick={() => { setHistoryJob(undefined); setHistoryOpen(value => !value) }}>沉淀记录</button>
-          <button type="button" className="memory-wiki-panel__icon" onClick={refreshGraph} aria-label="刷新知识图谱" disabled={graphBusy || historyOpen}><Icon name="refresh" /></button>
+          <button type="button" className="memory-wiki-panel__icon" onClick={refreshGraph} aria-label="刷新知识图谱" title="重新读取 Wiki 页面与链接" disabled={graphBusy || historyOpen}><Icon name="refresh" /></button>
           <button type="button" disabled={historyOpen} data-testid="mw-context-toggle" aria-expanded={drawer === 'context'} aria-controls="mw-context" onClick={() => { setSearchOpen(false); setDrawer((current) => current === 'context' ? null : 'context') }}><Icon name="graph" />上下文</button>
         </div>
       </header>

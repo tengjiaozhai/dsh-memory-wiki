@@ -49,21 +49,29 @@ function Canvas({ visible = true, graph, activePageId, onSelect, matches, drawer
     let instance: Renderer | null = null
     let frame = 0
     let observer: ResizeObserver | null = null
-    let currentGeneration = 0
-    const cleanup = () => {
+    let detachContextListeners = () => {}
+    const disposeRenderer = () => {
       observer?.disconnect()
+      observer = null
       if (frame !== 0) cancelAnimationFrame(frame)
-      if (instance !== null) {
-        instance.getCamera().removeAllListeners('updated')
-        instance.kill()
-        instance = null
-      }
-      mount.remove()
+      frame = 0
+      // Sigma.kill() deliberately loses its WebGL contexts. Detach first so
+      // those asynchronous events cannot mark a replacement renderer failed.
+      detachContextListeners()
+      detachContextListeners = () => {}
+      const previous = instance
+      instance = null
       renderer.current = null
+      if (previous !== null) {
+        previous.getCamera().removeAllListeners('updated')
+        previous.kill()
+      }
+    }
+    const cleanup = () => {
+      disposeRenderer()
+      mount.remove()
     }
     const create = () => {
-      currentGeneration += 1
-      const expected = currentGeneration
       try {
         indexParallelEdgesIndex(layout.graph)
         applyParallelCurvatures(layout)
@@ -102,18 +110,27 @@ function Canvas({ visible = true, graph, activePageId, onSelect, matches, drawer
             if (instance === next) setZoom(Math.round(100 / next.getCamera().ratio))
           })
         })
-        const lost = (event: Event) => { event.preventDefault(); setFailed(true) }
+        const lost = (event: Event) => {
+          if (instance !== next) return
+          event.preventDefault()
+          setFailed(true)
+        }
         const restored = () => {
-          if (expected !== currentGeneration) return
-          next.getCamera().removeAllListeners('updated')
-          next.kill()
+          if (instance !== next) return
+          disposeRenderer()
           mount.replaceChildren()
           create()
-          if (expected === currentGeneration) setGeneration(value => value + 1)
         }
-        for (const canvas of Object.values(next.getCanvases())) {
+        const canvases = Object.values(next.getCanvases())
+        for (const canvas of canvases) {
           canvas.addEventListener('webglcontextlost', lost)
           canvas.addEventListener('webglcontextrestored', restored, { once: true })
+        }
+        detachContextListeners = () => {
+          for (const canvas of canvases) {
+            canvas.removeEventListener('webglcontextlost', lost)
+            canvas.removeEventListener('webglcontextrestored', restored)
+          }
         }
         observer = new ResizeObserver(() => { if (instance === next && mount.clientWidth > 0 && mount.clientHeight > 0) next.resize() })
         observer.observe(mount)
@@ -144,15 +161,16 @@ function Canvas({ visible = true, graph, activePageId, onSelect, matches, drawer
     if (!layout.graph.hasNode(activePageId) || host.current.clientWidth < 700) return
     const camera = instance.getCamera()
     focused.current = { layout, page: activePageId, drawer }
-    const ratio = Math.min(camera.ratio, 0.85)
-    const width = host.current.clientWidth - (drawer ? Math.min(420, host.current.clientWidth * 0.4) + 32 : 0)
+    const state = camera.getState()
+    const node = instance.getNodeDisplayData(activePageId)
+    if (!node) return
+    const overlay = drawer ? host.current.closest('.memory-wiki-panel__workspace')?.querySelector<HTMLElement>('.memory-wiki-panel__drawer:not([hidden])') : null
+    // offsetLeft ignores the drawer's entrance animation and measures the final
+    // visible canvas between the host navigation and the actual reading card.
+    const width = overlay?.offsetLeft ?? host.current.clientWidth
     const height = host.current.clientHeight
-    const attributes = layout.graph.getNodeAttributes(activePageId)
-    const point = instance.graphToViewport({ x: attributes.x, y: attributes.y })
-    const zoomed = instance.getViewportZoomedState(point, ratio)
-    const centre = instance.viewportToFramedGraph({ x: host.current.clientWidth / 2, y: height / 2 }, { cameraState: zoomed })
-    const target = instance.viewportToFramedGraph({ x: width / 2, y: height / 2 }, { cameraState: zoomed })
-    void camera.animate({ x: zoomed.x + target.x - centre.x, y: zoomed.y + target.y - centre.y, ratio: zoomed.ratio }, { duration: motion() ? 220 : 0 })
+    const target = instance.viewportToFramedGraph({ x: width / 2, y: height / 2 }, { cameraState: state })
+    void camera.animate({ x: state.x + node.x - target.x, y: state.y + node.y - target.y }, { duration: motion() ? 220 : 0 })
   }, [activePageId, drawer, layout, generation, visible])
 
   const fit = () => {
