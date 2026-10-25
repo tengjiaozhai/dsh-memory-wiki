@@ -68,17 +68,37 @@ dsh plugin --profile desktop add dsh-memory-wiki
 
 ## 自动沉淀编码经验
 
-在既有配置中加入：
+### Desktop 配置
+
+编辑 Desktop profile 的 `cordis.patch.yml`。默认位置为 `~/.dsh/profiles/desktop/cordis.patch.yml`；设置了 `DSH_HOME` 时，位置为 `$DSH_HOME/profiles/desktop/cordis.patch.yml`。配置写在现有 `memory-wiki` 条目的 `config` 下，保留其他插件条目，不重复新增同名条目：
 
 ```yaml
-capture:
-  enabled: true
-  judgeModel: typesafe/jev-1.14.0
-  judgeBaseURL: https://api.commandcode.ai/provider/v1
-  skillPath: /absolute/path/to/llm-wiki/SKILL.md
+- id: memory-wiki
+  config:
+    enabled: true
+    wikiRoot: /absolute/path/to/your/wiki
+    budgetChars: 4000
+    capture:
+      enabled: true
+      judgeModel: typesafe/jev-1.14.0
+      judgeBaseURL: https://api.commandcode.ai/provider/v1
+      skillPath: /absolute/path/to/llm-wiki/SKILL.md
+  disabled: false
 ```
 
+`wikiRoot` 和 `skillPath` 换成实际绝对路径。`skillPath` 指向 `SKILL.md` 文件；常见安装位置是 `~/.agents/skills/llm-wiki/SKILL.md`，填入配置时展开为绝对路径。插件需同时满足条目未禁用、`config.enabled: true` 和 `config.capture.enabled: true`，才会启动采集。
+
+仓库自带一份 skill，位于 workspace 根的 `skills/llm-wiki/`（与 `packages/` 同级），从源码或 git clone 使用时可直接填 `<repo>/skills/llm-wiki/SKILL.md`，不必另建一份。它不在 npm 发布范围内——包内 `files` 只含 `lib/` 与 `cordis.patch.yml`——从 npm 安装的用户需单独获取后再填绝对路径。
+
+### 配置凭据
+
 服务端从 `CMD_API_KEY` 或 `$DSH_HOME/credentials/memory-wiki-commandcode.key` 读取 CommandCode key；本地凭据文件应为 `0600`，不要放进插件配置或 Git。Jev 通过 CommandCode 的 `/provider/v1/systemone` 调用，仍使用 TypeSafe System One 协议和 SDK。`judgeBaseURL` 填含 `/v1` 的完整 API 根，程序处理 SDK 的路径拼接。生成笔记使用原轮次已解析的普通 LLM provider/model，写作调用没有工具权限。
+
+未自定义 `DSH_HOME` 时，凭据文件为 `~/.dsh/credentials/memory-wiki-commandcode.key`，内容仅放 key。环境变量优先于该文件；使用环境变量时，要确保 Desktop 进程实际继承了它。已有凭据文件可设置权限：
+
+```sh
+chmod 600 "${DSH_HOME:-$HOME/.dsh}/credentials/memory-wiki-commandcode.key"
+```
 
 原直连配置应改为上述模型 ID 和地址；项目不再读取 `TYPESAFE_API_KEY`、`TYPESAFE_BASE_URL` 或旧 TypeSafe key 文件，也不回退到旧服务。当前只接受 `typesafe/jev-1.14.0`；其他版本或别名需先调整固定版本并重新校准。远端地址要求 HTTPS，本机受控验证可用 loopback HTTP。
 
@@ -89,6 +109,12 @@ capture:
 任务与恢复清单保存在 `$DSH_HOME/storages/memory-wiki-auto-capture/<库哈希>/`，不保存 API key。重复终态、重启和同库并发用稳定 jobId 与文件锁处理；既有页面保留正文并补实例，发布前发现外部修改则停止，避免覆盖。发布是可恢复的逐文件替换，不是跨文件原子事务。
 
 当前验证边界：CommandCode 的固定版本模型真实请求已返回 HTTP 200，实际 `JevJudge` 的两阶段调用也成功完成。合成样本未达到高置信条件，按设计保留候选，没有写入真实 Wiki；尚未完成生产样本校准及真实经验自动沉淀验收。网络/API 错误会显示失败，不会换模型或把未验证内容写入 Wiki。自动采集默认关闭；查看历史不会启用采集或调用模型。
+
+### 应用配置并确认生效
+
+保存配置后，在 Desktop 的 **插件 → dsh-memory-wiki → 启用组件** 中关闭再开启该组件，以重载配置；若应用已自动重载且状态正确，无需重复操作。仅刷新页面不等于重载后台服务。Desktop profile 由 Electron 应用管理，不使用 `dsh --profile desktop --dump-config` 验证；如果同时升级了 Remote 契约，按前文说明重启 DSH。
+
+打开 **记忆 Wiki → 沉淀记录**，确认“自动采集”显示 **本地配置已就绪**。这表示本地配置、宿主依赖和存储初始化成功，不代表远端 Jev 已完成调用。后续真人任务的 `turn/end` 会触发自动判定，结果和错误在当前会话的记录中查看；尚未发生任务时显示“尚无本会话采集记录”是正常状态。停用时将 `capture.enabled` 改为 `false` 并重载，已有历史仍可读取。
 
 ### 查看沉淀记录
 
