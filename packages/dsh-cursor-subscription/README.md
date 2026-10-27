@@ -1,0 +1,89 @@
+# DSH Cursor Subscription
+
+**English** | [简体中文](README_zh.md)
+
+Sign in to your Cursor account and use your Cursor subscription directly from DeepSeek Harness—without an API key and without depending on the Cursor IDE or Cursor CLI. The plugin preserves DSH's existing session, tool, and permission systems: once signed in, you can select Cursor subscription models from the model picker, while agent tool calls are executed through DSH's local toolset.
+
+> ⚠️ This plugin integrates with Cursor's unpublished Agent protocol (`agent.v1.AgentService/Run`). It is a community reverse-engineering project and may stop working when Cursor changes its server-side implementation. This project is not affiliated with or endorsed by Anysphere or Cursor. Please comply with Cursor's terms of service.
+
+## Features
+
+- Use a Cursor subscription directly in DSH through browser-based PKCE sign-in—no API key required.
+- Store credentials in DSH's local credential store and refresh access tokens automatically.
+- Discover models available to the current account dynamically through Cursor's `GetUsableModels`, with a built-in fallback list if discovery fails.
+- Stream conversations with reasoning output, image attachments, and DSH tool calls.
+- View sign-in status and token expiration in the settings page, which labels itself with the installed build version.
+- View and manually refresh subscription usage as Cursor's own dashboard lays it out: an included-usage table with the Cursor Models and Other Models pools, each followed by the models that drew on it, with token counts and percentages per row, plus included requests, on-demand spend, and the billing cycle.
+- View and manually refresh the models available to the current account, listed by name instead of Cursor's response order.
+- Configure the per-run tool-round limit, the HTTP retry policy, and whether every step replays the full history from the settings page.
+- Read the settings page in Simplified Chinese, English, Traditional Chinese, Japanese, Korean, Spanish, French, German, Italian, Brazilian Portuguese, Russian, or Arabic. The panel mirrors itself for Arabic; contributed languages join DSH's own language picker under **Settings → General → Language** and fall back to English outside the panel.
+
+## Installation
+
+### Install with an Agent (Recommended)
+
+Send the agent a link to [AGENTS.md](AGENTS.md). It contains the instructions for installation, updates, removal, and verification.
+
+### Manual Installation with the `dsh` Command
+
+```sh
+dsh plugin --profile web add dsh-cursor-subscription
+dsh plugin --profile web list dsh-cursor-subscription --depth 0
+dsh --profile web --dump-config
+```
+
+The installed package list should contain exactly one `dsh-cursor-subscription`, and the composed configuration should contain exactly one `cursor-subscription` entry.
+
+pnpm 11 and later ship a built-in 24-hour `minimumReleaseAge` gate, so a plain `add` never selects a version published within the last 24 hours. Right after a release, install it explicitly (`dsh plugin --profile web add dsh-cursor-subscription@0.5.8`) or exempt this package by name in the profile's `pnpm-workspace.yaml`:
+
+```yaml
+minimumReleaseAgeExclude:
+  - dsh-cursor-subscription
+```
+
+### Local Development Installation
+
+Run the following command in the profile directory, such as `%USERPROFILE%\.dsh\profiles\web`:
+
+```sh
+pnpm add file:D:/mcp/dsh-cursor-subscription
+```
+
+Then add `dsh-cursor-subscription` to the `dsh.profile.bundles` array in `package.json` and restart DSH.
+
+## Sign-in and Usage
+
+1. Open **Settings -> Cursor Subscription** in DSH.
+2. Select **Browser Sign-in**. Your browser will open the Cursor sign-in page.
+3. Complete sign-in and authorization. The settings page will automatically show that you are signed in.
+4. Select a Cursor model from the model picker, such as `composer-2` or `claude-4-sonnet`.
+
+When a tool is required, the agent converts Cursor's tool request into a local DSH tool execution. The result is returned to the model through the conversation history; Cursor's filesystem tools are not used. When Cursor asks for one of its own built-in tools instead — including a tool newer than this build knows — the plugin declines that request right away, telling the model to use the DSH tools, so the run continues instead of waiting for a result that will never come.
+
+The **Runtime settings** card controls the maximum tool rounds in one Cursor run, the HTTP retry policy, and whether each step replays the full history. The tool-round cap defaults to `200` (range 1–1000) and ends the run with `TOOL_LIMIT` when exceeded. Retry count means additional attempts and defaults to `0` (disabled). Cursor's streaming POST protocol cannot prove that a failed attempt was not processed remotely, so enabling retries may repeat model work or usage. Retries occur only before any response output when the initial HTTP status matches the configured list. **Replay the full history each step** is off by default: it rebuilds the Cursor conversation from the DSH history on every step instead of resuming the conversation Cursor keeps server-side, which is what an adapter that re-sends its own history does — at the cost of re-sending the transcript each step, since Cursor has no provider-side compaction to bound it.
+
+## Updating and Removing
+
+```sh
+dsh plugin --profile web update dsh-cursor-subscription   # Update
+dsh plugin --profile web remove dsh-cursor-subscription   # Remove
+```
+
+If DSH is running, restart it manually after installation or an update.
+
+## Troubleshooting
+
+- **DSH still reports that you are signed out after sign-in:** Make sure the browser completed the entire authorization flow and redirected to the completion page. Polling waits for up to approximately 2.5 minutes.
+- **The model list is empty:** `GetUsableModels` depends on the account type. If discovery fails, the plugin uses its built-in model list, and you can still enter a model name manually.
+- **Requests return 401:** If the access token has expired and the refresh token is no longer valid, sign in again from the settings page.
+- **DSH fails to start with `cannot get property "webServer" without inject`:** The installed DSH's Connection plugin does not declare `webServer`, which the older channel registration relied on. Install version 0.5.8 or later of this plugin.
+- **DSH fails to start with `Plugin dsh-cursor-subscription@... is incompatible with dsh ...`, or warns `patch: entry "cursor-subscription" not found`:** Since DSH 0.2.0-rc.2, a profile refuses to load a plugin whose declared DSH peer ranges do not cover the running DSH version, and a refused plugin contributes no `cursor-subscription` entry — so the profile's own patch for that entry reports it as missing. Version 0.6.12 and later declare the 0.2.0-rc line; 0.6.11 and earlier declare the 0.1.x line only. Install the build that matches your DSH, or accept the risk explicitly for one exact version pair with `dsh plugin --profile web allow-version dsh-cursor-subscription@<version> --dsh-version <dsh-version> --accept-risk`.
+- **A plain install picks an old version:** pnpm's built-in 24-hour `minimumReleaseAge` gate skips releases published within the last day. Install an explicit version or exempt this package by name; see the installation section.
+- **The server protocol changed:** Cursor's Agent protocol is unpublished. If requests fail, check for a plugin update.
+
+## Scope and Support
+
+- Image *input* (user-uploaded attachments) is supported. Cursor-native features such as image generation and web search remain outside this plugin's scope.
+- Report problems through the repository's Issues page.
+
+[MIT](LICENSE)

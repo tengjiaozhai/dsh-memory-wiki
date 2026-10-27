@@ -1,0 +1,120 @@
+# DSH Cursor Subscription
+
+[English](README.md) | **简体中文**
+
+在 DeepSeek Harness 中直接登录 Cursor 账户并使用 Cursor 订阅，不需要 API Key，
+也不依赖 Cursor IDE 或 Cursor CLI。保留 DSH 原有的会话、工具和权限体系：
+登录后在模型选择器中即可选择 Cursor 订阅模型，Agent 的工具调用走 DSH 本地的
+工具集。
+
+> ⚠️ 本插件接入的是 Cursor 未公开的 Agent 协议（`agent.v1.AgentService/Run`），
+> 属于社区逆向工程成果，可能随 Cursor 服务端变化而失效。本项目与 Anysphere /
+> Cursor 无隶属或背书关系，请遵守 Cursor 的服务条款。
+
+## 能做什么
+
+- 在 DSH 中直接使用 Cursor 订阅（浏览器 PKCE 登录，无 API Key）；
+- 登录凭据保存在本机 DSH credential 存储中，自动刷新访问令牌；
+- 通过 Cursor 的 `GetUsableModels` 动态发现当前账户可用的模型（失败时回退到内置列表）；
+- 流式对话，支持思考过程（reasoning）、用户图片附件与 DSH 工具调用；
+- 设置页可查看登录状态与令牌有效期，标题旁标出当前安装的插件版本号；
+- 设置页可查询订阅用量并手动刷新，展示方式与 Cursor 官网一致：一张包含用量表格，先列出 Cursor Models 与 Other Models 两个额度池，其下是各自消耗过的模型，每行都有 token 数与百分比；另有包含请求、按需消费与账单周期；
+- 设置页可查看当前账户可用的模型列表并手动刷新，列表按模型名称排序（不再跟随 Cursor 接口返回的顺序）；
+- 可在设置页调整单次任务工具轮次上限、HTTP 重试策略，以及是否每一步重放完整历史；
+- 设置页支持简体中文、英文、繁体中文、日语、韩语、西班牙语、法语、德语、意大利语、巴西葡萄牙语、俄语和阿拉伯语；阿拉伯语下界面自动镜像为从右到左。新增语言会注册进 DSH 的语言列表（**设置 → 通用 → 语言**），面板之外的其他界面回退到英文。
+
+## 安装
+
+### 交给 Agent（推荐）
+
+把 `AGENTS.md` 的链接发给 Agent 即可完成安装、更新、卸载与验收。
+
+### 手动安装（已有 dsh 命令）
+
+```sh
+dsh plugin --profile web add dsh-cursor-subscription
+dsh plugin --profile web list dsh-cursor-subscription --depth 0
+dsh --profile web --dump-config
+```
+
+安装列表中应只有一个 `dsh-cursor-subscription`，配置中应只有一个
+`cursor-subscription` 条目。
+
+pnpm 11 及以后内置了 24 小时的 `minimumReleaseAge` 供应链防护：普通 `add`
+不会选择 24 小时内发布的版本。刚发布完新版本时，请显式指定版本安装
+（`dsh plugin --profile web add dsh-cursor-subscription@0.5.8`），或在 profile 的
+`pnpm-workspace.yaml` 里按包名豁免：
+
+```yaml
+minimumReleaseAgeExclude:
+  - dsh-cursor-subscription
+```
+
+### 本地开发安装
+
+在 profile 目录（如 `%USERPROFILE%\.dsh\profiles\web`）执行：
+
+```sh
+pnpm add file:D:/mcp/dsh-cursor-subscription
+```
+
+并把 `dsh-cursor-subscription` 加入 `package.json` 的
+`dsh.profile.bundles` 列表，然后重启 DSH。
+
+## 登录与使用
+
+1. 打开 DSH 的 **设置 -> Cursor 订阅**；
+2. 点击「浏览器登录」，浏览器会打开 Cursor 登录页；
+3. 登录并授权后，设置页自动显示「已登录」；
+4. 在模型选择器中选择 Cursor 模型（如 `composer-2`、`claude-4-sonnet`）。
+
+需要调用工具时，Agent 会把 Cursor 侧的工具请求转成 DSH 本地工具执行，结果通过
+对话历史回传给模型，全程不经过 Cursor 的文件系统工具。当 Cursor 转而请求它自己的内置
+工具时（包括比当前版本更新的、插件还不认识的工具），插件会立即回绝该请求并提示模型
+改用 DSH 的工具，让任务继续，而不是等待一个永远不会到来的执行结果。
+
+「运行设置」卡片可以调整单次 Cursor 任务的最大工具轮次、HTTP 重试策略，以及是否每一步
+重放完整历史。工具轮次上限默认 `200`（范围 1–1000），超过后以 `TOOL_LIMIT` 终止该次运行。
+重试次数指首次请求之外的额外尝试次数，默认 `0`（关闭）。Cursor 的流式 POST 协议无法证明失败
+请求未被远端处理，因此启用重试可能重复模型工作或用量；仅当尚未产生任何输出且初始 HTTP
+状态码匹配列表时才会重试。「每步重放完整历史」默认关闭：开启后每一步都从 DSH 的对话历史重建
+Cursor 会话，而不是沿用 Cursor 服务端保存的会话——这正是"自带历史"的适配器所做的事，代价是
+每步都要重发整段记录，而 Cursor 没有服务端压缩来兜住它。
+
+## 更新与卸载
+
+```sh
+dsh plugin --profile web update dsh-cursor-subscription   # 更新
+dsh plugin --profile web remove dsh-cursor-subscription   # 卸载
+```
+
+如果 DSH 正在运行，安装或更新后请手动重启。
+
+## 常见问题
+
+- **登录后仍提示未登录**：确认浏览器完成了整个授权流程（登录页跳转回完成页）；
+  轮询最长等待约 2.5 分钟。
+- **模型列表为空**：`GetUsableModels` 依赖账户类型，失败时插件会使用内置模型列表，
+  仍可手动输入模型名。
+- **请求报 401**：令牌过期且 refresh token 失效时，需要在设置页重新登录。
+- **DSH 启动失败并报 `cannot get property "webServer" without inject`**：当前 DSH 的
+  Connection 插件不再自己声明 `webServer`，旧版插件注册账户通道时依赖了它。请安装
+  0.5.8 或更高版本的本插件。
+- **DSH 启动失败并报 `Plugin dsh-cursor-subscription@... is incompatible with dsh ...`，
+  或提示 `patch: entry "cursor-subscription" not found`**：从 DSH 0.2.0-rc.2 起，若插件
+  声明的 DSH peer 范围不覆盖当前 DSH 版本，profile 会拒绝加载该插件；被拒绝的插件不会
+  贡献 `cursor-subscription` 条目，于是 profile 自己的补丁会报告该条目不存在。0.6.12
+  及更高版本声明的是 0.2.0-rc 线，0.6.11 及更低版本只声明 0.1.x 线。请安装与当前 DSH
+  匹配的版本；若确认风险，也可用
+  `dsh plugin --profile web allow-version dsh-cursor-subscription@<版本> --dsh-version <DSH版本> --accept-risk`
+  对某一对具体版本显式放行。
+- **普通安装装到的是旧版本**：pnpm 内置的 24 小时 `minimumReleaseAge` 防护会跳过
+  最近一天内发布的版本。请显式指定版本安装，或按包名豁免该包；见安装章节。
+- **服务端协议变更**：Cursor 的 Agent 协议是未公开接口，若请求失败请检查插件更新。
+
+## 边界与支持
+
+- 支持用户上传图片作为输入。图片生成、联网搜索等 Cursor 内置能力仍不在本插件范围内；
+- 问题反馈请在仓库 Issues 中提交。
+
+[MIT](LICENSE)
