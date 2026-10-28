@@ -10342,12 +10342,31 @@ var require_graphology_layout_noverlap = /* @__PURE__ */ __commonJSMin(((exports
 //#region src/client/graph-layout.ts
 var import_graphology_layout_forceatlas2 = /* @__PURE__ */ __toESM(require_graphology_layout_forceatlas2(), 1);
 var import_graphology_layout_noverlap = /* @__PURE__ */ __toESM(require_graphology_layout_noverlap(), 1);
+/**
+* Collapse link occurrences onto one line per node pair.
+*
+* The corpus records every occurrence: a page may cite a neighbour twice, and
+* two pages may cite each other. The drawn graph is undirected, so all of them
+* are the same connection and must be the same line. The first occurrence wins,
+* which keeps direction and `source` deterministic across renders.
+*/
+function uniqueLinks(result) {
+	const seen = /* @__PURE__ */ new Set();
+	const links = [];
+	for (const edge of result.edges) {
+		const key = edge.from < edge.to ? edge.from + "\0" + edge.to : edge.to + "\0" + edge.from;
+		if (seen.has(key)) continue;
+		seen.add(key);
+		links.push(edge);
+	}
+	return links;
+}
 /** Visual hierarchy comes only from real, undirected link degree. */
 function graphStructure(result) {
 	const degree = new Map(result.pages.map((page) => [page.pageId, 0]));
 	const neighbors = new Map(result.pages.map((page) => [page.pageId, /* @__PURE__ */ new Set()]));
-	for (const edge of result.edges) {
-		if (!degree.has(edge.from) || !degree.has(edge.to) || edge.from === edge.to) continue;
+	const links = uniqueLinks(result).filter((edge) => edge.from !== edge.to && degree.has(edge.from) && degree.has(edge.to));
+	for (const edge of links) {
 		degree.set(edge.from, degree.get(edge.from) + 1);
 		degree.set(edge.to, degree.get(edge.to) + 1);
 		neighbors.get(edge.from).add(edge.to);
@@ -10357,12 +10376,13 @@ function graphStructure(result) {
 	return {
 		degree,
 		neighbors,
-		hubs: new Set([...degree].filter(([, value]) => value >= 10).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, limit).map(([id]) => id))
+		hubs: new Set([...degree].filter(([, value]) => value >= 10).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, limit).map(([id]) => id)),
+		links
 	};
 }
 /** Deterministic, bounded layout: FA2 clusters real links, noverlap separates hubs. */
 function layoutGraph(result) {
-	const { degree, hubs } = graphStructure(result);
+	const { degree, hubs, links } = graphStructure(result);
 	const graph = new Graph({
 		multi: true,
 		allowSelfLoops: false
@@ -10394,8 +10414,7 @@ function layoutGraph(result) {
 			zIndex: hub ? 2 : 1
 		});
 	});
-	result.edges.forEach((edge, index) => {
-		if (!graph.hasNode(edge.from) || !graph.hasNode(edge.to) || edge.from === edge.to) return;
+	links.forEach((edge, index) => {
 		const structural = Math.max(degree.get(edge.from) ?? 0, degree.get(edge.to) ?? 0) >= 20;
 		graph.addEdgeWithKey("edge-" + index, edge.from, edge.to, {
 			source: edge.source,
@@ -10776,7 +10795,7 @@ function Canvas({ visible = true, graph, activePageId, onSelect, matches, drawer
 						children: [
 							graph.pages.length,
 							" 页 · ",
-							graph.edges.length,
+							structure.links.length,
 							" 条连接"
 						]
 					}),
@@ -15531,7 +15550,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 161,
+				"line": 169,
 				"column": 9
 			}
 		},
@@ -16028,7 +16047,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 167,
+				"line": 175,
 				"column": 9
 			}
 		},
@@ -16550,7 +16569,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 164,
+				"line": 172,
 				"column": 9
 			}
 		},
@@ -16823,7 +16842,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 154,
+				"line": 162,
 				"column": 9
 			}
 		},
@@ -17063,7 +17082,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 221,
+				"line": 229,
 				"column": 9
 			}
 		},
@@ -17346,7 +17365,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 171,
+				"line": 179,
 				"column": 9
 			}
 		},
@@ -17751,7 +17770,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 211,
+				"line": 219,
 				"column": 9
 			}
 		},
@@ -18051,7 +18070,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 191,
+				"line": 199,
 				"column": 9
 			}
 		},
@@ -18439,7 +18458,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 201,
+				"line": 209,
 				"column": 9
 			}
 		},
@@ -18786,7 +18805,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 181,
+				"line": 189,
 				"column": 9
 			}
 		},
@@ -19402,7 +19421,7 @@ const TYPERT_REMOTE = createTypertRemoteInfo({
 			},
 			sourceLocation: {
 				"file": "packages/dsh-memory-wiki/src/server/index.ts",
-				"line": 146,
+				"line": 154,
 				"column": 9
 			}
 		}

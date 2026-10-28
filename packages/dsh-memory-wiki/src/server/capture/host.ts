@@ -4,14 +4,21 @@ import { dshHomePath } from '@deepseek-ai/dsh-home-paths'
 import { BlockAssembler } from '@deepseek-ai/dsh-llm'
 import type { GenerateOptions } from '@deepseek-ai/dsh-llm'
 import { ExperienceCapture } from './experience.js'
-import { JevJudge } from './jev.js'
+import { JevJudge, JUDGE_STATE_BUDGET_CHARS, resolveBudget } from './jev.js'
 import { WikiIngest } from './ingest.js'
 import { hash, safeError } from './files.js'
 import type { GenerateWiki } from './ingest.js'
 
 export function captureDataRoot(wikiRoot: string): string { return dshHomePath('storages', 'memory-wiki-auto-capture', hash(fs.realpathSync(wikiRoot))) }
 
-export type CaptureConfig = { enabled: boolean; judgeModel: string; judgeBaseURL: string; skillPath: string }
+export type CaptureConfig = {
+  enabled: boolean
+  judgeModel: string
+  judgeBaseURL: string
+  skillPath: string
+  /** Evidence folding for the judge's context limit; absent means enabled with the default budget. */
+  condense?: { enabled: boolean; budgetChars: number }
+}
 
 /** Independent one-shot model request: an empty tool set is a permission limit. */
 export function createWikiWriter(llm: { stream(options: GenerateOptions): AsyncIterable<any> }): GenerateWiki {
@@ -42,8 +49,12 @@ export function createHostCapture(ctx: any, wikiRoot: string, config: CaptureCon
   const apiKey = process.env.CMD_API_KEY?.trim() || (fs.existsSync(keyFile) ? fs.readFileSync(keyFile, 'utf8').trim() : '')
   if (!apiKey) throw new Error('CommandCode Jev 未配置：请设置 CMD_API_KEY 或 memory-wiki-commandcode.key')
   const dataRoot = captureDataRoot(wikiRoot)
-  const judge = new JevJudge({ apiKey, model: config.judgeModel, baseURL: config.judgeBaseURL })
-  const ingest = new WikiIngest({ wikiRoot, dataRoot, skillPath: path.resolve(config.skillPath), generate: createWikiWriter(ctx.llm) })
+  const condense = config.condense ?? { enabled: true, budgetChars: JUDGE_STATE_BUDGET_CHARS }
+  // One validated value for both consumers: an out-of-range config must not give
+  // the judge one budget and the precheck another.
+  const budgetChars = resolveBudget(condense.budgetChars)
+  const judge = new JevJudge({ apiKey, model: config.judgeModel, baseURL: config.judgeBaseURL, budgetChars, condense: condense.enabled })
+  const ingest = new WikiIngest({ wikiRoot, dataRoot, skillPath: path.resolve(config.skillPath), generate: createWikiWriter(ctx.llm), budgetChars })
   return new ExperienceCapture({ wikiRoot, dataRoot, judge, ingest,
     readEvents: async sessionId => (await ctx.sessionQuery.readSession(sessionId)).events,
     onPublishing: callbacks.publishing, onPublished: callbacks.published,

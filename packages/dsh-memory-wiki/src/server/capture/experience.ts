@@ -5,6 +5,8 @@ import { atomicWrite, hash, PublicationConflict, redactRecord, safeError, under 
 import { CaptureJournal, JournalWriteError } from './journal.js'
 import type { CaptureIssue } from '../../shared/contracts.js'
 import { RUBRIC_VERSION } from './types.js'
+import { JudgeBudgetExceeded } from './jev.js'
+import { unfoldableChars } from './condense.js'
 import type { Assessment, CaptureJob, CapturePhase, CaptureView, EvidenceBundle, PreparedIngest, RawEvent, Verification, WriterRoute, JudgmentRequest } from './types.js'
 
 type CaptureSession = {
@@ -23,6 +25,8 @@ type Options = {
 }
 type Watched = { workspace: string; cursor: number; lastIssue?: CaptureIssue }
 const TERMINAL: CapturePhase[] = ['ingested', 'skipped', 'deferred', 'failed', 'needs_attention']
+/** Single source of truth for the "too large to judge" limitation, never its wording. */
+const OVER_BUDGET_LIMITATION = '本轮任务与工具调用的原文超出可判定上限'
 
 /** Persistent per-human-turn work. It never injects or continues the parent conversation. */
 export class ExperienceCapture {
@@ -163,7 +167,10 @@ export class ExperienceCapture {
         const requestedTask = human.map(event => JSON.stringify(redactRecord(event.data.content))).join('\n')
         const limitations: string[] = []
         if (events.some(event => event.text === '[Sensitive-file event omitted]')) limitations.push('涉及凭据文件的事件已省略')
-        if (JSON.stringify(events).length > 150_000) limitations.push('本轮证据超出判定额度，需缩小取证范围')
+        // Folding removes assistant prose and tool output, so the real ceiling is the
+        // text that can never be folded: the task and the tool calls themselves.
+        // Everything else is judged instead of discarded.
+        if (unfoldableChars(events) > 300_000) limitations.push(`${OVER_BUDGET_LIMITATION}，需缩小取证范围`)
         const changes: NonNullable<EvidenceBundle['changes']> = []
         const checks: NonNullable<EvidenceBundle['checks']> = []
         const calls = new Map<string, { seq: number; data: any }>()
@@ -217,7 +224,9 @@ export class ExperienceCapture {
         return
       }
       if (job.phase !== 'publishing') {
-        if (job.evidence.limitations.some(limit => limit.includes('超出'))) { this.phase(job, 'deferred', job.evidence.limitations.join('；')); return }
+        // The judge defers on any limitation (jev assessment 'evidence-limits'), so
+        // stopping here is equivalent and saves a paid request per turn.
+        if (job.evidence.limitations.length > 0) { this.phase(job, 'deferred', job.evidence.limitations.join('；')); return }
         this.phase(job, 'judging', 'Jev 正在判断经验价值')
         const assessment = await this.judge(job, 'assessment', signal)
         job.model = assessment.model
@@ -243,6 +252,15 @@ export class ExperienceCapture {
     catch (error) {
       if (error instanceof JournalWriteError) throw error
       if (this.closed) { if (job.phase === 'publishing') this.journal.append(job, { kind: 'publication_interrupted', reason: '应用停止，发布结果待恢复核对' }); else this.save(job); return }
+      if (error instanceof JudgeBudgetExceeded || /max_tokens_exceeded/.test(safeError(error))) {
+        // Capacity, not malfunction: the turn is deliberately not captured, so it
+        // must not surface as a system failure or invite an automatic retry.
+        job.retryable = false
+        this.journal.append(job, { kind: 'operation_failed', phase: 'deferred', stage: job.phase,
+          reason: `本轮判定请求超出 Jev 上下文预算，本轮不沉淀：${safeError(error)}`,
+          error: { category: 'judgment_budget', message: safeError(error) } })
+        return
+      }
       const publicationUnknown = job.phase === 'publishing' && (!(error instanceof PublicationConflict) || error.partial)
       job.retryable = job.phase === 'publishing' && !(error instanceof PublicationConflict)
       if (error instanceof PublicationConflict && !error.partial) {

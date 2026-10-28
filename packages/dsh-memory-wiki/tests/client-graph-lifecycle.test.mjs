@@ -35,7 +35,7 @@ function harness() {
     sigma: { default: Sigma },
     '@sigma/edge-curve': { createEdgeCurveProgram() {}, indexParallelEdgesIndex() {} },
     'sigma/rendering': { drawDiscNodeLabel() {} },
-    './graph-layout.js': { layoutGraph(graph) { return { graph } }, graphStructure() { return {} } },
+    './graph-layout.js': { layoutGraph(graph) { return { graph } }, graphStructure() { return { links: [] } } },
     './graph-style.js': { applyGraphEmphasis() {}, applyParallelCurvatures() {} },
     './icons.js': { Icon() {} },
   }

@@ -198,7 +198,7 @@ function Canvas({ visible = true, graph, activePageId, onSelect, matches, drawer
         <div>{graph.pages.map(page => <button type="button" key={page.pageId} data-testid="mw-node" data-page-id={page.pageId} className={page.pageId === activePageId ? 'is-active' : ''} onClick={() => onSelect(page.pageId)} aria-pressed={page.pageId === activePageId}>{page.title}</button>)}</div>
       </details>
       <div className="memory-wiki-panel__canvas-tools" aria-label="图谱视图">
-        <span data-testid="mw-graph-facts">{graph.pages.length} 页 · {graph.edges.length} 条连接</span>
+        <span data-testid="mw-graph-facts">{graph.pages.length} 页 · {structure.links.length} 条连接</span>
         <button type="button" aria-label="缩小" onClick={() => zoomCamera(-1)}><Icon name="minus" /></button>
         <span className="memory-wiki-panel__zoom" data-testid="mw-zoom">{zoom}%</span>
         <button type="button" aria-label="放大" onClick={() => zoomCamera(1)}><Icon name="plus" /></button>

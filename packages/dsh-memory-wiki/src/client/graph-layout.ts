@@ -19,12 +19,36 @@ export interface GraphLayout {
   hubs: Set<string>
 }
 
+/** One corpus link occurrence, as the graph DTO carries it. */
+type GraphLink = GraphResult['edges'][number]
+
+/**
+ * Collapse link occurrences onto one line per node pair.
+ *
+ * The corpus records every occurrence: a page may cite a neighbour twice, and
+ * two pages may cite each other. The drawn graph is undirected, so all of them
+ * are the same connection and must be the same line. The first occurrence wins,
+ * which keeps direction and `source` deterministic across renders.
+ */
+function uniqueLinks(result: GraphResult): GraphLink[] {
+  const seen = new Set<string>()
+  const links: GraphLink[] = []
+  for (const edge of result.edges) {
+    const key = edge.from < edge.to ? edge.from + '\u0000' + edge.to : edge.to + '\u0000' + edge.from
+    if (seen.has(key)) continue
+    seen.add(key)
+    links.push(edge)
+  }
+  return links
+}
+
 /** Visual hierarchy comes only from real, undirected link degree. */
 export function graphStructure(result: GraphResult) {
   const degree = new Map(result.pages.map(page => [page.pageId, 0]))
   const neighbors = new Map(result.pages.map(page => [page.pageId, new Set<string>()]))
-  for (const edge of result.edges) {
-    if (!degree.has(edge.from) || !degree.has(edge.to) || edge.from === edge.to) continue
+  // Endpoints must exist and a self-loop is not a connection between two nodes.
+  const links = uniqueLinks(result).filter(edge => edge.from !== edge.to && degree.has(edge.from) && degree.has(edge.to))
+  for (const edge of links) {
     degree.set(edge.from, degree.get(edge.from)! + 1)
     degree.set(edge.to, degree.get(edge.to)! + 1)
     neighbors.get(edge.from)!.add(edge.to)
@@ -32,12 +56,13 @@ export function graphStructure(result: GraphResult) {
   }
   const limit = Math.min(10, Math.max(1, Math.ceil(result.pages.length * 0.1)))
   const hubs = new Set([...degree].filter(([, value]) => value >= 10).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, limit).map(([id]) => id))
-  return { degree, neighbors, hubs }
+  // `links` is what the canvas draws and what the panel counts: one entry per pair.
+  return { degree, neighbors, hubs, links }
 }
 
 /** Deterministic, bounded layout: FA2 clusters real links, noverlap separates hubs. */
 export function layoutGraph(result: GraphResult): GraphLayout {
-  const { degree, hubs } = graphStructure(result)
+  const { degree, hubs, links } = graphStructure(result)
   const graph = new Graph({ multi: true, allowSelfLoops: false })
   const ordered = [...result.pages].sort((a, b) => a.pageId.localeCompare(b.pageId))
   const nodes = new Map<string, LayoutNode>()
@@ -66,8 +91,7 @@ export function layoutGraph(result: GraphResult): GraphLayout {
       zIndex: hub ? 2 : 1,
     })
   })
-  result.edges.forEach((edge, index) => {
-    if (!graph.hasNode(edge.from) || !graph.hasNode(edge.to) || edge.from === edge.to) return
+  links.forEach((edge, index) => {
     const structural = Math.max(degree.get(edge.from) ?? 0, degree.get(edge.to) ?? 0) >= 20
     graph.addEdgeWithKey('edge-' + index, edge.from, edge.to, {
       source: edge.source,

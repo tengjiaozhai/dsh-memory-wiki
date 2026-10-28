@@ -1,6 +1,7 @@
 export { CaptureHistory } from './capture/history.js'
 export { CaptureJournal } from './capture/journal.js'
-export { JevJudge } from './capture/jev.js'
+export { JevJudge, JudgeBudgetExceeded, questionChars, resolveBudget, verificationQuestions } from './capture/jev.js'
+export { condenseEvidence, condenseVerification, unfoldableChars } from './capture/condense.js'
 export { WikiIngest } from './capture/ingest.js'
 export { ExperienceCapture } from './capture/experience.js'
 export { createHostCapture, createWikiWriter } from './capture/host.js'

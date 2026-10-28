@@ -106,3 +106,29 @@ test('changed frozen evidence and invented quotations are rejected', async t => 
   } })
   await assert.rejects(fabricated.prepare(evidence, { provider: 'fixture', model: 'writer' }, new AbortController().signal), /quote does not match/)
 })
+
+test('a verification state that cannot fit Jev is refused instead of failing at the endpoint', async t => {
+  const config = await library(t)
+  const ingest = new WikiIngest({ ...config, generate: async input => proposal(input) })
+  const text = 'y'.repeat(80_000)
+  // user/message is a fixed kind: folding cannot shrink it, so the precheck must reject.
+  const oversized = { ...evidence, events: [evidence.events[0], { seq: 3, kind: 'user/message', text, hash: createHash('sha256').update(text).digest('hex') }] }
+  await assert.rejects(
+    ingest.prepare(oversized, { provider: 'fixture', model: 'writer' }, new AbortController().signal),
+    error => error.name === 'JudgeBudgetExceeded' && /超出本地预算/.test(error.message),
+  )
+})
+
+test('verification is refused when the pages under review alone exceed the budget', async t => {
+  const config = await library(t)
+  const ingest = new WikiIngest({ ...config, generate: async input => {
+    const result = proposal(input)
+    // files are the text under verification: folding may never shorten them.
+    result.updates[0].content = result.updates[0].content.replace('Evidence:', 'x'.repeat(80_000) + '\n\nEvidence:')
+    return result
+  } })
+  await assert.rejects(
+    ingest.prepare(evidence, { provider: 'fixture', model: 'writer' }, new AbortController().signal),
+    error => error.name === 'JudgeBudgetExceeded',
+  )
+})

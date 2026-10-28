@@ -29,7 +29,7 @@ import type {
 } from '../shared/contracts.js'
 import { MemoryWikiAdapter } from './dsh-adapter.js'
 import { createHostCapture, captureDataRoot } from './capture/host.js'
-import { COMMANDCODE_BASE_URL, DEFAULT_JEV_MODEL } from './capture/jev.js'
+import { COMMANDCODE_BASE_URL, DEFAULT_JEV_MODEL, JUDGE_STATE_BUDGET_CHARS } from './capture/jev.js'
 import type { ExperienceCapture } from './capture/experience.js'
 import { CaptureJournal } from './capture/journal.js'
 import { CaptureHistory } from './capture/history.js'
@@ -68,7 +68,14 @@ export const Config = z
       judgeModel: z.string().default(DEFAULT_JEV_MODEL),
       judgeBaseURL: z.string().default(COMMANDCODE_BASE_URL),
       skillPath: z.string().default(''),
-    }).default({ enabled: false, judgeModel: DEFAULT_JEV_MODEL, judgeBaseURL: COMMANDCODE_BASE_URL, skillPath: '' }),
+      condense: z.object({
+        enabled: z.boolean().default(true),
+        budgetChars: z.number().default(JUDGE_STATE_BUDGET_CHARS),
+      }).default({ enabled: true, budgetChars: JUDGE_STATE_BUDGET_CHARS }),
+    }).default({
+      enabled: false, judgeModel: DEFAULT_JEV_MODEL, judgeBaseURL: COMMANDCODE_BASE_URL, skillPath: '',
+      condense: { enabled: true, budgetChars: JUDGE_STATE_BUDGET_CHARS },
+    }),
   })
   .default({ enabled: true, wikiRoot: '', budgetChars: 4000 })
 
@@ -123,6 +130,7 @@ export default class MemoryWikiService extends TypertRemoteService {
         try {
           this.capture = createHostCapture(captureContext, this.resolved.wikiRoot, {
             enabled: true, judgeModel: raw.capture.judgeModel ?? DEFAULT_JEV_MODEL, judgeBaseURL: raw.capture.judgeBaseURL ?? COMMANDCODE_BASE_URL, skillPath: raw.capture.skillPath ?? '',
+            condense: raw.capture.condense ?? { enabled: true, budgetChars: JUDGE_STATE_BUDGET_CHARS },
           }, { publishing: active => this.adapter.setPublishing(active), published: () => this.adapter.refreshCorpus() })
           this.captureState = { collector: 'ready', reason: '本地采集配置已就绪；远端模型可用性以实际调用结果为准' }
           const capture = this.capture

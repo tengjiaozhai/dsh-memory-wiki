@@ -40,6 +40,8 @@ export type PreparedIngest = {
   comparisonPages: Array<{ path: string; content: string }>
   comparisonIndex: Array<{ pageId: string; title: string; aliases: string[] }>
   files: FileChange[]
+  /** `files` minus derived copies of the evidence, used for verification only. */
+  verificationFiles?: FileChange[]
   claims: Claim[]
   patchHash: string
 }

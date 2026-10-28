@@ -3,7 +3,7 @@ import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
-import { ExperienceCapture as CaptureWorker, CaptureJournal } from '../lib/server/capture.js'
+import { ExperienceCapture as CaptureWorker, CaptureJournal, JudgeBudgetExceeded } from '../lib/server/capture.js'
 
 // Controlled judges use the same recorded-call seam as the production transport.
 class ExperienceCapture extends CaptureWorker {
@@ -202,5 +202,46 @@ test('common provider environment credential names are redacted before persisten
  }}})
  capture.observe({id:'human',header:{}},events[2]);await capture.whenIdle()
  for(const file of (await fs.readdir(path.join(root,'jobs'))).filter(file=>file.endsWith('.json'))){const content=await fs.readFile(path.join(root,'jobs',file),'utf8');assert.equal(content.includes('private-github-value'),false)}
+ await capture.dispose()
+})
+
+test('a large turn now reaches the judge instead of being discarded as capacity',async t=>{
+ const root=await fs.mkdtemp(path.join(os.tmpdir(),'capture-large-'))
+ t.after(()=>fs.rm(root,{recursive:true,force:true}))
+ const events=[{seq:0,type:'turn/start',data:{turn:1}},{seq:1,type:'user/message',data:{source:{kind:'user'},content:[{type:'text',text:'Summarize the long build log'}]}},
+  ...Array.from({length:30},(_,index)=>({seq:index+2,type:'assistant/message',data:{message:{content:[{type:'text',text:'x'.repeat(2_500)}]}}})),
+  {seq:32,type:'turn/end',data:{turn:1,reason:{kind:'completed'}}}]
+ let judged=0
+ const capture=new ExperienceCapture({wikiRoot:root,dataRoot:path.join(root,'jobs'),judge:{
+  assess:async()=>{judged++;return{disposition:'deferred',reason:'经验价值不足',model:'fixture'}},
+  verify:async()=>{assert.fail('No verify for a deferred assessment')},
+ },ingest:{},readEvents:async()=>events})
+ capture.observe({id:'human',header:{},requestHeader:()=>({config:{provider:'p',model:'m'}})},events.at(-1))
+ await capture.whenIdle()
+ const view=capture.getCapture('human')
+ assert.equal(judged,1,'the judge must see a large turn')
+ assert.equal(view.phase,'deferred')
+ assert.match(view.reason,/经验价值不足/)
+ await capture.dispose()
+})
+
+test('evidence that cannot be folded is deferred as capacity, never failed',async t=>{
+ const root=await fs.mkdtemp(path.join(os.tmpdir(),'capture-unfoldable-'))
+ t.after(()=>fs.rm(root,{recursive:true,force:true}))
+ // user/message is a fixed kind: folding cannot shrink it, so the request guard fires.
+ const events=[{seq:0,type:'turn/start',data:{turn:1}},
+  ...Array.from({length:35},(_,index)=>({seq:index+1,type:'user/message',data:{source:{kind:'user'},content:[{type:'text',text:'x'.repeat(2_500)}]}})),
+  {seq:36,type:'turn/end',data:{turn:1,reason:{kind:'completed'}}}]
+ const capture=new ExperienceCapture({wikiRoot:root,dataRoot:path.join(root,'jobs'),judge:{
+  assess:async()=>{throw new JudgeBudgetExceeded(90_000,72_000)},
+  verify:async()=>{assert.fail('No verify for an over-budget turn')},
+ },ingest:{},readEvents:async()=>events})
+ capture.observe({id:'human',header:{},requestHeader:()=>({config:{provider:'p',model:'m'}})},events.at(-1))
+ await capture.whenIdle()
+ const view=capture.getCapture('human')
+ assert.equal(view.phase,'deferred')
+ assert.match(view.reason,/上下文预算/)
+ // No assertion on the judgment record count: the production guard throws before
+ // `started`, so the journal shape is an implementation detail of the transport.
  await capture.dispose()
 })

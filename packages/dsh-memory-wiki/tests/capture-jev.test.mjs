@@ -4,7 +4,7 @@ import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
-import { createHostCapture, JevJudge } from '../lib/server/capture.js'
+import { condenseEvidence, condenseVerification, createHostCapture, JevJudge } from '../lib/server/capture.js'
 
 test('CommandCode Jev uses the versioned Provider API without duplicating v1', async t => {
   let request
@@ -108,4 +108,90 @@ test('Jev records actual verification questions and deferred gates without loose
  assert.equal(decision.audit.answers.length,4)
  assert.deepEqual(decision.audit.usage,{inputTokens:null,outputTokens:null})
  assert.ok(decision.durationMs>=0)
+})
+
+test('a state that folding cannot shrink is refused locally: no HTTP request, no journal entry', async t => {
+  let requests = 0
+  const server = createServer((req, res) => { requests++; res.setHeader('content-type', 'application/json'); res.end('{}') })
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve))
+  t.after(() => server.close())
+  const judge = new JevJudge({ apiKey: 'fixture', model: 'typesafe/jev-1.14.0', baseURL: `http://127.0.0.1:${server.address().port}/provider/v1` })
+  // user/message is never folded, so no amount of folding can bring this under budget.
+  const events = [{ seq: 0, kind: 'user/message', text: 'x'.repeat(80_000), hash: 'fixture' }]
+  let started = 0
+  await assert.rejects(
+    () => judge.assess({ jobId: 'a'.repeat(64), origin: { sessionId: 's', turn: 1, turnStartSeq: 0, turnEndSeq: 40 }, outcome: 'completed', workspaceIdentity: 'w', requestedTask: 'task', events, limitations: [], contentHash: 'h' }, new AbortController().signal, () => { started++ }),
+    error => error.name === 'JudgeBudgetExceeded' && /超出本地预算/.test(error.message),
+  )
+  assert.equal(requests, 0)
+  assert.equal(started, 0)
+})
+
+test('oversized prose is folded before sending: fixed kinds intact, folding visible', async t => {
+  let body
+  const server = createServer(async (req, res) => {
+    let raw = ''
+    for await (const chunk of req) raw += chunk
+    body = JSON.parse(raw)
+    res.setHeader('content-type', 'application/json')
+    res.end(JSON.stringify({ model: 'typesafe/jev-1.14.0', answers: {
+      activity: { type: 'choice', choice: 'coding', confidence: .99, probabilities: { coding: .995, non_coding: .003, unclear: .002 } },
+      lesson_kind: { type: 'choice', choice: 'failed_approach', confidence: .99, probabilities: { verified_fix: 0, failed_approach: 1, workflow_lesson: 0, none: 0, unclear: 0 } },
+      lasting_value: { type: 'noul', noul: .99 }, evidence_sufficient: { type: 'noul', noul: .99 },
+    }, usage: { input_tokens: 10, output_tokens: 1 } }))
+  })
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve))
+  t.after(() => server.close())
+  const judge = new JevJudge({ apiKey: 'fixture', model: 'typesafe/jev-1.14.0', baseURL: `http://127.0.0.1:${server.address().port}/provider/v1` })
+  const events = [
+    { seq: 0, kind: 'user/message', text: 'Fix the build', hash: 'f' },
+    { seq: 1, kind: 'tool/call', text: '{"name":"bash","arguments":"{\\"command\\":\\"pnpm build\\"}"}', hash: 'f' },
+    { seq: 2, kind: 'tool/result', text: 'noise\n' + 'x'.repeat(60_000) + '\nerror TS2322: type mismatch', hash: 'f' },
+    { seq: 3, kind: 'assistant/message', text: 'x'.repeat(60_000) + '\nBuild fixed.', hash: 'f' },
+  ]
+  await judge.assess({ jobId: 'a'.repeat(64), origin: { sessionId: 's', turn: 1, turnStartSeq: 0, turnEndSeq: 3 }, outcome: 'completed', workspaceIdentity: 'w', requestedTask: 'Fix the build', events, limitations: [], contentHash: 'h' }, new AbortController().signal)
+  assert.equal(typeof body.state, 'string')
+  assert.ok(body.state.length <= 72_000, `state must fit the budget, got ${body.state.length}`)
+  assert.match(body.state, /字符未展示/)
+  assert.ok(body.state.includes('pnpm build'), 'tool/call must stay intact')
+  assert.ok(body.state.includes('error TS2322'), 'the tail of a tool result must survive')
+  assert.ok(body.state.includes('Build fixed.'), 'the final conclusion must survive')
+})
+
+test('folding is deterministic and keeps every fixed kind byte-identical', () => {
+  const events = [
+    { seq: 0, kind: 'user/message', text: 'Task '.repeat(50), hash: 'f' },
+    { seq: 1, kind: 'tool/call', text: 'call '.repeat(400), hash: 'f' },
+    { seq: 2, kind: 'tool/result', text: 'y'.repeat(20_000), hash: 'f' },
+    { seq: 3, kind: 'assistant/message', text: 'z'.repeat(20_000), hash: 'f' },
+  ]
+  const evidence = { jobId: 'a'.repeat(64), origin: { sessionId: 's', turn: 1, turnStartSeq: 0, turnEndSeq: 3 }, outcome: 'completed', workspaceIdentity: 'w', requestedTask: 'task', events, limitations: [], contentHash: 'h' }
+  const first = condenseEvidence(evidence, 9_000)
+  const second = condenseEvidence(evidence, 9_000)
+  assert.equal(first.state, second.state)
+  assert.equal(first.condensed, true)
+  // The caller passes the state budget directly (questions are subtracted by the caller).
+  assert.ok(first.state.length <= 8_800, `state must fit the given budget: ${first.state.length}`)
+  assert.ok(first.ratio > 1)
+  assert.ok(first.state.includes('Task Task Task'), 'user/message survives whole')
+  assert.ok(first.folded.every(entry => entry.omitted > 0 && entry.kept > 0))
+})
+
+test('folded evidence never yields a verified fix', async t => {
+  const server = createServer(async (req, res) => {
+    for await (const chunk of req) void chunk
+    res.setHeader('content-type', 'application/json')
+    res.end(JSON.stringify({ model: 'typesafe/jev-1.14.0', answers: {
+      activity: { type: 'choice', choice: 'coding', confidence: .99, probabilities: { coding: .99, non_coding: .005, unclear: .005 } },
+      lesson_kind: { type: 'choice', choice: 'verified_fix', confidence: .99, probabilities: { verified_fix: .99, failed_approach: .005, workflow_lesson: .004, none: .0005, unclear: .0005 } },
+      lasting_value: { type: 'noul', noul: .99 }, evidence_sufficient: { type: 'noul', noul: .99 },
+    }, usage: { input_tokens: 10, output_tokens: 1 } }))
+  })
+  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve))
+  t.after(() => server.close())
+  const judge = new JevJudge({ apiKey: 'fixture', model: 'typesafe/jev-1.14.0', baseURL: `http://127.0.0.1:${server.address().port}/provider/v1` })
+  const events = [{ seq: 0, kind: 'user/message', text: 'Fix the build', hash: 'f' }, { seq: 1, kind: 'assistant/message', text: 'w'.repeat(90_000), hash: 'f' }]
+  const decision = await judge.assess({ jobId: 'a'.repeat(64), origin: { sessionId: 's', turn: 1, turnStartSeq: 0, turnEndSeq: 1 }, outcome: 'completed', workspaceIdentity: 'w', requestedTask: 'Fix the build', events, limitations: [], contentHash: 'h' }, new AbortController().signal)
+  assert.equal(decision.disposition, 'deferred')
+  assert.equal(decision.audit.reasonCode, 'condensed-evidence')
 })
