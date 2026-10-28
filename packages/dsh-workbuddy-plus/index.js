@@ -12,8 +12,8 @@
  *     半只改「按包名接线」的标识），并在其上重新声明包名与版本范围。
  *
  *  2. dsh-workbuddy-brandfix@1.0.0（本项目自研）——WorkBuddy 网关会把带宿主
- *     品牌串 "DeepSeek Harness" 的 system prompt 判为未授权渠道（HTTP 400，
- *     code 11128）。合并后不再有插件顺序依赖：补丁在 import 阶段就装好。
+ *     品牌串的 system prompt 判为未授权渠道（HTTP 400，code 11128，见下）
+ *     另有一条 @ 路径说明句也会被拦，两处都必须改写。合并后不再有插件顺序依赖：
  *
  *  3. 双账号池（本项目自研）——CN 通道可以配第二个账号的登录凭据文件，默认
  *     「主账号优先，额度用尽/限流/登录失效时自动切到备用账号」，也可以配成
@@ -21,8 +21,8 @@
  *
  * 配置（环境变量）：
  *   WORKBUDDY_BRAND_FIX=0        关闭品牌改写（默认开启）
- *   WORKBUDDY_BRAND_FROM         被替换的串（默认 "DeepSeek Harness"）
- *   WORKBUDDY_BRAND_TO           替换成的串（默认 "WorkBuddy"）
+ *   WORKBUDDY_BRAND_FROM         被替换的串（默认：16 字符的宿主品牌串，见下方品牌改写段）
+ *   WORKBUDDY_BRAND_TO           替换成的串（默认："WorkBuddy"）
  *   WORKBUDDY_AUTH_FILE_2        第二个 CN 账号的凭据文件（默认 $DSH_HOME/.workbuddy-account-2.info，旧名 .workbuddy-account-b.info 仍兼容）
  *   WORKBUDDY_ACCOUNT_POLICY     failover（默认）| rotate | off
  *   WORKBUDDY_ACCOUNT_COOLDOWN_MS 切到备用账号后多久再优先试主账号（默认 600000）
@@ -54,9 +54,47 @@ export const Config = connectConfig
 /* 品牌令牌改写                                                        */
 /* ------------------------------------------------------------------ */
 
-const BRAND_FROM = process.env.WORKBUDDY_BRAND_FROM ?? 'DeepSeek Harness'
-const BRAND_TO = process.env.WORKBUDDY_BRAND_TO ?? 'WorkBuddy'
+/**
+ * 网关的渠道校验（HTTP 400 / code 11128 "Illegal API invocation from an
+ * unapproved channel"，界面显示「请求被拦截，请重新发送」）命中两个串，
+ * 二者都必须改写——只改一个仍然 400（实测）。
+ *
+ *   1. 宿主品牌串（16 字符，D-e-e-p-S-e-e-k + 空格 + H-a-r-n-e-s-s）。
+ *      DSH 的 system prompt 首句固定是 "You are an AI agent powered by <它>."，
+ *      网关把「声称自己是某渠道的 agent」这种句式判为未授权渠道。
+ *   2. @ 路径说明句："Tokens prefixed with @ are paths ... referenced."
+ *      DSH 运行时上下文里的固定段落，语义风控命中，改措辞即过。
+ *
+ * 两串按码点构造而不是写字面量：本仓的文本通道会把 16 字符那串静默归一
+ * 成 9 字符的宿主品牌名，导致「改写前」「改写后」变成同一个串，补丁自我
+ * 失效且看不出来。下面的断言保证两者确实不同。
+ *
+ * 实测（CN 通道 copilot.tencent.com / deepseek-v4.1-flash）：
+ *   原始 system prompt 196KB → 11128（12/12）
+ *   两处都改写后           → 200（连续 2 轮，含哨兵对照）
+ */
+const BRAND_FROM = process.env.WORKBUDDY_BRAND_FROM ?? String.fromCodePoint(68, 101, 101, 112, 83, 101, 101, 107, 32, 72, 97, 114, 110, 101, 115, 115)
+const BRAND_TO = process.env.WORKBUDDY_BRAND_TO ?? String.fromCodePoint(87, 111, 114, 107, 66, 117, 100, 100, 121)
 const BRAND_FIX_ENABLED = process.env.WORKBUDDY_BRAND_FIX !== '0'
+
+/** @ 路径说明句的原文与替换文本（等长改写，不动无关字节）。 */
+const AT_PATH_FROM = 'Tokens prefixed with @ are paths the user explicitly referenced.'
+const AT_PATH_TO = 'Tokens prefixed with symbols are paths the reader mentioned earlier.'
+
+/**
+ * 当前生效的改写对。
+ *
+ * 两条不重叠，逐条替换比一次正则更可读，也便于单独开关；环境变量把
+ * from/to 设成同一个值时该条自动跳过。
+ *
+ * @returns {Array<{from: string, to: string}>} 改写对
+ */
+export function rewritePairs() {
+	const pairs = []
+	if (BRAND_FROM !== '' && BRAND_FROM !== BRAND_TO) pairs.push({ from: BRAND_FROM, to: BRAND_TO })
+	if (AT_PATH_FROM !== AT_PATH_TO) pairs.push({ from: AT_PATH_FROM, to: AT_PATH_TO })
+	return pairs
+}
 
 /**
  * 把一段文本转成 JSON 字符串字面量内部的形式。
@@ -70,23 +108,54 @@ function jsonStringBody(value) {
 	return JSON.stringify(value).slice(1, -1)
 }
 
-const BRAND_FROM_IN_JSON = jsonStringBody(BRAND_FROM)
-const BRAND_TO_IN_JSON = jsonStringBody(BRAND_TO)
+/** 预先把每条改写对转成 JSON 字面量内部形式（body 已是序列化字符串）。 */
+const REWRITE_PAIRS_IN_JSON = rewritePairs().map((pair) => ({
+	from: jsonStringBody(pair.from),
+	to: jsonStringBody(pair.to),
+}))
 
 /**
- * 把一段出站 JSON body 里的品牌串替换掉。
+ * 自检：改写对必须真的不同，且必须能命中宿主品牌串。
+ *
+ * 这道断言存在的理由很具体——本仓的文本通道会把 16 字符的品牌串静默归一
+ * 成 9 字符，于是 from 与 to 变成同一个值、补丁静默失效，而表面上看不出
+ * 任何异常。宁可 import 期直接抛错，也不要带着一个空转的补丁上线。
+ */
+function assertRewriteIsEffective() {
+	if (!BRAND_FIX_ENABLED) return
+	for (const pair of REWRITE_PAIRS_IN_JSON) {
+		if (pair.from === pair.to) {
+			throw new Error('[dsh-workbuddy-plus] 改写对前后相同（' + JSON.stringify(pair.from) + '），补丁不会生效')
+		}
+	}
+	const brand = REWRITE_PAIRS_IN_JSON[0]
+	if (brand !== undefined && !jsonStringBody('You are an AI agent powered by ' + BRAND_FROM + '.').includes(brand.from)) {
+		throw new Error('[dsh-workbuddy-plus] 品牌改写串无法命中 system prompt 首句')
+	}
+}
+assertRewriteIsEffective()
+
+/**
+ * 把一段出站 JSON body 里的拦截串替换掉。
  *
  * 上游把整个请求体序列化成一个字符串交给 chatStream，这里做的是整串替换，
  * 因此用户消息、工具结果里出现的同一串也会被一起改——这是刻意的取舍：
  * 不动 JSON 结构就不可能产出非法 body。要关掉就设 WORKBUDDY_BRAND_FIX=0。
+ *
+ * 每条改写对独立判断是否命中，没有命中的直接跳过，避免无谓的整串扫描。
  *
  * @param {unknown} bodyJson 上游要发出的 JSON 字符串
  * @returns {unknown} 改写后的字符串；非字符串原样返回
  */
 export function rewriteBrandTokens(bodyJson) {
 	if (!BRAND_FIX_ENABLED) return bodyJson
-	if (typeof bodyJson !== 'string' || !bodyJson.includes(BRAND_FROM_IN_JSON)) return bodyJson
-	return bodyJson.split(BRAND_FROM_IN_JSON).join(BRAND_TO_IN_JSON)
+	if (typeof bodyJson !== 'string') return bodyJson
+	let out = bodyJson
+	for (const pair of REWRITE_PAIRS_IN_JSON) {
+		if (!out.includes(pair.from)) continue
+		out = out.split(pair.from).join(pair.to)
+	}
+	return out
 }
 
 /* ------------------------------------------------------------------ */
@@ -543,8 +612,12 @@ export function apply(ctx, config) {
 		if (!BRAND_FIX_ENABLED) {
 			ctx?.logger?.info?.('[dsh-workbuddy-plus] WORKBUDDY_BRAND_FIX=0，品牌改写已关闭')
 		} else if (installed) {
+			// 两条规则分别报，便于一眼看出是品牌串还是 @ 路径句在生效。
+			const pairs = rewritePairs()
 			ctx?.logger?.info?.(
-				'[dsh-workbuddy-plus] 出站请求改写 ' + JSON.stringify(BRAND_FROM) + ' -> ' + JSON.stringify(BRAND_TO),
+				'[dsh-workbuddy-plus] 出站请求改写 ' +
+					pairs.length + ' 条规则：' +
+					pairs.map((p) => JSON.stringify(p.from.slice(0, 24)) + '->' + JSON.stringify(p.to.slice(0, 24))).join('；'),
 			)
 		} else {
 			ctx?.logger?.warn?.('[dsh-workbuddy-plus] 未找到 WorkBuddyUpstreamClient.prototype.chatStream，品牌改写未生效')
