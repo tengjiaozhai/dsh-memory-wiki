@@ -264,6 +264,49 @@ const WORKBUDDY_PROVIDER = "workbuddy";
 /** Provider idle ceiling while one stream read is outstanding. */
 const WORKBUDDY_STREAM_IDLE_TIMEOUT_MS = 3e5;
 /**
+* Retry policy for the workbuddy route.
+*
+* Two departures from `dsh-llm`'s defaults, each measured on real sessions
+* rather than guessed:
+*
+* 1. `PI_AI_ERROR` is added to the retryable set. That code is the classifier's
+*    catch-all, and it is what an upstream-reported `finish_reason: "error"`
+*    lands on: the stream stops mid-tool-call-arguments and the provider closes
+*    itself with a usage chunk, so it is a transport-shaped failure, not a
+*    request-shaped one. Leaving it out turned one 152-second stall into a dead
+*    turn with zero retries attempted. A 404 route misconfiguration also lands
+*    on this code, but it fails in milliseconds, so retrying it costs a few
+*    seconds of waiting rather than a re-run of the whole request.
+* 2. `maxRetries` drops to 2 (from 5). One attempt on this route can burn
+*    ~150s before the upstream gives up, so the 5-retry default would keep the
+*    user waiting up to ~15 minutes before surfacing the error. Two retries
+*    cover transient jitter and cap the worst case near ~7.6 minutes.
+*
+* The backoff is wider than the default (2s/30s, jitter 0.3 vs 0.5s/10s, 0.1):
+* every session on this machine shares one gateway, and a ±10% jitter band
+* retries into the same second when several sessions stall together.
+*
+* The code list repeats `dsh-llm`'s `DEFAULT_RETRYABLE_CODES` verbatim because
+* that constant is not part of the package's export surface.
+*/
+const WORKBUDDY_RETRY_POLICY = {
+	mode: "normal",
+	maxRetries: 2,
+	retryableCodes: [
+		"EMPTY_RESPONSE",
+		"RATE_LIMIT",
+		"SERVER",
+		"TIMEOUT",
+		"TRANSPORT",
+		"PI_AI_ERROR"
+	],
+	backoff: {
+		initialDelayMs: 2000,
+		maxDelayMs: 30000,
+		jitterRatio: 0.3
+	}
+};
+/**
 * Image-request budgets at the dsh-llm-pi-ai defaults; the profile type made
 * them required in 0.1.1-rc.2. They bound requests to models whose catalog
 * entry declares `supportsImages`; text-only models never receive images.
@@ -501,7 +544,7 @@ function createWorkBuddyAdapter(options) {
 		provider: providerId,
 		displayName,
 		streamIdleTimeoutMs: WORKBUDDY_STREAM_IDLE_TIMEOUT_MS,
-		retryPolicy: resolveRetryPolicy(void 0, "dsh-workbuddy-connect retryPolicy"),
+		retryPolicy: resolveRetryPolicy(WORKBUDDY_RETRY_POLICY, "dsh-workbuddy-connect retryPolicy"),
 		configuredMaxTokens: /* @__PURE__ */ new Map(),
 		modelErrors: /* @__PURE__ */ new Map(),
 		...REQUEST_IMAGE_BUDGETS,
@@ -2864,4 +2907,4 @@ function apply(ctx, config) {
 	});
 }
 //#endregion
-export { AI_VARIANT, CN_APP_VERSION_FILENAME, CN_VARIANT, Config, FALLBACK_CN_APP_VERSION, FALLBACK_WORKBUDDY_AI_MODELS, FALLBACK_WORKBUDDY_MODELS, PROBE_EFFORT_CANDIDATES, WORKBUDDY_AI_SETTINGS_NS, WORKBUDDY_APP_VERSION_FILENAME, WORKBUDDY_AUTH_FILENAME, WORKBUDDY_AUTH_FILE_ENV, WORKBUDDY_CATALOG_FILENAME, WORKBUDDY_HOST_HEARTBEAT_FILENAME, WORKBUDDY_PROBE_FILENAME, WORKBUDDY_PROVIDER, WORKBUDDY_SETTINGS_NS, WORKBUDDY_STREAM_IDLE_TIMEOUT_MS, WORKBUDDY_VARIANTS, WORKBUDDY_VISIBILITY_FILENAME, WorkBuddyCatalog, WorkBuddyCatalogStore, WorkBuddyCredentialStore, WorkBuddyProbeService, WorkBuddyProbeStore, WorkBuddyUpstreamClient, WorkBuddyVisibilityStore, appUserAgent, apply, chatUserAgent, classifyUpstreamError, clearHostHeartbeat, createWorkBuddyAdapter, createWorkBuddyShim, defaultDesktopAuthCandidates, defaultDesktopAuthPath, desktopAuthCandidatesFor, fallbackChatIdentity, fingerprintModel, inject, installedAppVersion, isHeartbeatProcessAlive, modelWithCurrentPromotion, name, normalizeCredits, parseModelCatalog, parseWorkBuddyAuth, prepareChatBody, prepareCnChatBody, prepareInternationalChatBody, probeModel, processStartTimeMs, randomSentinel, readBundleVersion, readCliVersion, readHostHeartbeat, regionOf, resolveAppVersion, resolveChatIdentity, validAppVersion, validCliVersion, variantFor, visibilityAccountOf, workbuddyCatalogPath, workbuddyHostHeartbeatPath, workbuddyOwnAuthPath, workbuddyProbePath, workbuddyVisibilityPath };
+export { AI_VARIANT, CN_APP_VERSION_FILENAME, CN_VARIANT, Config, FALLBACK_CN_APP_VERSION, FALLBACK_WORKBUDDY_AI_MODELS, FALLBACK_WORKBUDDY_MODELS, PROBE_EFFORT_CANDIDATES, WORKBUDDY_AI_SETTINGS_NS, WORKBUDDY_APP_VERSION_FILENAME, WORKBUDDY_AUTH_FILENAME, WORKBUDDY_AUTH_FILE_ENV, WORKBUDDY_CATALOG_FILENAME, WORKBUDDY_HOST_HEARTBEAT_FILENAME, WORKBUDDY_PROBE_FILENAME, WORKBUDDY_PROVIDER, WORKBUDDY_SETTINGS_NS, WORKBUDDY_STREAM_IDLE_TIMEOUT_MS, WORKBUDDY_VARIANTS, WORKBUDDY_VISIBILITY_FILENAME, WorkBuddyCatalog, WorkBuddyCatalogStore, WorkBuddyCredentialStore, WorkBuddyProbeService, WorkBuddyProbeStore, WorkBuddyUpstreamClient, WorkBuddyVisibilityStore, appUserAgent, apply, chatUserAgent, classifyUpstreamError, clearHostHeartbeat, createWorkBuddyAdapter, createWorkBuddyShim, defaultDesktopAuthCandidates, defaultDesktopAuthPath, desktopAuthCandidatesFor, fallbackChatIdentity, fingerprintModel, inject, installedAppVersion, isHeartbeatProcessAlive, modelWithCurrentPromotion, name, normalizeCredits, parseModelCatalog, parseWorkBuddyAuth, prepareChatBody, prepareCnChatBody, prepareInternationalChatBody, probeModel, processStartTimeMs, randomSentinel, readBundleVersion, readCliVersion, readHostHeartbeat, regionOf, resolveAppVersion, resolveChatIdentity, validAppVersion, validCliVersion, variantFor, visibilityAccountOf, workbuddyCatalogPath, workbuddyHostHeartbeatPath, workbuddyOwnAuthPath, workbuddyProbePath, workbuddyVisibilityPath, WORKBUDDY_RETRY_POLICY };

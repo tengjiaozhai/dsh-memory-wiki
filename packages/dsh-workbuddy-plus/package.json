@@ -21,7 +21,11 @@
     "./client": "./lib/connect/client.js",
     "./cordis.patch.yml": "./cordis.patch.yml",
     "./package.json": "./package.json",
-    "./connect": "./lib/connect/index.js"
+    "./connect": "./lib/connect/index.js",
+    "./account-pool": {
+      "types": "./lib/account-pool.d.ts",
+      "default": "./lib/account-pool.js"
+    }
   },
   "files": [
     "index.js",
@@ -68,9 +72,15 @@
     "dsh-workbuddy-plus": "./lib/connect/bin.js"
   },
   "scripts": {
-    "vendor": "node scripts/vendor-upstream.mjs",
+    "vendor": "node scripts/vendor-upstream.mjs && node scripts/patch-client-account-switch.mjs",
+    "patch:client": "node scripts/patch-client-account-switch.mjs",
     "test": "node test/smoke.mjs",
     "test:accounts": "node test/accounts.mjs",
-    "test:credits": "node test/credits.mjs"
+    "test:credits": "node test/credits.mjs",
+    "test:switch-ui": "node test/switch-ui.mjs all",
+    "test:render": "node test/render-card.mjs",
+    "test:card-poll": "node test/card-poll.mjs",
+    "test:apply-wiring": "node test/apply-wiring.mjs",
+    "test:all": "node test/smoke.mjs && node test/switch-ui.mjs all && node test/accounts.mjs && node test/credits.mjs && node test/render-card.mjs && node test/card-poll.mjs && node test/apply-wiring.mjs"
   }
 }

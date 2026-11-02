@@ -76,6 +76,71 @@ const EDITS = [
     times: 3,
     why: 'CLI 健康报告里的包名',
   },
+  {
+    file: 'index.js',
+    old: 'retryPolicy: resolveRetryPolicy(void 0, "dsh-workbuddy-connect retryPolicy"),',
+    new: 'retryPolicy: resolveRetryPolicy(WORKBUDDY_RETRY_POLICY, "dsh-workbuddy-connect retryPolicy"),',
+    times: 1,
+    why: 'workbuddy 路由的重试策略：PI_AI_ERROR 可重试 + 2 次上限（见 index.js 里的 WORKBUDDY_RETRY_POLICY 注释）',
+  },
+  {
+    file: 'index.js',
+    old: '/** Provider idle ceiling while one stream read is outstanding. */\nconst WORKBUDDY_STREAM_IDLE_TIMEOUT_MS = 3e5;',
+    new: `/** Provider idle ceiling while one stream read is outstanding. */
+const WORKBUDDY_STREAM_IDLE_TIMEOUT_MS = 3e5;
+/**
+* Retry policy for the workbuddy route.
+*
+* Two departures from \`dsh-llm\`'s defaults, each measured on real sessions
+* rather than guessed:
+*
+* 1. \`PI_AI_ERROR\` is added to the retryable set. That code is the classifier's
+*    catch-all, and it is what an upstream-reported \`finish_reason: "error"\`
+*    lands on: the stream stops mid-tool-call-arguments and the provider closes
+*    itself with a usage chunk, so it is a transport-shaped failure, not a
+*    request-shaped one. Leaving it out turned one 152-second stall into a dead
+*    turn with zero retries attempted. A 404 route misconfiguration also lands
+*    on this code, but it fails in milliseconds, so retrying it costs a few
+*    seconds of waiting rather than a re-run of the whole request.
+* 2. \`maxRetries\` drops to 2 (from 5). One attempt on this route can burn
+*    ~150s before the upstream gives up, so the 5-retry default would keep the
+*    user waiting up to ~15 minutes before surfacing the error. Two retries
+*    cover transient jitter and cap the worst case near ~7.6 minutes.
+*
+* The backoff is wider than the default (2s/30s, jitter 0.3 vs 0.5s/10s, 0.1):
+* every session on this machine shares one gateway, and a ±10% jitter band
+* retries into the same second when several sessions stall together.
+*
+* The code list repeats \`dsh-llm\`'s \`DEFAULT_RETRYABLE_CODES\` verbatim because
+* that constant is not part of the package's export surface.
+*/
+const WORKBUDDY_RETRY_POLICY = {
+	mode: "normal",
+	maxRetries: 2,
+	retryableCodes: [
+		"EMPTY_RESPONSE",
+		"RATE_LIMIT",
+		"SERVER",
+		"TIMEOUT",
+		"TRANSPORT",
+		"PI_AI_ERROR"
+	],
+	backoff: {
+		initialDelayMs: 2000,
+		maxDelayMs: 30000,
+		jitterRatio: 0.3
+	}
+};`,
+    times: 1,
+    why: '重试策略常量本体：上游重跑 vendor 后仍然生效',
+  },
+  {
+    file: 'index.js',
+    old: 'workbuddyVisibilityPath };',
+    new: 'workbuddyVisibilityPath, WORKBUDDY_RETRY_POLICY };',
+    times: 1,
+    why: '把策略常量透出，供 smoke 测试断言',
+  },
 ]
 
 mkdirSync(targetLib, { recursive: true })

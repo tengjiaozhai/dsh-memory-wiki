@@ -12,7 +12,7 @@ import assert from 'node:assert/strict'
 import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { WorkBuddyUpstreamClient } from 'dsh-workbuddy-plus/connect'
+import { WORKBUDDY_RETRY_POLICY, WorkBuddyUpstreamClient } from 'dsh-workbuddy-plus/connect'
 import {
 	Config,
 	apply,
@@ -65,5 +65,37 @@ if (process.env.WORKBUDDY_BRAND_FIX === '0') {
 	assert.equal(rewriteBrandTokens('{"plain":true}'), '{"plain":true}', '无品牌串时原样返回')
 	assert.equal(rewriteBrandTokens(undefined), undefined, '非字符串原样返回')
 }
+
+// workbuddy 路由的重试策略：PI_AI_ERROR 必须可重试，次数必须低。
+// 这条断言锁定的是「一次上游 finish_reason:error 不会把 turn 直接判死」那个修复，
+// 回归时（例如重跑 vendor 覆盖掉常量）会立刻红。
+assert.equal(WORKBUDDY_RETRY_POLICY.mode, 'normal', '不能用 always：它忽略 maxRetries 与 retryableCodes，会无限重试')
+assert.ok(
+	WORKBUDDY_RETRY_POLICY.retryableCodes.includes('PI_AI_ERROR'),
+	'PI_AI_ERROR 必须可重试，否则上游 finish_reason:error 会直接判死整个 turn',
+)
+assert.ok(
+	WORKBUDDY_RETRY_POLICY.maxRetries <= 3,
+	'maxRetries 必须 <=3：单次 attempt 可能烧 150s，默认 5 次会让用户等 15 分钟',
+)
+assert.ok(
+	WORKBUDDY_RETRY_POLICY.backoff.initialDelayMs >= 1000,
+	'首次退避至少 1s：默认 500ms 在网关级卡顿时重试得太急',
+)
+assert.ok(
+	WORKBUDDY_RETRY_POLICY.backoff.jitterRatio > 0.1,
+	'抖动要大于默认 0.1：多会话共享同一网关时会一起撞回同一秒',
+)
+
+// 策略必须真的接到 profile 上，而不是只存在于常量里。
+const host = readFileSync(join(root, 'lib/connect/index.js'), 'utf8')
+assert.ok(
+	host.includes('resolveRetryPolicy(WORKBUDDY_RETRY_POLICY, "dsh-workbuddy-connect retryPolicy")'),
+	'profile 构造必须使用 WORKBUDDY_RETRY_POLICY，而不是 resolveRetryPolicy(void 0, …)',
+)
+assert.ok(
+	!host.includes('resolveRetryPolicy(void 0, "dsh-workbuddy-connect retryPolicy")'),
+	'不应残留写死默认策略的旧调用',
+)
 
 console.log(JSON.stringify({ ok: true, name, inject, bundle: pkg.name }, null, 2))

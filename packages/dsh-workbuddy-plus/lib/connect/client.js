@@ -1067,6 +1067,182 @@ window.__ModuleLoader__.load({
 				]
 			});
 		}
+//#region dsh-workbuddy-plus/account-switch
+		/**
+		* 手动优先账号的写入口。与 status/probe 同一个前缀，Host 半写死同一串。
+		*/
+		const ACCOUNT_ROUTE_PATH = "/plugins/dsh-workbuddy-connect/account";
+		const accountSegStyle = {
+			display: "inline-flex",
+			gap: 4,
+			padding: 3,
+			borderRadius: 18,
+			border: "1px solid var(--dsw-alias-border-l2)",
+			background: "var(--dsw-alias-bg-layer-1)"
+		};
+		const accountSegButtonStyle = {
+			boxSizing: "border-box",
+			minHeight: 28,
+			padding: "4px 12px",
+			border: "none",
+			borderRadius: 14,
+			background: "transparent",
+			color: "var(--dsw-alias-label-secondary)",
+			font: "inherit",
+			fontSize: 13,
+			cursor: "pointer"
+		};
+		const accountSegActiveStyle = {
+			background: "var(--dsw-alias-bg-layer-2, rgba(127, 127, 127, 0.16))",
+			color: "var(--dsw-alias-label-primary)",
+			fontWeight: 600
+		};
+		const accountSegDisabledStyle = {
+			opacity: .45,
+			cursor: "not-allowed"
+		};
+		/**
+		* 读/写 Host 侧的手动优先账号。
+		*
+		* 只对 CN 卡片有意义：备用账号是 CN 的凭据，国际站通道不参与双账号池。
+		* 每次切换后都用 Host 返回的完整文档替换本地状态，不自己拼乐观值——
+		* 「按下按钮」和「真的生效」必须由同一个来源回答。
+		*
+		* @param {(key: string, vars?: object) => string} t 文案函数
+		* @param {{ id: string }} variant 卡片变体
+		* @returns {{ enabled: boolean, doc: object | undefined, busy: boolean, failure: string | undefined, set: (account: string) => Promise<void> }} 控件状态
+		*/
+		function useAccountSwitch(t, variant) {
+			const enabled = variant === CN_CARD_VARIANT;
+			const [doc, setDoc] = (0, react.useState)();
+			const [busy, setBusy] = (0, react.useState)(false);
+			const [failure, setFailure] = (0, react.useState)();
+			const [hidden, setHidden] = (0, react.useState)(false);
+			const busyRef = (0, react.useRef)(false);
+			const load = (0, react.useCallback)(async () => {
+				try {
+					const response = await fetch(ACCOUNT_ROUTE_PATH, {
+						headers: { accept: "application/json" },
+						credentials: "same-origin"
+					});
+					/**
+					* 404 = 这个宿主还没挂上切号路由（插件刚更新、应用还没重启）。
+					* 这时整条控件隐身，而不是在卡片上留一句红字：用户没做错什么，
+					* 也没有任何可采取的动作。
+					*/
+					if (response.status === 404) {
+						setHidden(true);
+						return;
+					}
+					const value = await response.json().catch(() => void 0);
+					if (!response.ok) throw new Error("HTTP " + response.status);
+					if (typeof value !== "object" || value === null) throw new Error(t("accountUnreadable"));
+					setHidden(false);
+					setDoc(value);
+					setFailure(void 0);
+				} catch (error) {
+					setFailure(error instanceof Error ? error.message : String(error));
+				}
+			}, [t]);
+			(0, react.useEffect)(() => {
+				if (enabled) load();
+			}, [enabled, load]);
+			/**
+			* 与卡片自己的 status 轮询同步重读一次。
+			*
+			* 只在挂载时读一次是不够的：Host 会在请求失败后写 degraded（"已选备号但
+			* 它不可用"）、备号文件被删/改坏时改 available，这些都发生在卡片已经挂在
+			* 屏幕上的时候。不轮询的话按钮会一直亮着一个早已无效的档位，用户不折叠再
+			* 展开就永远看不到原因。
+			*/
+			(0, react.useEffect)(() => {
+				if (!enabled || hidden) return;
+				const timer = window.setInterval(() => {
+					if (!busyRef.current) load();
+				}, POLL_INTERVAL_MS);
+				return () => {
+					window.clearInterval(timer);
+				};
+			}, [enabled, hidden, load]);
+			const set = (0, react.useCallback)(async (account) => {
+				if (doc === void 0) return;
+				busyRef.current = true;
+				setBusy(true);
+				try {
+					const response = await fetch(ACCOUNT_ROUTE_PATH, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+							"X-WorkBuddy-Account-Key": doc.key
+						},
+						credentials: "same-origin",
+						body: JSON.stringify({ account })
+					});
+					const value = await response.json().catch(() => void 0);
+					if (!response.ok) {
+						const message = typeof value === "object" && value !== null && "error" in value ? String(value["error"]) : "HTTP " + response.status;
+						throw new Error(message);
+					}
+					setDoc(value);
+					setFailure(void 0);
+				} catch (error) {
+					setFailure(error instanceof Error ? error.message : String(error));
+				} finally {
+					busyRef.current = false;
+					setBusy(false);
+				}
+			}, [doc, t]);
+			return { enabled: enabled && !hidden, doc, busy, failure, set, refresh: load };
+		}
+		/** 三态切换条：自动 / 主号 / 备号。非 CN 卡片返回 null。 */
+		function AccountSwitch({ t, state }) {
+			if (!state.enabled) return null;
+			const doc = state.doc;
+			const current = doc === void 0 ? "auto" : doc.override;
+			const secondaryReady = doc !== void 0 && doc.available !== void 0 && doc.available.secondary === true;
+			/**
+			* 备号为什么按不了。Host 会把具体原因写进 unavailableReason（坏信封、与主号
+			* 同账号各是一句不同的话），没有原因时退回通用文案——「没有配置备用凭据
+			* 文件」只在真的没配时才准确，坏文件说这句会把人引到错的方向。
+			*/
+			const secondaryBlocked = secondaryReady ? void 0 : typeof doc === "object" && doc !== null && typeof doc.unavailableReason === "string" ? doc.unavailableReason : t("accountModeSecondaryUnavailable");
+			const options = [
+				{ id: "auto", label: t("accountModeAuto"), title: t("accountModeAutoHint"), disabled: false },
+				{ id: "primary", label: t("accountModePrimary"), title: t("accountModePrimaryHint"), disabled: false },
+				{ id: "secondary", label: t("accountModeSecondary"), title: secondaryReady ? t("accountModeSecondaryHint") : secondaryBlocked, disabled: !secondaryReady }
+			];
+			return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+				style: { display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 },
+				children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("div", {
+					role: "group",
+					"aria-label": t("accountSwitchLabel"),
+					style: accountSegStyle,
+					children: options.map((option) => /* @__PURE__ */ (0, react_jsx_runtime.jsx)("button", {
+						type: "button",
+						disabled: state.busy || option.disabled || doc === void 0,
+						"aria-pressed": current === option.id,
+						title: option.title,
+						style: {
+							...accountSegButtonStyle,
+							...current === option.id ? accountSegActiveStyle : {},
+							...option.disabled ? accountSegDisabledStyle : {}
+						},
+						onClick: () => {
+							state.set(option.id);
+						},
+						children: option.label
+					}, option.id))
+				}), state.failure === void 0 ? null : /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+					style: errorStyle,
+					children: state.failure
+				}), /* 选了却没兑现的原因：Host 在手动档期间写 degraded，这里照实说一句。 */
+				typeof doc === "object" && doc !== null && typeof doc.degraded === "object" && doc.degraded !== null && typeof doc.degraded.message === "string" ? /* @__PURE__ */ (0, react_jsx_runtime.jsx)("p", {
+					style: noticeStyle,
+					children: doc.degraded.message
+				}) : null]
+			});
+		}
+//#endregion
 		/** Render WorkBuddy sign-in state and credit as one expandable card. */
 		function WorkBuddyPluginCard({ t, variant = CN_CARD_VARIANT }) {
 			if (t === void 0) throw new Error("WorkBuddy plugin card requires its translation function");
@@ -1108,6 +1284,7 @@ window.__ModuleLoader__.load({
 			*/
 			const [togglingModels, setTogglingModels] = (0, react.useState)(() => /* @__PURE__ */ new Set());
 			const [tab, setTab] = (0, react.useState)("status");
+			const accountSwitch = useAccountSwitch(t, variant);
 			const mounted = (0, react.useRef)(true);
 			/**
 			* Identity of the newest read that may write. Assigned when a read *starts*,
@@ -1203,6 +1380,7 @@ window.__ModuleLoader__.load({
 				const controller = trackController();
 				try {
 					await refresh(controller.signal);
+					await accountSwitch.refresh();
 				} finally {
 					manualControllers.current.delete(controller);
 					if (mounted.current) setBusy(false);
@@ -1360,9 +1538,15 @@ window.__ModuleLoader__.load({
 				}), open ? /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 					style: cardBodyStyle,
 					children: [
-						/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", {
-							style: quotaTitleStyle,
-							children: t("accountHeading")
+						/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
+							style: rowStyle$1,
+							children: [/* @__PURE__ */ (0, react_jsx_runtime.jsx)("h3", {
+								style: quotaTitleStyle,
+								children: t("accountHeading")
+							}), /* @__PURE__ */ (0, react_jsx_runtime.jsx)(AccountSwitch, {
+								t,
+								state: accountSwitch
+							})]
 						}),
 						/* @__PURE__ */ (0, react_jsx_runtime.jsxs)("div", {
 							style: rowStyle$1,
@@ -2935,6 +3119,15 @@ window.__ModuleLoader__.load({
 			statusRefreshFailed: "Refresh failed: {message} — showing the last known state",
 			statusResponseInvalid: "WorkBuddy returned an unreadable status reply",
 			accountHeading: "Account",
+			accountSwitchLabel: "Preferred account",
+			accountModeAuto: "Auto",
+			accountModeAutoHint: "Use the configured policy (primary first, switch on quota or rate-limit failures)",
+			accountModePrimary: "Primary",
+			accountModePrimaryHint: "Try the primary account first; quota exhaustion, rate limits and expired sessions still switch to the backup",
+			accountModeSecondary: "Backup",
+			accountModeSecondaryHint: "Try the backup account first; any backup failure still falls back to the primary",
+			accountModeSecondaryUnavailable: "No backup credential file is configured",
+			accountUnreadable: "WorkBuddy returned an unreadable account reply",
 			modelsHeading: "Model offers",
 			contextHeading: "Context window",
 			contextUpTo: "up to {size}",
@@ -3062,6 +3255,15 @@ window.__ModuleLoader__.load({
 			statusRefreshFailed: "刷新失败：{message} — 当前显示的是上次成功获取的状态",
 			statusResponseInvalid: "WorkBuddy 返回的状态数据无法识别",
 			accountHeading: "账号",
+			accountSwitchLabel: "优先账号",
+			accountModeAuto: "自动",
+			accountModeAutoHint: "按配置策略走：主号优先，额度不足或限流时自动切换",
+			accountModePrimary: "主号",
+			accountModePrimaryHint: "这个先试主号；额度用尽 / 限流 / 登录失效时仍会切到备号",
+			accountModeSecondary: "备号",
+			accountModeSecondaryHint: "这个先试备号；备号失败时仍会回落主号兜底",
+			accountModeSecondaryUnavailable: "没有配置备用凭据文件",
+			accountUnreadable: "WorkBuddy 返回的账号数据无法识别",
 			modelsHeading: "模型优惠",
 			contextHeading: "上下文窗口",
 			contextUpTo: "最高 {size}",

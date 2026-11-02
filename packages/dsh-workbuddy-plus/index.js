@@ -27,7 +27,7 @@
  *   WORKBUDDY_ACCOUNT_POLICY     failover（默认）| rotate | off
  *   WORKBUDDY_ACCOUNT_COOLDOWN_MS 切到备用账号后多久再优先试主账号（默认 600000）
  */
-import { existsSync } from 'node:fs'
+import { existsSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { resolveDshHome } from '@deepseek-ai/dsh-home-paths'
 import { atRestKeyProviderFor } from './lib/connect/at-rest.js'
@@ -40,6 +40,14 @@ import {
 	inject as connectInject,
 	name as connectName,
 } from './lib/connect/index.js'
+import {
+	accountPreference,
+	applyAccountOverride,
+	onAccountPreferenceChange,
+	registerAccountRoute,
+	secondaryConfiguredAt,
+	setAccountPreference,
+} from './lib/account-pool.js'
 
 /** Cordis 插件名，沿用上游，保证模型注册与设置命名空间不变。 */
 export const name = connectName
@@ -194,6 +202,24 @@ const SECONDARY_LEGACY_FILENAME = '.workbuddy-account-b.info'
 const SWITCHABLE_KINDS = new Set(['hard_credit', 'soft_rate', 'session_dead'])
 
 /**
+ * 手动档是否也允许「失败就换另一侧」。
+ *
+ * 默认允许：手动档只决定谁先上，额度用尽这类失败仍然切另一侧——否则按下
+ * 「主号」就等于「备号从此不许用」，额度没了直接报错，比自动档还差。
+ * 环境变量 WORKBUDDY_ACCOUNT_MANUAL_STRICT=1 可改成严格档：手动选谁就只用谁。
+ */
+const MANUAL_STRICT_ENV = 'WORKBUDDY_ACCOUNT_MANUAL_STRICT'
+
+/** 手动档是否严格只用选中的那一个账号。 */
+function manualStrict() {
+	const value = process.env[MANUAL_STRICT_ENV]?.trim().toLowerCase()
+	return value === '1' || value === 'true'
+}
+
+/** 可用性探针的缓存时长：卡片每次展开都会问一次，真解析不便宜。 */
+const AVAILABILITY_TTL_MS = 15_000
+
+/**
  * 跨模块实例共享的状态。
  *
  * DSH 热重载会重新求值本模块，但原型上的补丁只装一次——把 logger 和池状态放在
@@ -215,6 +241,19 @@ const shared = (globalThis[STATE_KEY] ??= {
 		/** 按 key 限速的日志闸门，避免一种告警吞掉另一种。 */
 		logGates: new Map(),
 	},
+	/**
+	 * 最近一次「按了手动档、请求却落在另一个账号」的记录。
+	 *
+	 * 只在手动档期间有意义：卡片用它说明「备号不可用，已回落主号」，否则用户只会
+	 * 看到按钮亮着、额度一行都没变。
+	 */
+	degraded: undefined,
+	/** 手动档写入的收口钩子是否已装（热重载时状态挂在 globalThis 上，只装一次）。 */
+	bridgeInstalled: false,
+	/** 可用性探针复用的 key provider 与主号 store（都在进程内缓存）。 */
+	keyProvider: undefined,
+	primaryStore: undefined,
+	availability: undefined,
 })
 const pool = shared.pool
 
@@ -338,6 +377,66 @@ function notify(key, message) {
 }
 
 /**
+ * 记一条「手动档没兑现」的原因，供卡片读取。
+ *
+ * 手动按下某一档之后，请求仍可能落在另一个账号上（备号读不出来、备号与主号同账号、
+ * 主号额度用尽）。这种时候按钮还亮在按下态，用户却看不到任何变化——卡片必须能把
+ * 原因说出来，否则这个控件就是个骗人的开关。
+ *
+ * @param {'secondary-unusable' | 'primary-fell-back'} kind 降级类别
+ * @param {string} message 说明
+ */
+function noteDegraded(kind, message) {
+	// 只按 kind 去重会把新原因吞掉：先「备号上游 500」后「凭据文件被删」时，卡片仍
+	// 显示前一句。同 kind 但换了说法就必须更新。
+	if (shared.degraded?.kind === kind && shared.degraded?.message === message) return
+	shared.degraded = { kind, message, at: Date.now() }
+	notify('degraded-' + kind, message)
+}
+
+/**
+ * 手动档「按了却没兑现」的统一留痕。
+ *
+ * 两个调用点（主号不可切换类失败的早退、两档全败的收尾）共用一份措辞，避免同一
+ * 件事在卡片上有两种说法。文案里的档数必须按**真发出去的请求**写：严格档下只发
+ * 一档，说「两档都没成功」是给用户讲一件没发生的事。
+ *
+ * @param {'auto' | 'primary' | 'secondary'} override **请求起手时**的档位快照
+ * @param {Array<'primary' | 'secondary'>} attempted 真正发出过请求的档位（按顺序）
+ * @param {Map<string, { ok?: boolean, kind?: string }>} results 本次每档的结果
+ * @param {{ ok?: boolean, kind?: string }} fallback 最终报给用户的那次失败
+ */
+function noteManualMiss(override, attempted, results, fallback) {
+	if (override === 'auto') return
+	// 用户在请求飞行期间改了档位：这次请求反映的是旧意图，写下来的每一句都会
+	// 跟按钮当前状态打架。让新档位的下一次请求自己说事实。
+	if (accountPreference() !== override) return
+	if (fallback?.ok === true) return
+	// 选中那档一个请求都没发出去（备号读不出来、与主号同账号）。那种情况的原因
+	// 已经由 chatStream 的入口路径写过了（"已选备用账号但它不可用（…），本次请求
+	// 回落主账号"）。这里再写一遍只会用主号的失败类别冒充备号的失败——用户会跑去
+	// 查备号凭据文件，而真因是主号额度不足。
+	if (!attempted.includes(override)) return
+	const label = override === 'secondary' ? '备用' : '主'
+	// 说「选中那档为什么失败」比说「最后报给你的那次失败」更贴近用户按下按钮的意图：
+	// 手动选了备号、备号 500 而主号额度不足时，真因是备号的 500。
+	const picked = results?.get?.(override)
+	const source = picked !== undefined && picked.ok !== true ? picked : fallback
+	const kind = source?.kind ?? '失败'
+	const both = attempted.includes('primary') && attempted.includes('secondary')
+	noteDegraded(
+		override === 'secondary' ? 'secondary-unusable' : 'primary-fell-back',
+		'已选' + label + '账号但它这次失败（' + kind + '），' +
+			(both ? '两档都没成功' : '本次只尝试了' + (attempted.includes(override) ? '选中的这一档' : '另一档')),
+	)
+}
+
+/** 清掉降级记录（手动档真的兑现了，或用户重新按了一次）。 */
+function clearDegraded() {
+	shared.degraded = undefined
+}
+
+/**
  * 记录一次切到备用账号。
  *
  * @param {string} reason 主账号的失败类别
@@ -379,13 +478,68 @@ function attemptOrder(policy) {
 }
 
 /**
+ * 本次请求真正要试的顺序：策略顺序 + 手动优先覆盖。
+ *
+ * 手动优先只重排、不截断（`applyAccountOverride`）：用户按下「备号」想要的是
+ * 「这次先烧备号」，而不是「主号从此不许用」——备号 5xx 时仍然兜底回主号。
+ *
+ * `WORKBUDDY_ACCOUNT_MANUAL_STRICT=1` 时改成严格档：只留选中的那一个。这条路给
+ * 「必须确定走某个账号」的场景（对账、复现某个账号的额度问题），代价是失败没有兜底。
+ *
+ * @param {'failover' | 'rotate'} policy 当前策略
+ * @returns {Array<'primary' | 'secondary'>} 顺序
+ */
+function requestOrder(policy) {
+	const order = attemptOrder(policy)
+	const override = accountPreference()
+	if (override !== 'auto' && manualStrict() && order.includes(override)) return [override]
+	return applyAccountOverride(order, override)
+}
+
+/**
  * 一次成功请求后的状态收尾。
  *
  * @param {'failover' | 'rotate'} policy 当前策略
  * @param {'primary' | 'secondary'} name 这次用的是谁
  * @param {Map<string, { kind?: string }>} results 本次已尝试的结果
+ * @param {'auto' | 'primary' | 'secondary'} manualAtStart **请求起手时**的档位快照
  */
-function noteSuccess(policy, name, results) {
+function noteSuccess(policy, name, results, manualAtStart) {
+	// 用户在请求飞行期间改了档位（点了备号又立刻按回自动，或反过来）：这次请求的
+	// 结果反映的是旧意图，写进池状态会把用户的新选择悄悄推翻——实测「手动备号 →
+	// 按回自动 → 飞行中的备号请求成功」会把 preferred 写回 secondary，回自动后的
+	// 第一个请求又先打备号。整段跳过，让新档位的下一次请求自己定事实。
+	if (accountPreference() !== manualAtStart) return
+	// 手动优先期间不改池状态：那条覆盖是用户显式按下的，不该被一次请求的结果
+	// 悄悄改写，否则「备号」按钮会在一次成功后被自动策略吃掉。
+	const override = manualAtStart
+	if (override !== 'auto') {
+		// 但「按下的那一档没兑现」必须留痕，否则卡片会一直亮着按不下去的档位。
+		if (name === override) {
+			clearDegraded()
+			// 手动档兑现：把池状态对齐到用户的选择，这样按回「自动」时不会带着
+			// 手动期间遗留的 preferred 继续跑（review 必修 1 的另一半）。
+			if (policy === 'failover') {
+				if (name === 'primary') notePrimary()
+				else if (pool.preferred !== 'secondary') noteSwitch('手动切到备用账号')
+			}
+		}
+		else if (override === 'secondary') {
+			// 这里是「备号被正常读出来、请求也真的发出去了，但上游失败」的路径。
+			// 说「读不到 / 内容损坏 / 同账号」是误诊——用户会去查凭据文件，而真因是上游。
+			//
+			// results 里没有 secondary 就说明备号压根没被用上：那句更准确的原因
+			// 已经由 chatStream 的入口路径写过了，这里不能再盖掉它。
+			if (results.has('secondary')) {
+				const reason = results.get('secondary')?.kind ?? '失败'
+				noteDegraded('secondary-unusable', '已选备用账号但它这次失败（' + reason + '），本次请求由主账号接住')
+			}
+		} else {
+			const reason = results.get('primary')?.kind ?? '失败'
+			noteDegraded('primary-fell-back', '已选主账号但它本次失败（' + reason + '），本次请求由备用账号接住')
+		}
+		return
+	}
 	if (policy !== 'failover') return
 	if (name === 'primary') {
 		notePrimary()
@@ -508,22 +662,43 @@ export function installChatPipeline() {
 
 		/** 本次每个账号的结果，用于最后决定把谁的错误报给用户。 */
 		const results = new Map()
+		/** 真正发出过请求的档位（严格档只发一个，所以不能拿 order 当它用）。 */
+		const attempted = []
 		let secondary
 		let secondaryUnusable = false
+		/** 备号读不出来时的原因（循环结束后「一次都没发」也要用它）。 */
+		let lastUnusableReason
+		// 档位快照：请求飞行期间用户可能改档，届时这次请求的结果属于旧意图。
+		const manualAtStart = accountPreference()
+		const order = requestOrder(policy)
 
-		for (const name of attemptOrder(policy)) {
+		for (const name of order) {
 			let attempt = credential
 			if (name === 'secondary') {
+				/** 备号读不出来时的具体原因，用来给卡片一句可读的话。 */
+				let unusableReason
 				if (!secondaryUnusable && secondary === undefined) {
 					secondary = await secondaryCredential(this, authPath)
-					if (secondary !== undefined && sameAccount(secondary, credential)) {
+					if (secondary === undefined) unusableReason = '读不到备用账号凭据（文件缺失、内容损坏或刷新失败）'
+					else if (sameAccount(secondary, credential)) {
 						// 两条路径指向同一个账号：切了也是同一个额度，白烧一次请求。
 						secondary = undefined
-						secondaryUnusable = true
+						unusableReason = '备用账号与主账号是同一个账号'
 					}
 				}
 				if (secondary === undefined) {
 					secondaryUnusable = true
+					lastUnusableReason = unusableReason ?? '本次不可用'
+					// 用户亲手按了「备号」却没兑现：必须让卡片说出来，不能静默落回主号。
+					// 严格档下 order 里只剩备号，说「回落主账号」是假话——一个请求都没发。
+					if (manualAtStart === 'secondary') {
+						noteDegraded(
+							'secondary-unusable',
+							order.includes('primary')
+								? '已选备用账号但它不可用（' + lastUnusableReason + '），本次请求回落主账号'
+								: '已选备用账号但它不可用（' + lastUnusableReason + '），严格档不会换号，本次请求没有发出',
+						)
+					}
 					continue
 				}
 				attempt = secondary
@@ -531,19 +706,43 @@ export function installChatPipeline() {
 
 			const result = await original.call(this, attempt, body, signal)
 			results.set(name, result)
+			attempted.push(name)
 			if (result?.ok === true) {
-				noteSuccess(policy, name, results)
+				noteSuccess(policy, name, results, manualAtStart)
 				return result
 			}
 			// 用户/会话已取消：不要再用另一个账号重发。
 			if (signal?.aborted === true) return result
 			// 主账号遇到非「换号能解决」的失败：原样返回，不动备用账号。
-			if (name === 'primary' && !SWITCHABLE_KINDS.has(result?.kind)) return result
+			//
+			// 这条早退也必须留痕：5xx/网络错误不属于 SWITCHABLE_KINDS，请求就停在
+			// 主号，手动选了档位却一次都没兑现——不留痕的话卡片上什么都不显示，
+			// 正是「同一件事两种说法」的那一半。
+			if (name === 'primary' && !SWITCHABLE_KINDS.has(result?.kind)) {
+				noteManualMiss(manualAtStart, attempted, results, result)
+				return result
+			}
 			// 备用账号失败（任何原因）都继续试主账号——主账号才是用户预期的那一个。
 		}
 
 		// 都失败了：报主账号的失败原因，别用备号的 session_dead 把主号的额度不足说歪。
-		return results.get('primary') ?? results.get('secondary') ?? { ok: false, kind: 'client', status: 0, message: 'workbuddy: no credential attempted' }
+		//
+		// 手动选了某一档、全败时也留一句：成功路径上「按下的那档没兑现」会写
+		// degraded，全失败时如果什么都不写，同一件事在卡片上就有两种说法。
+		const primaryResult = results.get('primary') ?? results.get('secondary')
+		if (primaryResult !== undefined) noteManualMiss(manualAtStart, attempted, results, primaryResult)
+		if (primaryResult !== undefined) return primaryResult
+		// 一个请求都没发出去（严格档下唯一选中的账号不可用）。上游兜底给的是
+		// status 0 的 'no credential attempted'，那对用户等于没有信息。
+		return {
+			ok: false,
+			kind: 'client',
+			status: 400,
+			message:
+				lastUnusableReason === undefined
+					? 'workbuddy: no credential attempted'
+					: 'workbuddy: 已选备用账号但它不可用（' + lastUnusableReason + '）',
+		}
 	}
 	Object.defineProperty(proto, PATCHED, { value: true, enumerable: false })
 
@@ -574,22 +773,141 @@ export function installChatPipeline() {
 	return true
 }
 
+/**
+ * 备用账号「真的能用」吗？
+ *
+ * `existsSync` 只证明文件躺在那里：文件可能是坏信封、可能是主账号自己的拷贝、
+ * 也可能是国际站凭据。以前拿它当可用性，结果卡片上「备号」按钮亮着，按下去每次
+ * 都静默空转。这里真解析一次，只读不刷新——过期但能解析的凭据仍然算可用，
+ * 续期是请求路径的事。
+ *
+ * @param {string} authPath 备用凭据文件
+ * @returns {Promise<{configured: boolean, usable: boolean, reason?: string}>} 可用性
+ */
+export async function secondaryAvailability(authPath) {
+	const signature = secondarySignature(authPath)
+	const cached = shared.availability
+	if (cached !== undefined && cached.signature === signature && Date.now() - cached.at < AVAILABILITY_TTL_MS) {
+		return cached.value
+	}
+	/** 成功/失败都写进缓存，坏文件的结论也要复用，不然每次打开卡片都重新解析。 */
+	const value = await probeSecondary(authPath)
+	shared.availability = { signature, at: Date.now(), value }
+	return value
+}
+
+/** 备用凭据文件的大小+修改时间，用来给可用性缓存做失效判定。 */
+function secondarySignature(authPath) {
+	try {
+		const info = statSync(authPath)
+		return info.size + ':' + Math.round(info.mtimeMs)
+	} catch {
+		return 'missing'
+	}
+}
+
+/**
+ * 真解析一次主备凭据并比较身份。
+ *
+ * @param {string} authPath 备用凭据文件
+ * @returns {Promise<{configured: boolean, usable: boolean, reason?: string}>} 结论
+ */
+async function probeSecondary(authPath) {
+	if (!existsSync(authPath)) return { configured: false, usable: false, reason: '备用凭据文件不存在' }
+	const keyProvider = (shared.keyProvider ??= atRestKeyProviderFor(CN_VARIANT))
+	let secondary
+	try {
+		secondary = await new WorkBuddyCredentialStore({
+			variant: CN_VARIANT,
+			desktopPath: authPath,
+			ownPath: join(resolveDshHome(), SECONDARY_OWN_FILENAME),
+			keyProvider,
+		}).current()
+	} catch (error) {
+		return { configured: true, usable: false, reason: '备用凭据读不出来（' + String(error?.message ?? error) + '）' }
+	}
+	if (secondary === undefined) return { configured: true, usable: false, reason: '备用凭据文件里没有登录信息' }
+	try {
+		const primary = await (shared.primaryStore ??= new WorkBuddyCredentialStore({ variant: CN_VARIANT, keyProvider })).current()
+		if (primary !== undefined && sameAccount(secondary, primary)) {
+			return { configured: true, usable: false, reason: '备用账号与主账号是同一个账号' }
+		}
+	} catch {
+		// 主号读不出来不是备号的错：只影响「是否同一账号」这条判断，放行。
+	}
+	return { configured: true, usable: true }
+}
+
+/**
+ * 手动档写入的收口钩子：按回「自动」的同一刻把池状态复位。
+ *
+ * review 必修 1 的根因是「手动期间池状态冻住」——一旦手动档没兑现（或者兑现了但
+ * 池里还留着上次自动切号的结果），回 auto 后第一个请求就会拿旧顺序走。这里在写入
+ * 那一刻复位，比在每个请求里补判更省心：状态只有一个源头。
+ *
+ * 装在 globalThis 上，热重载不会叠加监听器。
+ */
+function installPreferenceBridge() {
+	if (shared.bridgeInstalled) return
+	shared.bridgeInstalled = true
+	onAccountPreferenceChange((override) => {
+		if (override === 'auto') {
+			pool.preferred = 'primary'
+			pool.switchedAt = 0
+			clearDegraded()
+			return
+		}
+		// 换档就等于换了意图：降级提示必须跟着清掉，否则上一档的红字会挂在新档上。
+		clearDegraded()
+	})
+}
+
+installPreferenceBridge()
+
 const installed = installChatPipeline()
 
 /**
  * 只读诊断：当前池状态。给 CLI / 排查用，不参与请求路径。
  *
- * @returns {{policy: string, secondaryConfigured: boolean, preferred: string, switchedAt: number}} 状态快照
+ * @returns {{policy: string, secondarySlot: boolean, secondaryUsable: boolean | undefined,
+ *   secondaryPath: string | undefined, preferred: string, switchedAt: number,
+ *   override: string, degraded?: {kind: string, message: string}, routeFailed: boolean}} 状态快照
  */
 export function accountPoolStatus() {
 	const authPath = secondaryAuthPath()
+	// 缓存里的可用性结论（同步可见）：没探测过、或文件已经变了就是 undefined。
+	const warmed = shared.availability
+	const usable =
+		authPath !== undefined && warmed !== undefined && warmed.signature === secondarySignature(authPath)
+			? warmed.value.usable
+			: undefined
 	return {
 		policy: accountPolicy(),
-		secondaryConfigured: authPath !== undefined && existsSync(authPath),
+		/** 备用槽位文件在不在（不等于是不是能用——坏信封也会是 true）。 */
+		secondarySlot: authPath !== undefined && secondaryConfiguredAt(authPath),
+		/** 最近一次真解析的结论：undefined 表示还没探测过。 */
+		secondaryUsable: usable,
 		secondaryPath: authPath,
 		preferred: pool.preferred,
 		switchedAt: pool.switchedAt,
+		/** 卡片上的手动优先（auto | primary | secondary）。 */
+		override: accountPreference(),
+		/** 手动档没兑现的原因（只在手动档期间出现）。 */
+		...(shared.degraded === undefined ? {} : { degraded: shared.degraded }),
+		/** 切号路由挂载失败过（卡片上不会有控件，日志里有 warn）。 */
+		routeFailed: shared.routeFailed !== undefined,
 	}
+}
+
+/**
+ * 手动优先账号的读写入口（CLI / 测试用；卡片走 HTTP 路由）。
+ *
+ * @param {'auto' | 'primary' | 'secondary'} [value] 不传则只读
+ * @returns {ReturnType<typeof accountPoolStatus>} 状态（写完后是最新快照）
+ */
+export function accountSwitch(value) {
+	if (value !== undefined) setAccountPreference(value)
+	return accountPoolStatus()
 }
 
 /* ------------------------------------------------------------------ */
@@ -624,6 +942,39 @@ export function apply(ctx, config) {
 		}
 		const policy = accountPolicy()
 		const authPath = policy === 'off' ? undefined : secondaryAuthPath()
+		// 手动切换路由：只要有备用槽位就挂上，卡片才能在两个账号间来回按。
+		//
+		// 留痕点在 registerAccountRoute 内部（那里才在 cordis 的 fiber 回调里）。
+		// 外面的 try 只兜「组装参数时抛错」这一路，抓不到 inject 回调里的失败——
+		// cordis 会把它交给 fiber 的 .catch，调用方一行也看不到。
+		shared.routeFailed = undefined
+		if (authPath !== undefined) {
+			try {
+				registerAccountRoute(ctx, {
+					describe: async () => {
+						const status = accountPoolStatus()
+						// 可用性必须是「真能解析成另一个账号」，不能用文件在不在——
+						// 否则坏信封会让「备号」按钮亮着，按下去每次静默空转。
+						const availability = await secondaryAvailability(authPath)
+						return {
+							policy: status.policy,
+							secondaryConfigured: availability.usable,
+							...(availability.usable || availability.reason === undefined
+								? {}
+								: { unavailableReason: availability.reason }),
+							...(shared.degraded === undefined ? {} : { degraded: shared.degraded }),
+						}
+					},
+				}, undefined, (error) => {
+					// 挂不上路由 = 卡片上会安静地少一个控件。这条日志是唯一的留痕。
+					shared.routeFailed = error
+					shared.logger?.warn?.('[dsh-workbuddy-plus] 手动切号路由未挂上（卡片不会显示切换控件）', error)
+				})
+			} catch (error) {
+				shared.routeFailed = error
+				shared.logger?.warn?.('[dsh-workbuddy-plus] 手动切号路由未挂上（卡片不会显示切换控件）', error)
+			}
+		}
 		if (authPath === undefined) return connectApply(ctx, config)
 		if (existsSync(authPath)) {
 			ctx?.logger?.info?.('[dsh-workbuddy-plus] 双账号池已启用：policy=' + policy + '，备用凭据文件 ' + authPath)
