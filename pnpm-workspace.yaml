@@ -8,7 +8,7 @@ allowBuilds:
   protobufjs: set this to true or false
 
 minimumReleaseAgeExclude:
-  - '@deepseek-ai/dsh-typert-generator@0.2.1-rc.3'
+  - '@deepseek-ai/dsh-typert-generator@0.2.1-rc.5'
 
 overrides:
   # 宿主装的是 zod 4.4.3；typert-protocol 的 ^4.4.3 曾被解析成 4.6.7，

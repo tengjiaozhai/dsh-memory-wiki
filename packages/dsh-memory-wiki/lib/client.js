@@ -13609,7 +13609,7 @@ function createSource(mode = SOURCE_MODE, remote) {
 	return unregisteredFixtureSource("no fixture source registered; production bundles none");
 }
 //#endregion
-//#region ../../node_modules/.pnpm/@deepseek-ai+dsh-typert-protocol@0.2.1-rc.3_@deepseek-ai+cordis@4.0.5/node_modules/@deepseek-ai/dsh-typert-protocol/lib/types/remote-info.js
+//#region ../../node_modules/.pnpm/@deepseek-ai+dsh-typert-protocol@0.2.1-rc.5_@deepseek-ai+cordis@4.0.5/node_modules/@deepseek-ai/dsh-typert-protocol/lib/types/remote-info.js
 /** Lazy assembly of generated Remote definitions using caller-supplied Zod; no runtime imports. */
 /**
 * Retain one generated definition per endpoint without constructing parsers or projections.

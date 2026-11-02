@@ -17,7 +17,7 @@ Wiki 仍是唯一知识权威。默认做「检索 → 冻结 → 引用」；�
 
 库级 Remote 读取为 `memoryWiki/graph({})` 和 `memoryWiki/readPage({ pageId, contentHash? })`；读页不再接受 `sessionId`。会话的 `view/search/reviseDraft/prepareOverride/clearOverride` 仍检查会话与写入版本。前后端需要一同重载，不能混用旧的读页契约。
 
-DSH `0.2.1-rc.3` 会缓存插件的 Typert manifest。升级已有 Remote 方法的参数时，组件/插件开关和页面刷新不会清掉后端旧缓存，需要重启 DSH 后生效；出现 `wire field "input" failed boundary validation` 时先确认前后端运行同一版契约。
+DSH `0.2.1-rc.3` 及之后的版本会缓存插件的 Typert manifest。升级已有 Remote 方法的参数时，组件/插件开关和页面刷新不会清掉后端旧缓存，需要重启 DSH 后生效；出现 `wire field "input" failed boundary validation` 时先确认前后端运行同一版契约。
 
 ## 安装
 
@@ -59,7 +59,7 @@ dsh plugin --profile desktop add dsh-memory-wiki
 
 | 限制 | 说明 |
 |---|---|
-| 当前宿主 DSH `0.2.1-rc.3` | 自动采集接入按该版本验证；DSH 公共接口仍处 pre-stable，升级需重新验证 |
+| 当前宿主 DSH `0.2.1-rc.5` | `engines.dsh` 声明为 `>=0.2.1-rc.2 <0.3.0-0`；依赖与构建产物按 `0.2.1-rc.5` 验证，DSH 公共接口仍处 pre-stable，升级需重新验证 |
 | 单库 | 一个配置对应一个 Wiki 根；改 `wikiRoot` 要重载插件 |
 | 默认只读 | `capture.enabled` 默认为 false；启用后只有 Jev 两阶段高置信且程序检查通过的经验可自动写入，不提供任意 `wiki_remember` |
 | 输入严格、输出不严格 | 入参由生成的 strict codec 校验（多余字段拒绝）；返回值的 codec 目前是宽松的（上游生成器限制），不要据此宣称「双向严格」 |
