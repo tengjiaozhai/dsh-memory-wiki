@@ -47,7 +47,7 @@ DSH_HOME=$PWD/../.dev-dsh dsh plugin --profile web add "link:$PWD/packages/dsh-m
 
 ## 状态
 
-- `0.1.0` · 默认只读，自动经验采集需显式启用 · 单库 · 当前按 DSH `0.2.1-rc.3` 验证
+- `0.1.0` · 默认只读，自动经验采集需显式启用 · 单库 · 当前按 DSH `0.2.1-rc.5` 验证
 - 已知限制见包内 README 的「已知限制」一节——那里写的是实情，不是免责声明
 
 ## 许可

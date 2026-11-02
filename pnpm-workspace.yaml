@@ -7,8 +7,14 @@ allowBuilds:
   '@google/genai': set this to true or false
   protobufjs: set this to true or false
 
+# 宿主 rc 发布当天就需要装，不受 minimumReleaseAge 冷却期拦截。
+# 只列本项目实际钉住的版本；升到新 rc 时这里要跟着改，不要放宽成 '@deepseek-ai/*'。
 minimumReleaseAgeExclude:
   - '@deepseek-ai/dsh-typert-generator@0.2.1-rc.5'
+  - '@deepseek-ai/dsh-llm@0.2.1-rc.5'
+  - '@deepseek-ai/dsh-home-paths@0.2.1-rc.5'
+  - '@deepseek-ai/dsh-typert-protocol@0.2.1-rc.5'
+  - '@deepseek-ai/dsh-brand@0.2.1-rc.5'
 
 overrides:
   # 宿主装的是 zod 4.4.3；typert-protocol 的 ^4.4.3 曾被解析成 4.6.7，

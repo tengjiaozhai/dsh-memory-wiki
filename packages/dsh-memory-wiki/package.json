@@ -41,11 +41,13 @@
   "files": [
     "lib/server",
     "lib/client.js",
+    "lib/client.js.map",
     "lib/shared",
     "lib/typert.host.js",
     "lib/typert.host.d.ts",
     "lib/typert.remote-client.js",
     "lib/typert.remote-client.d.ts",
+    "lib/typert.remote-client.d.ts.map",
     "cordis.patch.yml"
   ],
   "engines": {
@@ -71,7 +73,7 @@
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "^4.0.0",
-    "@deepseek-ai/dsh-llm": "0.2.1-rc.5",
+    "@deepseek-ai/dsh-llm": ">=0.2.1-rc.2 <0.3.0-0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
